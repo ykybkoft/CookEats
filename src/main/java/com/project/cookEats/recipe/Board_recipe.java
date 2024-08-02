@@ -1,4 +1,4 @@
-package com.project.cookEats.board_recipe;
+package com.project.cookEats.recipe;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -66,4 +66,5 @@ public class Board_recipe {
     private String MANUAL20;	//만드는법_20
     private String MANUAL_IMG20;	//만드는법_이미지_20
     private String RCP_NA_TIP;	//저감 조리법 TIP
+    private Long memberId; //유저 레시피 등록용 member_seq;
 }
