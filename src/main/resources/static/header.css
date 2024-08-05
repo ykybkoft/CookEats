@@ -1,0 +1,22 @@
+.nav {
+    justify-content: space-between;
+}
+
+.menu > h1 {
+  background-color: red;
+  flex-grow: 1;
+}
+
+.menu{
+    background-color: yellow;
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+.menu > li {
+    background-color: green;
+	margin: 0 10px;
+	display: flex;
+	align-items: center;
+}
