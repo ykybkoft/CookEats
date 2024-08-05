@@ -13,6 +13,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -65,5 +67,10 @@ public class Board_share {
     @Column(name = "cntLike")
     @ColumnDefault("0")
     private int cntLike;
+
+    @OneToMany()
+    private List<Board_share_comment> commentList = new ArrayList<>();
+
+
     
 }
