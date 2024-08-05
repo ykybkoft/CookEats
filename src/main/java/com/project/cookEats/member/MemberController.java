@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/member")
 public class MemberController {
 
-    @Autowired
+
     private final MemberRepository mr;
+    private final MemberService ms;
 
     @GetMapping("/join")
     String join(){
@@ -23,8 +24,12 @@ public class MemberController {
 
     @PostMapping("/join")
     String joinProcess(@ModelAttribute Member row){
-        mr.save(row);
+        int result =ms.join(row);
+        return "redirect:/";
+    }
 
-        return "member/join.html";
+    @GetMapping("/login")
+    String login(){
+        return "member/login.html";
     }
 }
