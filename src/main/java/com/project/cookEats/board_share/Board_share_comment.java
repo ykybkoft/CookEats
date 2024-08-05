@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -26,14 +28,12 @@ public class Board_share_comment {
     @Column(nullable = false)
     private String username;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "memberId", foreignKey = @ForeignKey(name = "fk_member_order1",
-            foreignKeyDefinition = "FOREIGN KEY (id) REFERENCES member(id) " +
-                    "ON DELETE CASCADE ON UPDATE CASCADE"))
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn()
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    @CreatedDate // 시간 자동 설정, java.sql.Date = date 타입으로 매핑
-    @Column(name = "sysDate", nullable = false, updatable = false)
+    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date sysDate;
 
     @Column(length = 255, nullable = false)

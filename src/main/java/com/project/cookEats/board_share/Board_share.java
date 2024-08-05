@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,18 +32,17 @@ public class Board_share {
     // 1-1. ManyToOne : 다대일 테이블 외래키 연결 어노테이션
     // 1-2. cascade = CascadeType.ALL : 부모 엔티티의 CRUD 변경사항이 자식 엔티티에게 전달되도록 함
     // 1-3. orphanRemoval = true : 부모 엔티티에서 자식 엔티티를 제거할 때 삭제 되는 자식 엔티티를 자동으로 데이터베이스에서 제거하는 기능이다.
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     // 1. foreignKeyDefinition : 외래키 제약 조건을 입력하기 위해 사용되는 속성
-    @JoinColumn(name = "memberId", foreignKey = @ForeignKey(name = "fk_member_order",
-            foreignKeyDefinition = "FOREIGN KEY (id) REFERENCES member(id) " +
-                    "ON DELETE CASCADE ON UPDATE CASCADE")) //foreign key 값을 채우기 위한 어노테이션
+    @JoinColumn() //foreign key 값을 채우기 위한 어노테이션
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     // 1. 작성일자 - updateble = fales는 게시글 시간이 변경되지 않음을 의미.
     // 2-1 LsatModifiedDate - Spring Data JPA의 감사(auditing) 기능 사용하여 엔티티 작성 및 수정시 자동으로 현재 시간을 설정함.
     // 2-2 하지만, updateble = fales 조건을 통해 생성 시에만 자동으로 시간이 설정되고 이후는 글의 내용이 수정되어도 시간이 변하지 않음.
     // 2-3 이 기능을 사용하려면 @EntityListeners(AuditingEntityListener.class)를 클래스에 추가해야 됨.
-    @Column(name = "sysDate", nullable = false, updatable = false)
+    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate // TimeStemp 데이터 타입
     private LocalDateTime sysDate;
 
