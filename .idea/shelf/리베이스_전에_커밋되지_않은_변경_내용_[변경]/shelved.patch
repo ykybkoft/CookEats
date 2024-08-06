@@ -1,0 +1,18 @@
+Index: CookEats/src/main/java/com/project/cookEats/board_normal/BoardNormal.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.project.cookEats.board_normal;\r\n\r\nimport com.project.cookEats.member.Member;\r\nimport jakarta.persistence.*;\r\nimport jakarta.persistence.Entity;\r\nimport jakarta.persistence.GeneratedValue;\r\nimport jakarta.persistence.Id;\r\n\r\nimport lombok.Getter;\r\nimport lombok.Setter;\r\nimport lombok.ToString;\r\nimport org.hibernate.annotations.OnDelete;\r\nimport org.hibernate.annotations.OnDeleteAction;\r\nimport org.springframework.boot.autoconfigure.domain.EntityScan;\r\nimport org.springframework.data.annotation.CreatedDate;\r\n\r\nimport java.sql.Date;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\n@Getter\r\n@Setter\r\n@EntityScan\r\n@ToString\r\n@Table(name = \"board_nomal\")\r\npublic class BoardNormal {\r\n    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n    private Long id;\r\n\r\n    @Column(length = 100, nullable = false)\r\n    private String title;\r\n\r\n    @ManyToOne(cascade = CascadeType.MERGE)\r\n    @JoinColumn()\r\n    @OnDelete(action = OnDeleteAction.CASCADE)\r\n    private Member member;\r\n\r\n    @Column(name = \"sysDate\", nullable = false, updatable = false,  columnDefinition = \"TIMESTAMP DEFAULT CURRENT_TIMESTAMP\")\r\n    @CreatedDate\r\n    private Date sys_date;\r\n\r\n    @Column(columnDefinition = \"TEXT\", nullable = false)\r\n    private String content;\r\n\r\n    @Column(columnDefinition = \"0\", name = \"count\")\r\n    private int count;\r\n\r\n    @Column(columnDefinition = \"0\")\r\n    private long cnt_like;\r\n\r\n    @OneToMany()\r\n    private List<BoardNormalComment> commentList = new ArrayList<>();\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/CookEats/src/main/java/com/project/cookEats/board_normal/BoardNormal.java b/CookEats/src/main/java/com/project/cookEats/board_normal/BoardNormal.java
+--- a/CookEats/src/main/java/com/project/cookEats/board_normal/BoardNormal.java	(revision 1a8bf9de2aaf5c51257373740814397d4845881d)
++++ b/CookEats/src/main/java/com/project/cookEats/board_normal/BoardNormal.java	(date 1722916155599)
+@@ -2,7 +2,6 @@
+ 
+ import com.project.cookEats.member.Member;
+ import jakarta.persistence.*;
+-import jakarta.persistence.Entity;
+ import jakarta.persistence.GeneratedValue;
+ import jakarta.persistence.Id;
+ 
