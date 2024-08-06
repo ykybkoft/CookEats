@@ -17,7 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="53173924-6ed4-4e56-9327-331a2ae97937">
-      <console name="Connection" type="STANDARD" schema="cookeats" session="Main"><![CDATA[select count(*) from board_recipe;]]></console>
+      <console name="Connection" type="STANDARD" schema="cookeats" session="Main"><![CDATA[select * from board_recipe;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
