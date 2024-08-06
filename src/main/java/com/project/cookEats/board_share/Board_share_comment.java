@@ -25,9 +25,6 @@ public class Board_share_comment {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String username;
-
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)

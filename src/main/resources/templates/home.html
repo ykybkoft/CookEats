@@ -10,8 +10,8 @@
 
     <div th:replace="~{header.html :: navbar}"></div>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
-
 </head>
+
 <body>
     <main class="main">
         <section class="contents">
@@ -22,14 +22,16 @@
                     </caption>
 
                     <thead>
-                    <tr>
+                    <tr class="title">
+                        <th>순서</th>
                         <th>제목</th>
                         <th>날짜</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <tr>
+                    <tr class="content">
+                        <td>1</td>
                         <td>나눔 게시판 첫글</td>
                         <td>2024-08-05</td>
                     </tr>
