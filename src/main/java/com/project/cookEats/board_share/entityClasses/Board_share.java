@@ -61,7 +61,6 @@ public class Board_share {
     @ColumnDefault("0")
     private int vCount;
 
-
     // 좋아요 수
     @Column(name = "cntLike")
     @ColumnDefault("0")
