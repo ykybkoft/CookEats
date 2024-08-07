@@ -29,8 +29,9 @@ public class CookeatsUserDetailService implements UserDetailsService {
         var user = tmp.get();
         List<GrantedAuthority> authList = new ArrayList<>();
         authList.add(new SimpleGrantedAuthority("normal"));
+        CustomUser custom = new CustomUser(user.getUsername(), user.getPassword(),authList);
+        custom.setId(user.getId());
 
-
-        return new User(user.getUsername(), user.getPassword(),authList);
+        return custom;
     }
 }

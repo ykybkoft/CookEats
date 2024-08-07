@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -11,18 +11,237 @@
 <body>
 
 <h1>회원 가입 페이지</h1>
-<form action="/member/join" method="POST">
-    ID : <input name="username" ><br>
+<form action="/member/join" method="POST" onsubmit="return checkField();">
+
+    ID : <input name="username" id="username"><br>
+    <label id="msg1">아이디를 입력해주세요</label><br>
     이름 : <input name="name"><br>
     PW : <input name="password" type="password"><br>
-    닉네임 : <input name="nick"><br>
-    이메일 : <input name="email" type="email"><br>
-    전화번호 : <input name="phone"><br>
+    닉네임 : <input name="nick" id="nick"><br>
+	<label id="msg2"></label><br>
+    이메일 : <input name="email" type="email" id="email"><br>
+	<label id="msg3"></label><br>
+    전화번호 : <input name="phone" id="phone"><br>
+	<label id="msg4"></label><br>
     생년월일 : <input name="birth" type="date"><br>
     성별 : 남<input type="radio" name="gender" value="man"> 여<input type="radio" name="gender" value="woman"> <br>
     <button type="submit">회원가입하기</button>
 </form>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        let inputs = document.querySelectorAll('input');
+		function checkField(){
 
+			if(!inputs[0].value){
+				alert("아이디를 입력하세요.");
+				return false;
+			}
+			if(!inputs[1].value){
+				alert("이름을 입력하세요.");
+				return false;
+			}
+			if(!inputs[2].value){
+				alert("비밀번호를 입력하세요.");
+				return false;
+			}
+			if(inputs[2].value.length < 8){
+			    alert("비밀번호를 8자 이상 입력해주세요.");
+			}
+			if(!inputs[3].value){
+				alert("닉네임을 입력하세요.");
+				return false;
+			}
+			if(!inputs[4].value){
+				alert("이메일을 입력하세요.");
+				return false;
+			}
+			if(!inputs[5].value){
+				alert("전화번호를 입력하세요.");
+				return false;
+			}
+			if(!inputs[6].value){
+				alert("생년월일을 입력하세요.");
+				return false;
+			}
+			if(!inputs[7].checked && !inputs[8].checked ){
+				alert("성별을 입력하세요.");
+				return false;
+			}
+
+
+		}
+		var $username = $('#username');
+		var $email = $('#email');
+		var $nick = $('#nick');
+		var $phone = $('#phone');
+
+		var $musername = $('#msg1');
+		var $memail = $('#msg3');
+		var $mnick = $('#msg2');
+		var $mphone = $('#msg4');
+
+
+		$username.on('keyup', function(){
+			$.ajax({
+					type : "POST", // http 방식 
+					url : "/member/check", // ajax 통신 url
+					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
+						"type" : "username",
+						"value" : $username.val()
+					},
+					success : function(data) {
+						if (data == 1) { // 1이면 중복
+							ck = false;
+							$musername.html("<span id='check1'>이미 존재하는 아이디입니다</span>")
+							$("#check1").css({
+								"color" : "#FA3E3E",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							//console.log("중복아이디");
+						} else { // 아니면 중복아님
+							ck = true;
+							$musername.html("<span id='check1'>사용가능한 아이디입니다</span>")
+
+							$("#check1").css({
+								"color" : "#0D6EFD",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							//console.log("중복아닌 아이디");
+						}
+					}
+				})
+
+
+		});
+
+		$email.on('keyup', function(){
+			$.ajax({
+					type : "POST", // http 방식 
+					url : "/member/check", // ajax 통신 url
+					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
+						"type" : "email",
+						"value" : $email.val()
+					},
+					success : function(data) {
+						if (data == 1) { // 1이면 중복
+							ck = false;
+							$memail.html("<span id='check2'>이미 존재하는 이메일입니다</span>")
+							$("#check2").css({
+								"color" : "#FA3E3E",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							
+						} else { // 아니면 중복아님
+							ck = true;
+							$memail.html("<span id='check2'>사용가능한 이메일입니다</span>")
+
+							$("#check2").css({
+								"color" : "#0D6EFD",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							
+						}
+					}
+				})
+
+		});
+
+		$nick.on('keyup', function(){
+			$.ajax({
+					type : "POST", // http 방식 
+					url : "/member/check", // ajax 통신 url
+					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
+						"type" : "nick",
+						"value" : $nick.val()
+					},
+					success : function(data) {
+						if (data == 1) { // 1이면 중복
+							ck = false;
+							$mnick.html("<span id='check3'>이미 존재하는 닉네임입니다</span>")
+							$("#check3").css({
+								"color" : "#FA3E3E",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							//console.log("중복아이디");
+						} else { // 아니면 중복아님
+							ck = true;
+							$mnick.html("<span id='check3'>사용가능한 닉네임입니다</span>")
+
+							$("#check3").css({
+								"color" : "#0D6EFD",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							//console.log("중복아닌 아이디");
+						}
+					}
+				})
+
+		});
+
+		$phone.on('keyup', function(){
+			$.ajax({
+					type : "POST", // http 방식 
+					url : "/member/check", // ajax 통신 url
+					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
+						"type" : "phone",
+						"value" : $phone.val()
+					},
+					success : function(data) {
+						if (data == 1) { // 1이면 중복
+							ck = false;
+							$mphone.html("<span id='check4'>이미 존재하는 전화번호입니다</span>")
+							$("#check4").css({
+								"color" : "#FA3E3E",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							//console.log("중복아이디");
+						} else { // 아니면 중복아님
+							ck = true;
+							$mphone.html("<span id='check4'>사용가능한 전화번호입니다</span>")
+
+							$("#check4").css({
+								"color" : "#0D6EFD",
+								"font-weight" : "bold",
+								"font-size" : "10px"
+
+							})
+							//console.log("중복아닌 아이디");
+						}
+					}
+				})
+
+		});
+
+
+
+		
+		
+
+
+	
+
+
+
+
+	</script>
+    <script>
+
+
+    </script>
 </body>
 </html>
