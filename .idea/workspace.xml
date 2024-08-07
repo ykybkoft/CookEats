@@ -4,10 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="11d8b53e-cb86-40c5-866d-28b2229b21ff" name="변경" comment="change Board_recipe(DB) to recipe(DB)&#10;create BoardRecipe, Comment">
+    <list default="true" id="11d8b53e-cb86-40c5-866d-28b2229b21ff" name="변경" comment="create">
+      <change afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/controller/BoardRecipeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/controller/RecipeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/repository/BoardRecipeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/service/BoardRecipeService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/service/RecipeService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/board_share/Board_share_comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/board_share/Board_share_comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/board_normal/BoardNormal.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/board_normal/BoardNormal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/member/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/member/Member.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/BoardRecipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/db/BoardRecipe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/BoardRecipeComment.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/db/BoardRecipeComment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/db/recipe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,19 +57,6 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <favorite-branches>
-      <branch-storage>
-        <map>
-          <entry type="REMOTE">
-            <value>
-              <list>
-                <branch-info repo="$PROJECT_DIR$/CookEats" source="origin/hyeonjoo" />
-              </list>
-            </value>
-          </entry>
-        </map>
-      </branch-storage>
-    </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$/CookEats" value="main" />
@@ -66,6 +65,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/CookEats" />
     <option name="RESET_MODE" value="KEEP" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="SHOW_RECENT_BRANCHES" value="false" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -99,7 +99,7 @@
     &quot;git-widget-placeholder&quot;: &quot;jihun&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/Desktop/Take-care-of-the-refrigerator-master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/Desktop/YourMeals-main&quot;,
     &quot;project.structure.last.edited&quot;: &quot;프로젝트&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
@@ -107,6 +107,11 @@
     &quot;애플리케이션.CookEatsApplication.executor&quot;: &quot;Run&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.project.cookEats.recipe" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="CookEatsApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.project.cookEats.CookEatsApplication" />
@@ -152,7 +157,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722994796411</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="change Board_recipe(DB) to recipe(DB)&#10;create BoardRecipe &amp; Comment (#2)">
+      <option name="closed" value="true" />
+      <created>1722996510538</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1722996510538</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,7 +173,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -170,6 +195,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Call OpenApi, Save Mysql DB #2" />
     <MESSAGE value="change Board_recipe(DB) to recipe(DB)&#10;create BoardRecipe, Comment" />
-    <option name="LAST_COMMIT_MESSAGE" value="change Board_recipe(DB) to recipe(DB)&#10;create BoardRecipe, Comment" />
+    <MESSAGE value="change Board_recipe(DB) to recipe(DB)&#10;create BoardRecipe &amp; Comment (#2)" />
+    <option name="LAST_COMMIT_MESSAGE" value="change Board_recipe(DB) to recipe(DB)&#10;create BoardRecipe &amp; Comment (#2)" />
   </component>
 </project>
