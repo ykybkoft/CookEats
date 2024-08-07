@@ -1,0 +1,16 @@
+.main {
+   // background-color: rgb(182, 255, 255);
+}
+.footer {
+    background-color: orange;
+}
+.cnt_cap{
+   // background-color: rgb(193, 253, 221);
+   // border: 1px solid black;
+}
+.title{
+    background-color : pink;
+}
+.content{
+    text-align: center;
+}
