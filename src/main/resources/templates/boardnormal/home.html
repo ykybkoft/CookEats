@@ -6,8 +6,57 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>게시판</title>
+
+    <div th:replace="~{header.html :: navbar}"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
+
 </head>
 <body>
-게시판 home
+
+<form action="/search" method="post">
+    <input name="searchText" style="display : inline">
+    <button>검색</button>
+</form>
+
+<main class="main">
+    <section class="contents">
+        <article class="board_share">
+            <table>
+                <caption class="cnt_cap">
+                    게시판
+                </caption>
+
+                <thead>
+                <tr class="title">
+                    <th>순서</th>
+                    <th>제목</th>
+                    <th>날짜</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr class="content">
+                    <td>1</td>
+                    <td>게시판 첫글</td>
+                    <td>2024-08-07</td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+    </section>
+
+</main>
+<footer class="footer">
+    <section>
+        <div>
+            <ul class="boardhome">
+                <li><a href="/board/write">글쓰기</a></li>
+            </ul>
+        </div>
+
+    </section>
+
+</footer>
 </body>
 </html>
