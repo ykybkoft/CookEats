@@ -8,3 +8,9 @@
     background-color: rgb(193, 253, 221);
     border: 1px solid black;
 }
+.title{
+    background-color : pink;
+}
+.content{
+    text-align: center;
+}
