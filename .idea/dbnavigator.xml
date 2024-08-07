@@ -12,19 +12,21 @@
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
-    <show-object-properties value="true" />
+    <show-object-properties value="false" />
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="53173924-6ed4-4e56-9327-331a2ae97937">
-      <console name="Connection" type="STANDARD" schema="cookeats" session="Main"><![CDATA[select * from board_recipe;]]></console>
+      <console name="Connection" type="STANDARD" schema="cookeats" session="Main"><![CDATA[select * from recipe;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="53173924-6ed4-4e56-9327-331a2ae97937" object-ref="consoles/Connection" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="53173924-6ed4-4e56-9327-331a2ae97937" />
@@ -32,6 +34,8 @@
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="53173924-6ed4-4e56-9327-331a2ae97937" dataset="cookeats.board_share_comment" active-filter-id="" />
     <filter-actions connection-id="53173924-6ed4-4e56-9327-331a2ae97937" dataset="cookeats.board_recipe" active-filter-id="" />
+    <filter-actions connection-id="53173924-6ed4-4e56-9327-331a2ae97937" dataset="cookeats.board_recipe_comment_list" active-filter-id="" />
+    <filter-actions connection-id="53173924-6ed4-4e56-9327-331a2ae97937" dataset="cookeats.recipe" active-filter-id="" />
     <filter-actions connection-id="53173924-6ed4-4e56-9327-331a2ae97937" dataset="cookeats.board_share" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
