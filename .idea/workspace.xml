@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11d8b53e-cb86-40c5-866d-28b2229b21ff" name="변경" comment="change Board_recipe(DB) to recipe(DB)&#10;create BoardRecipe, Comment">
+      <change afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/BoardRecipe.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/BoardRecipeComment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/board_share/Board_share_comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/board_share/Board_share_comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/Board_recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/board_recipe/recipe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/CookEats/src/main/java/com/project/cookEats/recipe/openapi/OpenApiService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,6 +111,11 @@
     &quot;애플리케이션.CookEatsApplication.executor&quot;: &quot;Run&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.project.cookEats.recipe" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="CookEatsApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.project.cookEats.CookEatsApplication" />
@@ -160,7 +169,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="jihun" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
