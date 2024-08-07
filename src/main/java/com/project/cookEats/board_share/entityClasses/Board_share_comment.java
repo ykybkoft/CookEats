@@ -34,6 +34,7 @@ public class Board_share_comment {
     @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date sysDate;
 
+
     @Column(name = "cmtLike")
     @ColumnDefault("0")
     private int cmtLike;

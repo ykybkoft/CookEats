@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface Board_shareRepository extends JpaRepository<Board_share, Long> {
 
+
 }
