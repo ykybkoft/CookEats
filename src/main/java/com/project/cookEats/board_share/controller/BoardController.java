@@ -23,7 +23,7 @@ public class BoardController {
         List<Board_share> result = br.findAll();
         System.out.println(result.get(0));
         return "board_share/title.html";
-
+    }
     // 게시판 글 작성 페이지 매핑
     @GetMapping("/write")
     String write(){
