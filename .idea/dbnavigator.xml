@@ -12,12 +12,12 @@
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
-    <show-object-properties value="false" />
+    <show-object-properties value="true" />
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="53173924-6ed4-4e56-9327-331a2ae97937">
-      <console name="Connection" type="STANDARD" schema="cookeats" session="Main"><![CDATA[drop table board_nomal_comment_list;]]></console>
+      <console name="Connection" type="STANDARD" schema="cookeats" session="Main"><![CDATA[select * from board_recipe;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
