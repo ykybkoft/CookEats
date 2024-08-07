@@ -1,5 +1,6 @@
 package com.project.cookEats.member;
 
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,12 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -35,6 +42,7 @@ public class MemberController {
     String login(){
         return "member/login.html";
     }
+
 
     @GetMapping("/logout") // Spring Security 는 로그아웃 방법이 기본적으로 POST 이기 때문에 추가한 코드
     public String logout(HttpServletRequest request, HttpServletResponse response){
@@ -81,11 +89,6 @@ public class MemberController {
 
         return 0;
     }
-
-
-
-
-
 
 
 }

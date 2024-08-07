@@ -7,10 +7,57 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>홈페이지</title>
-    <div th:replace="~{header.html :: navbar}"></div>
 
+    <div th:replace="~{header.html :: navbar}"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 </head>
 <body>
+    <main class="main">
+        <section class="contents">
+            <article class="board_share">
+                <table>
+                    <caption class="cnt_cap">
+                        나눔 게시판
+                    </caption>
+
+                    <thead>
+                      
+                    <tr>
+
+                    <tr class="title">
+                        <th>순서</th>
+
+                        <th>제목</th>
+                        <th>날짜</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr>
+
+                    <tr class="content">
+                        <td>1</td>
+
+                        <td>나눔 게시판 첫글</td>
+                        <td>2024-08-05</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </article>
+
+        </section>
+
+    </main>
+    <footer class="footer">
+        <section>
+            <div>
+                <p>빈칸2</p>
+            </div>
+
+        </section>
+
+    </footer>
 
 </body>
 </html>
