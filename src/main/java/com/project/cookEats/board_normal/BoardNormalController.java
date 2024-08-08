@@ -29,8 +29,8 @@ public class BoardNormalController {
     @GetMapping("/search")
     String postSearch(@RequestParam String searchText) {
 
-       // var result = BoardNormalRepository.findAllByTitleContains(searchText);
-      //  System.out.println(result);
+        // var result = BoardNormalRepository.findAllByTitleContains(searchText)
+        // System.out.println(result);
 
         return  "boardnormal/list.html";
     }

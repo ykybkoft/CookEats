@@ -4,17 +4,21 @@
     <link rel="stylesheet" type="text/css" th:href="@{/header.css}">
 
     <ul class="menu">
-        <h1>사이트이미지(삽입)</h1>
-        <img src="img/로고.png" alt=""　width="100" height="100">
+        <a href="/">
+            <img class="logo" src="/img/로고.png" alt="logo"　width="150" height="150">
+        </a>
 
-        <li><a href="/">Home</a></li>
-        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a></li>
-        <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
+        <div class="top">
+            <li sec:authorize="isAnonymous()"><a href="/member/login">login</a> │ </li>
+            <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
+            <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a> │ </li>
+            <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
+        </div>
     </ul>
       
-    <ul class="boardhome">
+    <ul class="board">
         <li><a href="/board/board_normal">게시판</a></li>
+        <li><a href="/board_share/title">나눔게시판</a></li>
+        <li><a href="/board/board_normal">레시피게시판</a></li>
     </ul>
 </div>
