@@ -15,39 +15,38 @@
     <main class="main">
         <section class="contents">
             <article class="board_share">
+                    <form action="/search" method="post">
+                        <input name="searchText" style="display : inline">
+                        <button>검색</button>
+                    </form>
+
                 <table>
                     <caption class="cnt_cap">
-                        나눔 게시판
+                        home 게시판
                     </caption>
 
                     <thead>
-                      
+
                     <tr>
-
-                    <tr class="title">
-                        <th>순서</th>
-
-                        <th>제목</th>
-                        <th>날짜</th>
-                    </tr>
+                        <tr class="title">
+                            <th>순서</th>
+                            <th>제목</th>
+                            <th>날짜</th>
+                        </tr>
                     </thead>
 
                     <tbody>
-
                     <tr>
+                        <tr class="content">
+                            <td>1</td>
 
-                    <tr class="content">
-                        <td>1</td>
-
-                        <td>나눔 게시판 첫글</td>
-                        <td>2024-08-05</td>
-                    </tr>
+                            <td>home 게시판 첫글</td>
+                            <td>2024-08-05</td>
+                        </tr>
                     </tbody>
                 </table>
             </article>
-
         </section>
-
     </main>
     <footer class="footer">
         <section>
@@ -56,7 +55,6 @@
             </div>
 
         </section>
-
     </footer>
 
 </body>
