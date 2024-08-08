@@ -65,18 +65,28 @@ public class MemberController {
     }
 
     @PostMapping("/password")
-    String password(@RequestParam String password, Authentication auth){
-        if(ms.checkPW(password, auth)){
-            return "member/password.html";
+    String password(@RequestParam String password,@RequestParam String type ,Authentication auth){
+        if(type.equals("password")){
+            if(ms.checkPW(password, auth)){
+                return "member/password.html";
+            }
+            return "redirect:/member/myPage?result=false";
+        }
+
+        if(ms.checkPW(password,auth)){
+            int result = ms.delete(auth);
+            return "redirect:/?delete=true";
         }
         return "redirect:/member/myPage?result=false";
+
+
+
     }
 
 
-
-    @PostMapping("/changPW")
-    String changePW(){
-
+    @PostMapping("/changePW")
+    String changePW(@RequestParam String newPW, @RequestParam Long id){
+        int result = ms.changePW(newPW, id);
         return "redirect:/";
     }
 

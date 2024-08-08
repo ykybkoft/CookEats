@@ -57,5 +57,15 @@
         </section>
     </footer>
 
+
+
+    <script>
+        const param = new URLSearchParams(window.location.search);
+
+        if(param.get('delete')=='true'){
+            alert('회원탈퇴가 완료되었습니다.');
+        }
+
+    </script>
 </body>
 </html>
