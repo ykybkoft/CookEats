@@ -35,7 +35,19 @@
         <form action="/member/password" method="post">
             <td>
                 <input name="password" type="password">
+                <input name="type" type="hidden" value="password">
                 <button>비밀번호 변경</button>
+            </td>
+        </form>
+
+    </tr>
+    <tr>
+        <th>회원탈퇴</th>
+        <form action="/member/password" method="post">
+            <td>
+                <input name="password" type="password" placeholder="비밀번호 입력">
+                <input name="type" type="hidden" value="delete">
+                <button>회원 탈퇴</button>
             </td>
         </form>
 
@@ -43,7 +55,15 @@
 
 </table>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const param = new URLSearchParams(window.location.search);
 
+    if(param.get('result')=='false'){
+        alert('비밀번호가 틀렸습니다.');
+    }
+
+</script>
 
 </body>
 </html>
