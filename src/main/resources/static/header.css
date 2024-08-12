@@ -24,7 +24,7 @@
 }
 
 .top{
-
+    display: flex;
 }
 
 .board {
