@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable());
@@ -22,6 +23,7 @@ public class SecurityConfig {
                 .failureUrl("/member/login?result=false")
         );
         http.logout( logout -> logout.logoutUrl("/member/logout").logoutSuccessUrl("/") );
+
         return http.build();
     }
     @Bean

@@ -1,5 +1,6 @@
 package com.project.cookEats.board_normal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
@@ -26,7 +27,7 @@ public class BoardNormal {
     @Column(length = 100, nullable = false)
     private String title;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -24,8 +24,8 @@ public class RecipeDb {
     private Long id;    //idx
 
     @JsonBackReference
-    @JoinColumn()
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("member")
     private Member member;
