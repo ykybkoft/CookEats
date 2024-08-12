@@ -1,6 +1,10 @@
 package com.project.cookEats.member;
 
 
+import com.project.cookEats.board_normal.BoardNormal;
+import com.project.cookEats.board_normal.BoardNormalRepository;
+import com.project.cookEats.board_share.entityClasses.Board_share;
+import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+import java.util.Optional;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -27,8 +34,11 @@ public class MemberController {
     private final MemberRepository mr;
     private final MemberService ms;
 
+    private final Board_shareRepository bsr;
+
     @GetMapping("/join")
     String join(){
+
         return "member/join.html";
     }
 
@@ -60,6 +70,10 @@ public class MemberController {
     String myPage(Authentication auth, Model model){
         Member result = ms.findMember(auth);
         model.addAttribute("user",result);
+        List<BoardNormal> normal = ms.findBoardNormal(auth);
+        model.addAttribute("normal", normal);
+        List<Board_share> share = ms.findBoardShare(auth);
+        model.addAttribute("share",share);
 
         return "member/myPage.html";
     }
