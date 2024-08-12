@@ -1,0 +1,37 @@
+.main {
+    background-color: rgb(182, 234, 255);
+    justify-content: center;
+}
+.footer {
+    background-color: orange;
+}
+.cnt_cap{
+    //background-color: rgb(193, 253, 221);
+    //border: 1px solid black;
+}
+.title{
+    background-color : pink;
+}
+.content{
+    text-align: center;
+}
+table{
+    margin:auto;
+    width: 1000px;
+}
+form{
+    margin: auto;
+    text-align: right;
+}
+
+input {
+  margin: auto;
+  width: 500px;
+  height: 32px;
+  font-size: 15px;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+}
