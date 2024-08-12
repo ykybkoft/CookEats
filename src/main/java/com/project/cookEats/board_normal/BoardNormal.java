@@ -52,3 +52,4 @@ public class BoardNormal {
     @OneToMany()
     private List<BoardNormalComment> commentList = new ArrayList<>();
 }
+
