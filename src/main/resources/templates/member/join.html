@@ -13,8 +13,6 @@
 </head>
 <body>
 
-<h1>회원 가입 페이지</h1>
-
 <form action="/member/join" method="POST" onsubmit="return checkField();">
 
     <table>
@@ -54,8 +52,7 @@
         <tr><td>이메일</td></tr>
         <tr>
             <td><input type="email" class="text" name="email" id="email" >
-
-            <label id="msg3"></label></td>
+                <label id="msg3"></label></td>
         </tr>
         <tr><td><input type="submit" value="가입하기" class="btn"></td></tr>
     </table>
@@ -64,7 +61,6 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
 		var $username = $('#username');
 		var $email = $('#email');
 		var $nick = $('#nick');
@@ -78,7 +74,7 @@
 		var $mpassword = $('#msg5');
 
 		$password.on('keyup', function(){
-
+			
 			if($password.val().length < 8 ||$password.val().length > 20){
 				$mpassword.html("<span id='check5'>비밀번호는 8자 이상 20자 이하입니다.</span>")
 							$("#check5").css({
@@ -95,7 +91,7 @@
 
 
 		$username.on('keyup', function(){
-
+			
 			var regId = /^[A-za-z0-9]{5,20}/g;
 			if(!regId.test($username.val())){
 				$musername.html("<span id='check1'>아이디는 영문자, 숫자로만 시작할 수 있고, 5자이상 20자 이하입니다.</span>")
@@ -107,7 +103,7 @@
 							});
 			}else{
 				$.ajax({
-					type : "POST", // http 방식
+					type : "POST", // http 방식 
 					url : "/member/check", // ajax 통신 url
 					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
 						"type" : "username",
@@ -144,7 +140,7 @@
 
 		$email.on('keyup', function(){
 			$.ajax({
-					type : "POST", // http 방식
+					type : "POST", // http 방식 
 					url : "/member/check", // ajax 통신 url
 					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
 						"type" : "email",
@@ -160,7 +156,7 @@
 								"font-size" : "10px"
 
 							})
-
+							
 						} else { // 아니면 중복아님
 							ck = true;
 							$memail.html("<span id='check2'>사용가능한 이메일입니다</span>")
@@ -171,7 +167,7 @@
 								"font-size" : "10px"
 
 							})
-
+							
 						}
 					}
 				})
@@ -179,7 +175,7 @@
 		});
 
 		$nick.on('keyup', function(){
-
+			
 			if($nick.val().length > 20){
 				$mnick.html("<span id='check3'>닉네임은 20자 이하입니다.</span>")
 							$("#check3").css({
@@ -190,7 +186,7 @@
 							});
 			}else{
 				$.ajax({
-					type : "POST", // http 방식
+					type : "POST", // http 방식 
 					url : "/member/check", // ajax 통신 url
 					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
 						"type" : "nick",
@@ -238,7 +234,7 @@
 							});
 			}else{
 				$.ajax({
-					type : "POST", // http 방식
+					type : "POST", // http 방식 
 					url : "/member/check", // ajax 통신 url
 					data : { // ajax 내용 => 파라미터 : 값 이라고 생각해도 무방
 						"type" : "phone",
@@ -271,10 +267,10 @@
 				})
 			}
 		});
-
-
+        
+		
 		let inputs = document.querySelectorAll('input');
-
+		
 
 
 		function checkField(){
@@ -325,20 +321,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 	</script>
-
-
 </body>
 </html>

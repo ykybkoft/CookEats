@@ -57,11 +57,11 @@ public class BoardRecipe {
     @ColumnDefault("0")
     private int cntLike;
 
-    @JsonManagedReference
+    //@JsonManagedReference
     @OneToMany(mappedBy = "boardRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardRecipeComment> boardRecipeComments;
 
-    @JsonBackReference
+    //@JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_db_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

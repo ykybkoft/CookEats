@@ -12,42 +12,45 @@
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 </head>
 <body>
-    <main class="main">
-        <section class="contents">
-            <article class="board_share">
-                    <form action="/search" method="post">
-                        <input name="searchText" style="display : inline">
-                        <button>검색</button>
-                    </form>
 
-                <table>
-                    <caption class="cnt_cap">
-                        home 게시판
-                    </caption>
+<!-- 검색 -->
+<form action="/search" method="post" class="search">
+    <input name="searchText" style="display : inline">
+    <button>검색</button>
+</form>
 
-                    <thead>
+<main class="main">
+    <section class="contents">
+        <article class="board_share">
+            <table>
+                <caption class="cnt_cap">
+                   <h1>home 게시판</h1>
+                </caption>
 
-                    <tr>
-                        <tr class="title">
-                            <th>순서</th>
-                            <th>제목</th>
-                            <th>날짜</th>
-                        </tr>
-                    </thead>
+                <thead>
+                <tr class="title">
+                    <th>순서</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>날짜</th>
+                    <th>조회수</th>
+                </tr>
+                </thead>
 
-                    <tbody>
-                    <tr>
-                        <tr class="content">
-                            <td>1</td>
+                <tbody>
+                <tr class="content">
+                    <td>1</td>
+                    <td>home 게시판 첫글</td>
+                    <td>딩딩</td>
+                    <td>2024-08-05</td>
+                    <td>2</td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+    </section>
 
-                            <td>home 게시판 첫글</td>
-                            <td>2024-08-05</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </article>
-        </section>
-    </main>
+</main>
     <footer class="footer">
         <section>
             <div>

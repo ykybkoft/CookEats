@@ -1,6 +1,5 @@
 package com.project.cookEats.board_normal;
 
-
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.member.Member;
 import org.springframework.data.domain.Page;

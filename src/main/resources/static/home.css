@@ -1,16 +1,20 @@
 .main {
-    background-color: rgb(182, 234, 255);
+    //background-color: rgb(182, 234, 255);
     justify-content: center;
 }
 .footer {
-    background-color: orange;
+   // background-color: orange;
+}
+.footer > a {
+    list-style-type: none;
 }
 .cnt_cap{
     //background-color: rgb(193, 253, 221);
     //border: 1px solid black;
 }
 .title{
-    background-color : pink;
+
+    text-decoration: none;
 }
 .content{
     text-align: center;
@@ -34,4 +38,10 @@ input {
   outline: none;
   padding-left: 10px;
   background-color: rgb(233, 233, 233);
+}
+.board > li > a {
+    list-style-type: none;
+}
+.search{
+    width: 1000px;
 }

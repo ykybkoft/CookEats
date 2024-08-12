@@ -15,7 +15,7 @@
 <body>
 
 <!-- 검색 -->
-<form action="/search" method="post">
+<form action="/search" method="post" class="search">
     <input name="searchText" style="display : inline">
     <button>검색</button>
 </form>
@@ -39,24 +39,23 @@
                 </thead>
 
                 <tbody>
-                <tr class="content">
-                    <td>1</td>
-                    <td>게시판 첫글</td>
-                    <td>바보</td>
-                    <td>2024-08-07</td>
-                    <td>50</td>
+                <tr class="content" th:each="i : ${list}">
+                    <td th:text="${i.id}"></td>
+                    <td th:text="${i.title}"></td>
+                    <td th:text="${i.member}"></td>
+                    <td th:text="${i.sys_date}"></td>
+                    <td th:text="${i.count}"></td>
                 </tr>
                 </tbody>
             </table>
         </article>
-
     </section>
 
 </main>
 <footer class="footer">
     <section>
         <div>
-            <ul class="boardhome">
+            <ul class="board">
                 <li><a href="/board/write">글쓰기</a></li>
             </ul>
             <ul class="boardhome">
