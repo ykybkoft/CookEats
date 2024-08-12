@@ -1,5 +1,6 @@
 package com.project.cookEats.board_share.entityClasses;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "board_share") // 만약 Table 어노테이션이 없을 경우 테이터베이스 테이블 이름은 클래스의 이름과 유사하게 만들어짐.
-@ToString // Hash코드가 아닌 데이터를 반환
+//@ToString // Hash코드가 아닌 데이터를 반환
 @EntityListeners(AuditingEntityListener.class)
 public class Board_share {
     // @GeneratedValue로 게시글 시퀀스 자동 번호 증가 추가
@@ -68,6 +69,7 @@ public class Board_share {
 
     // 보드 쉐어는 많은 코멘트를 가질 수 있다. 즉, 1:n 양방향 관계 설정
     // 회원탈퇴시 게시글 댓글 연계 삭제 위한 컬럼
+    @JsonManagedReference
     @OneToMany(mappedBy = "board_share", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board_share_comment> board_comment;
 
