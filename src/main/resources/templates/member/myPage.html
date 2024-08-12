@@ -22,11 +22,6 @@
         <td th:text="${user.nick}"></td>
     </tr>
     <tr>
-        <th>성별</th>
-        <td th:if="${user.gender == 'woman'}">여자</td>
-        <td th:if="${user.gender == 'man'}">남자</td>
-    </tr>
-    <tr>
         <th>이메일</th>
         <td th:text="${user.email}"></td>
     </tr>
@@ -52,6 +47,51 @@
         </form>
 
     </tr>
+
+</table>
+
+<hr>
+<h1>내가 쓴 글</h1>
+<hr>
+<h3>자유 게시판</h3>
+
+<table>
+    <tr>
+        <th>제목</th>
+        <th>내용</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+
+    <div th:each="normal : ${normal}">
+        <tr>
+            <td th:text="${normal.title}"></td>
+            <td th:text="${normal.content}"></td>
+            <th>✏️</th>
+            <th>🗑️</th>
+        <tr>
+    </div>
+
+</table>
+<hr>
+
+<h3>장터 게시판</h3>
+<table>
+    <tr>
+        <th>제목</th>
+        <th>내용</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+
+    <div th:each="share : ${share}">
+        <tr>
+            <td th:text="${share.title}"></td>
+            <td th:text="${share.content}"></td>
+            <th>✏️</th>
+            <th>🗑️</th>
+        <tr>
+    </div>
 
 </table>
 

@@ -1,5 +1,7 @@
 package com.project.cookEats.board_normal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class BoardNormalComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -34,5 +37,4 @@ public class BoardNormalComment {
     @Column(name = "cmtLike")
     @ColumnDefault("0")
     private long comment_like;
-
 }

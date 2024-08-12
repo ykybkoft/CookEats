@@ -1,5 +1,9 @@
 package com.project.cookEats.member;
 
+import com.project.cookEats.board_normal.BoardNormal;
+import com.project.cookEats.board_normal.BoardNormalRepository;
+import com.project.cookEats.board_share.entityClasses.Board_share;
+import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -14,6 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final Board_shareRepository bsr;
+    private final BoardNormalRepository bnr;
     private final MemberRepository mr;
     private final PasswordEncoder pe;
     public int join(Member row) {
@@ -23,15 +30,13 @@ public class MemberService {
     }
 
     public Member findMember(Authentication auth) {
-        CustomUser user = (CustomUser) auth.getPrincipal();
 
-        return mr.findById(user.getId()).get();
+        return mr.findById(findId(auth)).get();
     }
 
 
+
     public boolean check(String value, String type) {
-
-
         switch (type){
             case "username":
                 return mr.findByUsername(value).isPresent();
@@ -66,9 +71,26 @@ public class MemberService {
     }
 
     public int delete(Authentication auth) {
-        CustomUser user = (CustomUser) auth.getPrincipal();
-        mr.deleteById(user.getId());
+
+        mr.deleteById(findId(auth));
 
         return 1;
+    }
+
+    public Long findId(Authentication auth){
+        CustomUser user = (CustomUser) auth.getPrincipal();
+        return user.getId();
+    }
+    public List<BoardNormal> findBoardNormal(Authentication auth) {
+        Member member =new Member();
+        member.setId(findId(auth));
+
+        return bnr.findAllByMember(member);
+    }
+    public List<Board_share> findBoardShare(Authentication auth) {
+        Member member =new Member();
+        member.setId(findId(auth));
+
+        return bsr.findAllByMember(member);
     }
 }
