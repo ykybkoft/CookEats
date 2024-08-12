@@ -1,5 +1,6 @@
 package com.project.cookEats.board_share.entityClasses;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class Board_share_comment {
     private Long id;
 
     // 댓글 작성자
+    @JsonManagedReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -40,6 +42,7 @@ public class Board_share_comment {
 
     // 탈퇴시 정보 삭제를 위한 컬럼
     // 코멘트는 많은 사용자가 가질 수 있다. 즉, n:1 양방향 관계 설정
+    @JsonManagedReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "board_share_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

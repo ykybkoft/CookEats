@@ -1,5 +1,8 @@
 package com.project.cookEats.recipe.board_recipe;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,15 +27,19 @@ public class BoardRecipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id")
     private Long id;
 
     // 게시글 제목 varchar(100)
     @Column(length = 100, nullable = false)
+    @JsonProperty("title")
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
+    @JsonProperty("content")
     private String content;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -50,10 +57,11 @@ public class BoardRecipe {
     @ColumnDefault("0")
     private int cntLike;
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "boardRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardRecipeComment> boardRecipeComments;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_db_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -1,5 +1,7 @@
 package com.project.cookEats.recipe.board_recipe;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
@@ -16,12 +18,14 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "recipedb")
 public class RecipeDb {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
     private Long id;    //idx
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonBackReference
     @JoinColumn()
+    @ManyToOne(cascade = CascadeType.MERGE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("member")
     private Member member;
