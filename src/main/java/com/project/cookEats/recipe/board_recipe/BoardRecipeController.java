@@ -13,11 +13,20 @@ public class BoardRecipeController {
     @Autowired
     private BoardRecipeService boardRecipeService;
 
+    @Autowired
+    private RecipeDbRepository recipeDbRepository;
+
     // 모든 게시글 가져오기
     @GetMapping
     public ResponseEntity<List<BoardRecipe>> getAllBoardRecipes() {
         List<BoardRecipe> boardRecipes = boardRecipeService.getAllBoardRecipes();
         return ResponseEntity.ok(boardRecipes);
+    }
+
+    @GetMapping("/by-ingredient")
+    public ResponseEntity<List<RecipeDb>> findByIngredientName(@RequestParam("ingredientName") String ingredientName) {
+        List<RecipeDb> recipes = recipeDbRepository.findByIngredientName(ingredientName);
+        return ResponseEntity.ok(recipes);
     }
 
     // 게시글 ID로 조회
