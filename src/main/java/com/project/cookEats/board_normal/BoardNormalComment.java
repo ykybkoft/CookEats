@@ -33,7 +33,7 @@ public class BoardNormalComment {
     @JoinColumn(name = "board_normal_id")
     private BoardNormal boardNormal;
 
-    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date sys_date;
 
     @Column(length = 255, nullable = false)

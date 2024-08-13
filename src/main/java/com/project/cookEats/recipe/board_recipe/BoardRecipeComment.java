@@ -44,7 +44,7 @@ public class BoardRecipeComment {
     @ColumnDefault("0")
     private long cntcmtLike;
 
-    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date sysDate;
 
 

@@ -55,7 +55,7 @@ public class BoardRecipe {
     @JsonProperty("content")
     private String content;
 
-    @Column(name = "sysDate", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate
     private Date sys_date;
 

@@ -42,7 +42,7 @@ public class Board_share_comment {
     @Column(length = 255, nullable = false)
     private String comment;
 
-    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date sysDate;
 
     @Column(name = "cmtLike")
