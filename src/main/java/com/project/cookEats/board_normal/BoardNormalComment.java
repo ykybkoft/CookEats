@@ -22,11 +22,16 @@ public class BoardNormalComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
+    @JsonBackReference(value = "comment-member")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
+
+    @JsonBackReference(value = "comment-boardNormal")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "board_normal_id")
+    private BoardNormal boardNormal;
 
     @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date sys_date;

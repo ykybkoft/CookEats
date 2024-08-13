@@ -15,6 +15,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -44,7 +45,7 @@ public class Board_share {
     // 1-1. ManyToOne : 다대일 테이블 외래키 연결 어노테이션
     // 1-2. cascade = CascadeType.ALL : 부모 엔티티의 CRUD 변경사항이 자식 엔티티에게 전달되도록 함
     // 게시글 유저 닉네임 표기 위한 컬럼
-    @JsonBackReference
+    @JsonBackReference("member-boardShare")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -72,8 +73,7 @@ public class Board_share {
 
     // 보드 쉐어는 많은 코멘트를 가질 수 있다. 즉, 1:n 양방향 관계 설정
     // 회원탈퇴시 게시글 댓글 연계 삭제 위한 컬럼
-    @JsonManagedReference
-    @OneToMany(mappedBy = "board_share", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Board_share_comment> board_comment;
+    @OneToMany(mappedBy = "boardShare", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board_share_comment> commentList = new ArrayList<>();
 
 }

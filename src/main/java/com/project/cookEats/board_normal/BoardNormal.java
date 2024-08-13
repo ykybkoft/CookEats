@@ -27,7 +27,7 @@ public class BoardNormal {
     @Column(length = 100, nullable = false)
     private String title;
 
-    @JsonBackReference
+    @JsonBackReference(value = "boardNormal-member")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -48,7 +48,7 @@ public class BoardNormal {
     @ColumnDefault("0")
     private int llike;
 
-    @JsonManagedReference
-    @OneToMany()
+    @JsonManagedReference(value = "boardNormal-comments")
+    @OneToMany(mappedBy = "boardNormal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardNormalComment> commentList = new ArrayList<>();
 }
