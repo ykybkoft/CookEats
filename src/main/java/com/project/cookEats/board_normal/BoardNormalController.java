@@ -17,7 +17,6 @@ public class BoardNormalController {
     private final BoardNormalRepository br;
     private final BoardNormalService bs;
 
-
     // 게시판 홈 화면
     @GetMapping("/board_normal")
     String home(Model model){

@@ -66,4 +66,5 @@ public class BoardRecipe {
     @Column(name = "cntLike")
     @ColumnDefault("0")
     private int cntLike;
+
 }
