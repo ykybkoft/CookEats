@@ -2,8 +2,12 @@ package com.project.cookEats.board_normal;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -16,7 +20,11 @@ public class BoardNormalController {
 
     // 게시판 홈 화면
     @GetMapping("/board_normal")
-    String home(){
+    String home(Model model){
+        List<BoardNormal> result = br.findAll();
+        System.out.println(result);
+        model.addAttribute("list", result);
+
         return "boardnormal/home.html";
     }
 

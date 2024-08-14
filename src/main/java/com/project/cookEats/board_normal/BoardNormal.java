@@ -26,6 +26,7 @@ public class BoardNormal {
     @Column(length = 100, nullable = false)
     private String title;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)

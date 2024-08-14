@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -20,7 +21,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "board_share") // 만약 Table 어노테이션이 없을 경우 테이터베이스 테이블 이름은 클래스의 이름과 유사하게 만들어짐.
-@ToString // Hash코드가 아닌 데이터를 반환
+//@ToString // Hash코드가 아닌 데이터를 반환
 @EntityListeners(AuditingEntityListener.class)
 public class Board_share {
     // @GeneratedValue로 게시글 시퀀스 자동 번호 증가 추가

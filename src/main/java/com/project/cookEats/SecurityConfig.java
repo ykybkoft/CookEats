@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable());
@@ -19,8 +20,10 @@ public class SecurityConfig {
         );//.requestMatchers()에 URL 기재 가능 , /**는 모든 이라는 뜻이다.
         http.formLogin((formLogin) -> formLogin.loginPage("/member/login")
                 .defaultSuccessUrl("/")
+                .failureUrl("/member/login?result=false")
         );
-        //http.logout( logout -> logout.logoutUrl("/member/logout").logoutSuccessUrl("/") );
+        http.logout( logout -> logout.logoutUrl("/member/logout").logoutSuccessUrl("/") );
+
         return http.build();
     }
     @Bean
