@@ -1,8 +1,6 @@
+/*home_title css*/
 .nav {
-    width: 1000px;
-    margin:auto;
     justify-content: space-between;
-    text-decoration-line: none;
 }
 
 .menu > h1 {
@@ -10,46 +8,25 @@
   flex-grow: 1;
 }
 
-.menu {
-   // background-color: yellow;
+.menu{
+    background-color: yellow;
     list-style: none;
     padding: 0;
     display: flex;
-    justify-content: space-around;
 }
 
-.menu > li > a {
-    text-decoration: none;
-    	margin: 0 10px;
-    	align-items: center;
+.menu > li {
+    background-color: green;
+	margin: 0 10px;
+	display: flex;
+	align-items: center;
 }
 
-.top{
-    display: flex;
+/*second_menu 2 css*/
+.second_menu{
+    display: inline-block;
 }
-
-.board {
+.board_menu > li{
+    background-color: rgb(193, 253, 221);
     list-style: none;
-    justify-content: space-between;
-    text-decoration: none;
-    display: flex;
-    justify-content: space-around;
 }
-
-a {
-  color : black;
-  text-decoration: none;
-}
-a:visited {
-  color : pink;
-  text-decoration: none;
-}
-a:hover {
-  color : red;
-  text-decoration: underline;
-}
-a:active {
-  color : green;
-  text-decoration: none;
-}
-

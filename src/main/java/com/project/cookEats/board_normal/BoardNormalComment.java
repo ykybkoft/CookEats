@@ -1,7 +1,6 @@
 package com.project.cookEats.board_normal;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,12 +22,12 @@ public class BoardNormalComment {
     private Long id;
 
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date sys_date;
 
     @Column(length = 255, nullable = false)
@@ -37,4 +36,10 @@ public class BoardNormalComment {
     @Column(name = "cmtLike")
     @ColumnDefault("0")
     private long comment_like;
+
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_normal_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private BoardNormal boardNormal;
 }
