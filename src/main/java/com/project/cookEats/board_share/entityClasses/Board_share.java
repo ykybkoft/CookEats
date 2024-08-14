@@ -55,7 +55,7 @@ public class Board_share {
     // 2. LocalDateTime
     // 2-1 updateble = fales 조건을 통해 생성 시에만 자동으로 시간이 설정되고 이후는 글의 내용이 수정되어도 시간이 변하지 않음.
     // 2-2 엔티티 작성 및 수정시 자동으로 현재 시간 설정 기능을 사용하려면 @EntityListeners(AuditingEntityListener.class)를 클래스에 추가해야 됨.
-    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate // TimeStemp 데이터 타입
     private LocalDateTime sysDate;
 
@@ -73,7 +73,8 @@ public class Board_share {
 
     // 보드 쉐어는 많은 코멘트를 가질 수 있다. 즉, 1:n 양방향 관계 설정
     // 회원탈퇴시 게시글 댓글 연계 삭제 위한 컬럼
-    @OneToMany(mappedBy = "boardShare", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Board_share_comment> commentList = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "board_share", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board_share_comment> board_comment;
 
 }

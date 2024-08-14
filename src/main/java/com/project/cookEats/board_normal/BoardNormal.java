@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ public class BoardNormal {
 
     @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate
-    private Date sys_date;
+    private LocalDateTime sys_date = LocalDateTime.now(); // 기본값 설정
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
@@ -51,4 +52,7 @@ public class BoardNormal {
     @JsonManagedReference(value = "boardNormal-comments")
     @OneToMany(mappedBy = "boardNormal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardNormalComment> commentList = new ArrayList<>();
+
+    private String formattedSysDate; // 포맷된 날짜를 저장할 필드
+
 }

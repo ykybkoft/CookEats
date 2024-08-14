@@ -47,6 +47,7 @@ public class Member {
     // 멤버가 사라지면 연관된 게시물과 코멘트를 삭제 해야됨으로 멤버에서 1:n 관계를 설정함
     // 멤버는 많은 보드 쉐어 게시물을 가질 수 있다. 즉, 1:n 양방향 관계 설정
     @JsonManagedReference("member-boardShare")
+    //json~~reference는 무한 순환 참조를 방지하기 위해 사용
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board_share> boardShare;
 

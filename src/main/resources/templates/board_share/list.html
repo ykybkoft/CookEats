@@ -1,0 +1,90 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>공유게시판 목록</title>
+
+    <!--navbar inculude-->
+    <div th:replace="~{header.html :: navbar}"></div>
+
+    <!--Link css-->
+
+</head>
+<body>
+<!--블라인드 클래스는 안보이게 css에서 처리 예정-->
+<!--board_share list view-->
+<div class="layout">
+    <div class="panelCenter">
+        <!--게시글 목록 헤드 기능-->
+        <div class="article_container">
+            <strong class="article_title">공유 게시판</strong>
+            <div class="controller">
+                <form class="article_search">
+                    <fieldset class="article_search_area">
+                        <legend class="blind">게시판 검색</legend>
+                        <select name="search_option" id="option">
+                            <option value="title">제목</option>
+                            <option value="contents">내용</option>
+                        </select>
+                        <input placeholder="내용을 입력하세요">
+                        <button>검색</button>
+                    </fieldset>
+                </form>
+            </div>
+            <!--게시글 목록 wrap-->
+            <div class="board_wrap">
+                <table class="listBoard">
+                    <caption>
+                        <span class="blind">게시글 목록</span>
+                    <div style='width:80px; float: right;'>
+                        <input type='button' class='btn' onclick="location.href='/board_share/b_write'" value='글쓰기'>
+                    </div>
+                    </caption>
+                    <colgroup>
+                        <col>
+                        <col style="width: 110px">
+                        <col style="width: 75px">
+                        <col style="width: 60px">
+                        <col style="width: 60px">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                        <th>조회수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--페이지 버튼-->
+            <div class="article_pagination">
+                <button class="article_page_bt">1</button>
+                <button class="article_page_bt">2</button>
+                <button class="article_page_bt">3</button>
+                <button class="article_page_bt">4</button>
+                <button class="article_page_bt">5</button>
+                <button class="article_page_bt">6</button>
+                <button class="article_page_bt">7</button>
+                <button class="article_page_bt">8</button>
+                <button class="article_page_bt">9</button>
+                <button class="article_page_bt">10</button>
+                <button class="article_page_bt">></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

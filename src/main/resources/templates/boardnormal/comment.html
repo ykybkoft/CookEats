@@ -10,12 +10,9 @@
 <body>
 
 <h1>댓글</h1>
-<form action="/boardnormal/comment" method="POST">
-    댓글 번호 :<br>
-    닉네임 : <br>
-    내용 : <input name="comment_contents"><br>
-
-    <button>좋아요</button>
+<form action="comment" method="POST">
+    <input name="comment">
+    <input name="parent" th:value="${data.id}">
     <button type="submit">작성하기</button>
 </form>
 

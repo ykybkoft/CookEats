@@ -1,7 +1,6 @@
 package com.project.cookEats.board_share.entityClasses;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -42,8 +41,8 @@ public class Board_share_comment {
     @Column(length = 255, nullable = false)
     private String comment;
 
-    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date sysDate;
+    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDate sysDate;
 
     @Column(name = "cmtLike")
     @ColumnDefault("0")
