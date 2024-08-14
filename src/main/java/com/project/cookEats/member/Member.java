@@ -50,4 +50,5 @@ public class Member {
     @JsonManagedReference
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board_share_comment> board_comment;
+
 }

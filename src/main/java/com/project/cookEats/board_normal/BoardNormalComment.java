@@ -32,9 +32,9 @@ public class BoardNormalComment {
     private Date sys_date;
 
     @Column(length = 255, nullable = false)
-    private String comment_contents;
+    private String contents;
 
     @Column(name = "cmtLike")
     @ColumnDefault("0")
-    private long comment_like;
+    private long like;
 }

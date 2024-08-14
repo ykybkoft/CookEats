@@ -5,6 +5,7 @@ import com.project.cookEats.board_normal.BoardNormalRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class MemberService {
 
     private final Board_shareRepository bsr;
     private final BoardNormalRepository bnr;
+    @Autowired
     private final MemberRepository mr;
     private final PasswordEncoder pe;
     public int join(Member row) {
@@ -92,5 +94,15 @@ public class MemberService {
         member.setId(findId(auth));
 
         return bsr.findAllByMember(member);
+    }
+
+    // 현주 write
+    public Member getMemberByUsername(String username) {
+        Optional<Member> memberOpt = mr.findByUsername(username);
+        if (memberOpt.isPresent()) {
+            return memberOpt.get(); // 값이 존재하면 반환
+        } else {
+            throw new RuntimeException("Member not found"); // 값이 없으면 예외를 던짐
+        }
     }
 }
