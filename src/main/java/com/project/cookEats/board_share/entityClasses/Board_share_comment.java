@@ -11,7 +11,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -34,7 +34,7 @@ public class Board_share_comment {
     private String comment;
 
     @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date sysDate;
+    private LocalDate sysDate;
 
     @Column(name = "cmtLike")
     @ColumnDefault("0")

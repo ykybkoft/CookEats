@@ -35,9 +35,8 @@ public class Borad_shareService {
             Member member = findMember(auth);
             data.setMember(member); // 현재 로그인된 사용자 id를 타입에 맞춰 저장
 
-            // 날짜 정보만 포함한 스트링 타입을 LocalDate 객체로 파싱
-            String dateStr = "2024-08-14";
-            LocalDate date = LocalDate.parse(dateStr);
+            // 글작성 된 현재 날짜 데이터 추가
+            LocalDate date = LocalDate.now();
 
             // 입력된 게시글 정보와 파싱된 날짜정보를 DB에 저장
             data.setSysDate(date);

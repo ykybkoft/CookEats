@@ -4,17 +4,12 @@ import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.service.Borad_shareService;
 import com.project.cookEats.member.Member;
-import com.project.cookEats.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
