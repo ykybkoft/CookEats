@@ -43,7 +43,7 @@ public class Borad_shareService {
             br.save(data);
         } else {
             // 회원 로그인 인증 정보가 없을 경우, 예외를 발생시켜 로그인 페이지로 리다이렉트
-            throw new RuntimeException("redirect:/member/login.html");
+            throw new RuntimeException("로그인 해주세용!");
         }
     }
 }

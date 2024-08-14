@@ -46,7 +46,7 @@
                     <colgroup>
                         <col>
                         <col style="width: 110px">
-                        <col style="width: 75px">
+                        <col style="width: 100px">
                         <col style="width: 60px">
                         <col style="width: 60px">
                     </colgroup>
@@ -58,12 +58,12 @@
                         <th>조회수</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="content" th:each="i : ${list}">
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td th:text="${i.title}"></td>
+                        <td th:text="${i.member.getUsername()}"></td>
+                        <td th:text="${i.sysDate}"></td>
+                        <td th:text="${i.vCount}"></td>
                     </tr>
                     </tbody>
                 </table>
