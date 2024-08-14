@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -54,9 +54,9 @@ public class Board_share {
     // 2. LocalDateTime
     // 2-1 updateble = fales 조건을 통해 생성 시에만 자동으로 시간이 설정되고 이후는 글의 내용이 수정되어도 시간이 변하지 않음.
     // 2-2 엔티티 작성 및 수정시 자동으로 현재 시간 설정 기능을 사용하려면 @EntityListeners(AuditingEntityListener.class)를 클래스에 추가해야 됨.
-    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate",  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate // TimeStemp 데이터 타입
-    private LocalDate sysDate;
+    private LocalDateTime sysDate;
 
     // 조회수 view count의 약자
     // 1-1. ColumnDefault : 조회수 초기값을 0으로 설정하기 위해 사용
