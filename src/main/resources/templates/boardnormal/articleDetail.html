@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>게시글 상세 페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
+</head>
+<body>
+
+<main class="main">
+    <section class="contents">
+        <div th:if="${article != null}">
+            <h1 th:text="${article.title}"></h1>
+            <p><strong>작성자:</strong> <span th:text="${article.member.username}"></span></p>
+            <p><strong>날짜:</strong> <span th:text="${formattedDate}"></span></p>
+            <p><strong>조회수:</strong> <span th:text="${article.count}"></span></p>
+            <div>
+                <p th:text="${article.content}"></p>
+            </div>
+            <a href="/board/board_normal">목록으로 돌아가기</a>
+        </div>
+        <div th:if="${article == null}">
+            <p>게시글을 찾을 수 없습니다.</p>
+            <a href="/board/board_normal">목록으로 돌아가기</a>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <section>
+        <div>
+            <ul class="board">
+                <li><a href="/board/write">글쓰기</a></li>
+            </ul>
+        </div>
+    </section>
+</footer>
+</body>
+</html>
