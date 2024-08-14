@@ -71,15 +71,14 @@ public class BoardNormalController {
     public String getArticleDetail(@PathVariable("id") Long id, Model model) {
         BoardNormal article = bs.getArticleById(id);
         if (article != null) {
-            // 날짜 포맷터 생성
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             // 날짜 포맷팅
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedDate = article.getSys_date() != null ? article.getSys_date().format(formatter) : "";
             model.addAttribute("article", article);
             model.addAttribute("formattedDate", formattedDate);
             return "boardnormal/articleDetail";
         } else {
-            model.addAttribute("errorMessage", "Article not found");
+            model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
     }
@@ -111,6 +110,40 @@ public class BoardNormalController {
         post.setMember(member); // Member 객체 설정
 
         bs.save(post); // BoardNormalService의 save 메서드 호출
+        return "redirect:/board/board_normal"; // 게시판 목록으로 리다이렉트
+    }
+
+    // 게시글 수정 폼 표시
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
+        BoardNormal article = bs.getArticleById(id);
+        if (article != null) {
+            model.addAttribute("article", article);
+            return "boardnormal/update"; // update.html 템플릿으로 이동
+        } else {
+            model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
+            return "error";
+        }
+    }
+
+    // 게시글 수정 처리
+    @PostMapping("/update")
+    public String updateArticle(@RequestParam Long id, @RequestParam String title, @RequestParam String content) {
+        BoardNormal article = bs.getArticleById(id);
+        if (article != null) {
+            article.setTitle(title);
+            article.setContent(content);
+            bs.save(article); // 수정된 게시글 저장
+            return "redirect:/board/articles/" + id; // 수정된 게시글 페이지로 리다이렉트
+        } else {
+            return "error"; // 게시글을 찾을 수 없는 경우
+        }
+    }
+
+    // 삭제
+    @PostMapping("/delete/{id}")
+    public String deleteArticle(@PathVariable("id") Long id) {
+        bs.deleteById(id);
         return "redirect:/board/board_normal"; // 게시판 목록으로 리다이렉트
     }
 
