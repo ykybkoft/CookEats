@@ -1,0 +1,10 @@
+.menu{
+    background-color: yellow;
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+.menu > li {
+ background-color: green;
+	margin: 0 10px;
+}

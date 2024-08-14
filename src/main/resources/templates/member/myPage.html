@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>마이페이지</title>
+    <div th:replace="~{header.html :: navbar}"></div>
+</head>
+<body>
+
+<h1>마이페이지</h1><hr>
+<h4>회원 정보 수정</h4>
+
+<table>
+    <tr>
+        <th>이름</th>
+        <td th:text="${user.name}"></td>
+    </tr>
+    <tr>
+        <th>닉네임</th>
+        <td th:text="${user.nick}"></td>
+    </tr>
+    <tr>
+        <th>이메일</th>
+        <td th:text="${user.email}"></td>
+    </tr>
+    <tr>
+        <th>현재 비밀번호 입력</th>
+        <form action="/member/password" method="post">
+            <td>
+                <input name="password" type="password">
+                <button>비밀번호 변경</button>
+            </td>
+
+        </form>
+
+    </tr>
+
+</table>
+
+
+
+</body>
+</html>

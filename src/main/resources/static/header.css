@@ -1,3 +1,4 @@
+/*home_title css*/
 .nav {
     justify-content: space-between;
 }
@@ -20,6 +21,12 @@
 	display: flex;
 	align-items: center;
 }
-.boardhome{
+
+/*second_menu 2 css*/
+.second_menu{
+    display: inline-block;
+}
+.board_menu > li{
+    background-color: rgb(193, 253, 221);
     list-style: none;
 }

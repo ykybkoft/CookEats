@@ -1,5 +1,7 @@
 package com.project.cookEats.board_share.entityClasses;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -41,6 +43,7 @@ public class Board_share {
     // 1-1. ManyToOne : 다대일 테이블 외래키 연결 어노테이션
     // 1-2. cascade = CascadeType.ALL : 부모 엔티티의 CRUD 변경사항이 자식 엔티티에게 전달되도록 함
     // 게시글 유저 닉네임 표기 위한 컬럼
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -50,9 +53,9 @@ public class Board_share {
     // 2. LocalDateTime
     // 2-1 updateble = fales 조건을 통해 생성 시에만 자동으로 시간이 설정되고 이후는 글의 내용이 수정되어도 시간이 변하지 않음.
     // 2-2 엔티티 작성 및 수정시 자동으로 현재 시간 설정 기능을 사용하려면 @EntityListeners(AuditingEntityListener.class)를 클래스에 추가해야 됨.
-    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate // TimeStemp 데이터 타입
-    private LocalDateTime sysDate;
+    private LocalDate sysDate;
 
     // 조회수 view count의 약자
     // 1-1. ColumnDefault : 조회수 초기값을 0으로 설정하기 위해 사용
@@ -68,6 +71,7 @@ public class Board_share {
 
     // 보드 쉐어는 많은 코멘트를 가질 수 있다. 즉, 1:n 양방향 관계 설정
     // 회원탈퇴시 게시글 댓글 연계 삭제 위한 컬럼
+    @JsonManagedReference
     @OneToMany(mappedBy = "board_share", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board_share_comment> board_comment;
 
