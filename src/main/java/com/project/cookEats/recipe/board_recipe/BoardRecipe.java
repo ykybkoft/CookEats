@@ -11,9 +11,11 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class BoardRecipe {
 
     @Column(name = "sysDate", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate
-    private Date sys_date;
+    private LocalDateTime sys_date;
 
     @Column(name = "cntView")
     @ColumnDefault("0")
@@ -66,5 +68,8 @@ public class BoardRecipe {
     @Column(name = "cntLike")
     @ColumnDefault("0")
     private int cntLike;
+
+    @Column(name = "formattedSysDate")
+    private LocalDateTime formattedSysDate;
 
 }

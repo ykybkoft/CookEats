@@ -1,15 +1,23 @@
 package com.project.cookEats.recipe.board_recipe;
 
+import com.project.cookEats.member.Member;
+import com.project.cookEats.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
 
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -18,17 +26,28 @@ public class BoardRecipeController {
 
     @Autowired
     private BoardRecipeService boardRecipeService;
-    
+
     @Autowired
     private BoardRecipeRepository boardRecipeRepository;
 
     @Autowired
     private RecipeDbRepository recipeDbRepository;
 
+    @Autowired
+    private final MemberService memberService;
+
     @GetMapping("/board_recipe")
     String home(Model model){
         List<BoardRecipe> result = boardRecipeRepository.findAll();
-        System.out.println(result);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (BoardRecipe board : result) {
+            if (board.getSys_date() != null) {
+                board.setFormattedSysDate(LocalDateTime.parse(board.getSys_date().format(formatter)));
+            } else {
+                board.setFormattedSysDate(null);
+            }
+        }
+
         model.addAttribute("list", result);
 
         return "boardrecipe/home.html";
