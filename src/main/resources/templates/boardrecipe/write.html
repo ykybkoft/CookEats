@@ -1,30 +1,24 @@
-<!doctype html>
-<html lang="kr">
+<!-- src/main/resources/templates/boardrecipe/write.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>게시글 작성</title>
+    <title>Create Board Recipe</title>
 </head>
 <body>
+<h2>Create Board Recipe</h2>
+<form th:action="@{/boardrecipe}" th:object="${boardRecipe}" method="post">
+    <label>Title:</label><br>
+    <input type="text" th:field="*{title}" required><br>
 
-<h1>게시글 작성</h1>
-<form action="/boardNormal/write" method="POST">
-    <label for="nickname">닉네임:</label><br>
-    <p id="nickname" th:text="${username}"></p><br><br>
+    <label>Content:</label><br>
+    <textarea th:field="*{content}" rows="5" required></textarea><br>
 
-    <label for="title">제목:</label><br>
-    <input type="text" id="title" name="title" required><br><br>
+    <!-- RecipeDb 정보 입력 -->
+    <label>RecipeDb ID:</label><br>
+    <input type="text" th:field="*{recipeDb.id}" required><br>
 
-    <label for="content">내용:</label><br>
-    <textarea id="content" name="content" rows="5" cols="33" required></textarea><br><br>
-
-    <button type="submit">작성하기</button>
+    <button type="submit">Create</button>
 </form>
-
-<ul class="boardhome">
-    <li><a href="/boardNormal/home">목록으로 돌아가기</a></li>
-</ul>
-
 </body>
 </html>

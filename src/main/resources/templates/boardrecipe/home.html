@@ -1,31 +1,16 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>레시피 게시판</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
-    <div th:replace="~{/header.html :: navbar}"></div>
 </head>
 <body>
 
-<!-- 검색 폼 -->
-<form action="#" th:action="@{/boardRecipe/home}" method="get" class="search">
-    <select name="searchType">
-        <option value="ingredient">재료</option>
-        <option value="author">작성자</option>
-    </select>
-    <input name="searchValue" placeholder="검색어 입력" style="display: inline">
-    <button type="submit">검색</button>
 </form>
 
-<!-- 레시피 리스트 -->
 <main class="main">
     <section class="contents">
-        <div>
             <table>
                 <caption class="cnt_cap">
-                    <h1>레시피 게시판</h1>
                 </caption>
 
                 <thead>
@@ -34,59 +19,24 @@
                     <th>제목</th>
                     <th>작성자</th>
                     <th>날짜</th>
-                    <th>추천수</th>
                     <th>조회수</th>
                 </tr>
                 </thead>
 
                 <tbody>
-
-                <tr th:each="recipe, iterStat : ${list}">
-                    <td th:text="${recipe.id}"></td>
-                    <td><a th:href="@{/boardRecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
-                    <td th:text="${recipe.member != null ? recipe.member.username : 'CookEats'}"></td>
-                    <td th:text="${recipe.formattedSysDate}"></td>
-                    <td th:text="${recipe.LLIKE}"></td>
-                    <td th:text="${recipe.CCOUNT}"></td>
                 </tr>
                 </tbody>
             </table>
-        </div>
     </section>
 
-
-    <!-- 페이징 네비게이션 -->
-    <div class="pagination">
-        <!-- << 버튼 -->
-        <a href="#" th:if="${startPage > 10}" th:href="@{/boardRecipe/home(page=${startPage - 1})}">&lt;&lt;</a>
-
-        <!-- < 버튼 -->
-        <a href="#" th:if="${currentPage > 1}" th:href="@{/boardRecipe/home(page=${currentPage - 1})}">&lt;</a>
-
-        <!-- 페이지 번호 -->
-        <a href="#" th:each="i : ${#numbers.sequence(startPage, endPage)}"
-           th:classappend="${currentPage == i} ? 'current' : ''"
-           th:href="@{/boardRecipe/home(page=${i})}"
-           th:text="${i}">1</a>
-
-        <!-- > 버튼 -->
-        <a href="#" th:if="${currentPage < totalPages}" th:href="@{/boardRecipe/home(page=${currentPage + 1})}">&gt;</a>
-
-        <!-- >> 버튼 -->
-        <a href="#" th:if="${endPage < totalPages}" th:href="@{/boardRecipe/home(page=${endPage + 1})}">&gt;&gt;</a>
-    </div>
-
 </main>
-
 <footer class="footer">
     <section>
         <div>
             <ul class="board">
-                <li><a href="/boardRecipe/write">글쓰기</a></li>
             </ul>
         </div>
     </section>
 </footer>
-
 </body>
 </html>

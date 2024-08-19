@@ -7,64 +7,78 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>홈페이지</title>
-
-    <div th:replace="~{header.html :: navbar}"></div>
-    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 </head>
 <body>
-    <main class="main">
-        <section class="contents">
-            <article class="board_share">
-                    <form action="/search" method="post">
-                        <input name="searchText" style="display : inline">
-                        <button>검색</button>
-                    </form>
 
-                <table>
-                    <caption class="cnt_cap">
-                        home 게시판
-                    </caption>
+<div class="container">
 
-                    <thead>
+    <div class="top" xmlns:sec="http://www.w3.org/1999/xhtml">
+        <ul>
+        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a>│</li>
+        <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
+        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a>│</li>
+        <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
+        </ul>
+    </div>
+    <header>
+        <div class="header">
+            <a href="/"><img src="img/cookeats_home.png"></a>
 
-                    <tr>
-                        <tr class="title">
-                            <th>순서</th>
-                            <th>제목</th>
-                            <th>날짜</th>
-                        </tr>
-                    </thead>
+        </div>
+    </header>
+    <section>
 
-                    <tbody>
-                    <tr>
-                        <tr class="content">
-                            <td>1</td>
-
-                            <td>home 게시판 첫글</td>
-                            <td>2024-08-05</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </article>
-        </section>
-    </main>
-    <footer class="footer">
-        <section>
+        <div class="section">
+            <form action="/search" method="get">
+                <div class="form-bar">
+                    <div>
+                        <i class="fas fa-search"></i>
+                        <input class="search" type="text" name="search" placeholder="검색어를 입력해주세요.">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section>
+        <div class="section-contents">
             <div>
-                <p>빈칸2</p>
+                <a href="/"><img src="img/recipe.png"></a>
+                <a href="/"><img src="img/share.png"></a>
+                <a href="/"><img src="img/normal.png"></a>
+                <a href="/"><img src="img/member.png"></a>
             </div>
 
-        </section>
+        </div>
+    </section>
+    <footer>
+        <div class="footer">
+
+        </div>
     </footer>
+</div>
 
 
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const param = new URLSearchParams(window.location.search);
 
-        if(param.get('delete')=='true'){
-            alert('회원탈퇴가 완료되었습니다.');
+        var type ='';
+
+        if(param.get('result')=='success'){
+            if(param.get('type')=='delete'){
+                type='회원 탈퇴가';
+                alert(type+' 완료되었습니다.');
+            }else if (param.get('type')=='join'){
+                type='회원 가입이';
+                alert(type+' 완료되었습니다.');
+            }
+            
         }
+
+        
 
     </script>
 </body>

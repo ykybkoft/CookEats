@@ -43,7 +43,7 @@ public class Board_share {
     // 1-1. ManyToOne : 다대일 테이블 외래키 연결 어노테이션
     // 1-2. cascade = CascadeType.ALL : 부모 엔티티의 CRUD 변경사항이 자식 엔티티에게 전달되도록 함
     // 게시글 유저 닉네임 표기 위한 컬럼
-    @JsonBackReference
+    @JsonBackReference("member-boardShare")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

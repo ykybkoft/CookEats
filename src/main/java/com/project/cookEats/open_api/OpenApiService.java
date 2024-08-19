@@ -1,8 +1,8 @@
-package com.project.cookEats.open_api;
+package com.project.cookEats.recipe.openapi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.cookEats.board_recipe.RecipeDB;
+import com.project.cookEats.recipe.board_recipe.RecipeDb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,13 +68,13 @@ public class OpenApiService {
                             return Mono.empty();
                         }
 
-                        List<RecipeDB> recipeDBS = new ArrayList<>();
+                        List<RecipeDb> recipeDbs = new ArrayList<>();
                         for (JsonNode node : dataList) {
-                            RecipeDB recipeDb = objectMapper.treeToValue(node, RecipeDB.class);
-                            recipeDBS.add(recipeDb);
+                            RecipeDb recipeDb = objectMapper.treeToValue(node, RecipeDb.class);
+                            recipeDbs.add(recipeDb);
                         }
-                        repository.saveAll(recipeDBS);
-                        logger.info("Data saved to database: {} records", recipeDBS.size());
+                        repository.saveAll(recipeDbs);
+                        logger.info("Data saved to database: {} records", recipeDbs.size());
 
                         if (currentEnd < end) {
                             return Mono.delay(Duration.ofMillis(delayMillis))
