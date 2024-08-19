@@ -12,7 +12,7 @@
 <main class="main">
     <section class="contents">
         <div th:if="${article != null}">
-            <h1>게시글 수정</h1>
+            <h1>자유게시글 수정</h1>
             <form action="/board/update" method="post">
                 <input type="hidden" name="id" th:value="${article.id}">
                 <label for="title">제목:</label><br>

@@ -27,8 +27,9 @@ public class RecipeDb {
 
     @JsonBackReference(value = "member-recipeDb")
     @ManyToOne(cascade = CascadeType.MERGE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonProperty("member")
     private Member member;
 
     @JsonManagedReference(value = "recipeDb-boardRecipe")

@@ -20,8 +20,8 @@
     <tr th:each="i : ${list}">
         <td th:text="${i.id}"></td>
         <td th:text="${i.title}"></td>
-        <td th:text="${i.member}"></td>
-        <td th:text="${i.sys_date}"></td>
+        <td th:text="${i.member != null ? i.member.username : '작성자 정보 없음'}"></td>
+        <td th:text="${i.formattedSysDate}"></td>
         <td th:text="${i.count}"></td>
     </tr>
     </tbody>

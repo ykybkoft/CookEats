@@ -17,17 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="08b6d921-ad64-4416-898e-9c0de30b4622">
-      <console name="Connection" type="STANDARD" schema="cookeats" session="Main"><![CDATA[select * from board_normal
-
-insert into board_normal value(1, '바보야~', 2, 3, '2024.08.09', '안녕이라고 말 하지마', null)
-insert into board_normal value(2, '맹구야!', 9, 8, '2024.08.12', '사랑과 전쟁', null)
-
-commit
-
-ALTER DATABASE board_normal CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci
-ALTER TABLE board_normal CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-
-select * from member]]></console>
+      <console name="Connection" type="STANDARD" schema="" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -279,7 +269,6 @@ select * from member]]></console>
           <content-type name="JSON" enabled="true" />
           <content-type name="JSON5" enabled="true" />
           <content-type name="Groovy" enabled="true" />
-          <content-type name="AIDL" enabled="true" />
           <content-type name="YAML" enabled="true" />
           <content-type name="Manifest" enabled="true" />
         </content-types>
