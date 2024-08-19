@@ -43,12 +43,12 @@ dependencies {
 
 	/*live reload*/
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 }
 
 compileJava {
-	options.compilerArgs << '-parameters'
+    options.compilerArgs << '-parameters'
 }
-
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

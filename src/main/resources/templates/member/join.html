@@ -9,11 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>회원가입</title>
     <div th:replace="~{header.html :: navbar}"></div>
-    <link rel="stylesheet" type="text/css" th:href="@{/join.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/join.css}">
 </head>
 <body>
-
-<h1>회원 가입 페이지</h1>
 
 <form action="/member/join" method="POST" onsubmit="return checkField();">
 
@@ -54,8 +52,8 @@
         <tr><td>이메일</td></tr>
         <tr>
             <td><input type="email" class="text" name="email" id="email" >
+            <label id="msg3"></label></td>
 
-                <label id="msg3"></label></td>
         </tr>
         <tr><td><input type="submit" value="가입하기" class="btn"></td></tr>
     </table>
@@ -77,14 +75,14 @@
     var $mphone = $('#msg4');
     var $mpassword = $('#msg5');
 
-    $password.on('keyup', function(){
-
-        if($password.val().length < 8 ||$password.val().length > 20){
-            $mpassword.html("<span id='check5'>비밀번호는 8자 이상 20자 이하입니다.</span>")
-                        $("#check5").css({
-                            "color" : "#FA3E3E",
-                            "font-weight" : "bold",
-                            "font-size" : "10px"
+		$password.on('keyup', function(){
+			
+			if($password.val().length < 8 ||$password.val().length > 20){
+				$mpassword.html("<span id='check5'>비밀번호는 8자 이상 20자 이하입니다.</span>")
+							$("#check5").css({
+								"color" : "#FA3E3E",
+								"font-weight" : "bold",
+								"font-size" : "10px"
 
                         });
         }else{
@@ -275,6 +273,9 @@
 
     let inputs = document.querySelectorAll('input');
 
+
+
+
     function checkField(){
         let spans= document.querySelectorAll('span');
         for(let i = 0; i<spans.length; i++){
@@ -315,7 +316,14 @@
             alert("생년월일을 입력하세요.");
             return false;
         }
+
+
+
     }
+
+
+
+
 </script>
 
 
