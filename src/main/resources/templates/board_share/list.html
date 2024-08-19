@@ -60,7 +60,7 @@
                     </thead>
                     <tbody class="content" th:each="i : ${list}">
                     <tr>
-                        <td th:text="${i.title}"></td>
+                        <td><a th:text="${i.title}" th:href="@{ '/board_share/detail/{id}' (id=${i.id}) }"></a></td>
                         <td th:text="${i.member.getUsername()}"></td>
                         <td th:text="${i.sysDate}"></td>
                         <td th:text="${i.vCount}"></td>

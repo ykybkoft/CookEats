@@ -4,19 +4,19 @@
 }
 
 .menu > h1 {
-  background-color: red;
+  background-color: rgb(116, 251, 157);
   flex-grow: 1;
 }
 
 .menu{
-    background-color: yellow;
+    background-color: rgb(193, 253, 221);
     list-style: none;
     padding: 0;
     display: flex;
 }
 
 .menu > li {
-    background-color: green;
+    background-color: rgb(116, 217, 251);
 	margin: 0 10px;
 	display: flex;
 	align-items: center;
