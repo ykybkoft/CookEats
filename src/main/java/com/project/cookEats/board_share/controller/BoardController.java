@@ -22,9 +22,10 @@ public class BoardController {
 
     // 게시글 리스트 페이지
     @GetMapping("/list")
-    String title(){
-        // br로 선언된 리포지토리 DB데이터 불러옴.
+    String title(Model model){
         List<Board_share> result = br.findAll();
+        model.addAttribute("list", result);
+
         return "board_share/list.html";
     }
 
