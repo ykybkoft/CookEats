@@ -70,6 +70,6 @@ public class BoardRecipe {
     private int cntLike;
 
     @Column(name = "formattedSysDate")
-    private LocalDateTime formattedSysDate;
+    private String formattedSysDate;
 
 }
