@@ -6,16 +6,13 @@ import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -57,7 +54,7 @@ public class Board_share {
     // 2-2 엔티티 작성 및 수정시 자동으로 현재 시간 설정 기능을 사용하려면 @EntityListeners(AuditingEntityListener.class)를 클래스에 추가해야 됨.
     @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate // TimeStemp 데이터 타입
-    private LocalDateTime sysDate;
+    private LocalDate sysDate;
 
     // 조회수 view count의 약자
     // 1-1. ColumnDefault : 조회수 초기값을 0으로 설정하기 위해 사용
