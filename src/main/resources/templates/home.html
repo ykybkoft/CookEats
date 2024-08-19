@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -7,125 +7,64 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>홈페이지</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
-    <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
+
+    <div th:replace="~{header.html :: navbar}"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 </head>
 <body>
+    <main class="main">
+        <section class="contents">
+            <article class="board_share">
+                    <form action="/search" method="post">
+                        <input name="searchText" style="display : inline">
+                        <button>검색</button>
+                    </form>
 
-<div class="container">
-    <div class="menu">
-    <div class="menu_btn">
-        <a href="#">
-            <i class="fas fa-bars fa-lg"></i>
-        </a>
-    </div>
-    <div class="fullscreen_menu">
-        <div class="close_btn">
-            <a href="#">
-                <i class="fa-solid fa-x"></i>
-            </a>
-        </div>
-        <ul class="menu_wrap">
-            <li><a href="/boardRecipe/home">레시피</a></li>
-            <li><a href="/boardShare/home">장터 게시판</a></li>
-            <li><a href="/boardNormal/home">자유 게시판</a></li>
-            <li sec:authorize="isAuthenticated()"><a href="/member/myPage">마이페이지</a></li>
-        </ul>
-    </div>
-    <div class="top">
-        <ul class="member_menu">
-        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a>│</li>
-        <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a>│</li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
-        </ul>
-    </div>
-    </div>
-    <header>
-        <div class="header">
-            <a href="/"><img src="img/cookeats_home.png"></a>
+                <table>
+                    <caption class="cnt_cap">
+                        home 게시판
+                    </caption>
 
-        </div>
-    </header>
-    <section>
+                    <thead>
 
-        <div class="section">
-            <form action="/search" method="get">
-                <div class="form-bar">
-                    <div>
-                        <i class="fas fa-search"></i>
-                        <input class="search" type="text" name="search" placeholder="검색어를 입력해주세요.">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-    <section>
-        <div class="section-contents">
+                    <tr>
+                        <tr class="title">
+                            <th>순서</th>
+                            <th>제목</th>
+                            <th>날짜</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <tr class="content">
+                            <td>1</td>
+
+                            <td>home 게시판 첫글</td>
+                            <td>2024-08-05</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+        </section>
+    </main>
+    <footer class="footer">
+        <section>
             <div>
-                <a href="/boardRecipe/home"><img src="img/recipe.png"></a>
-                <a href="/boardShare/home"><img src="img/share.png"></a>
-                <a href="/boardNormal/home"><img src="img/normal.png"></a>
-                <a sec:authorize="isAuthenticated()" href="/member/myPage"><img src="img/member.png"></a>
-                <a sec:authorize="isAnonymous()" href="/member/join"><img src="img/member.png"></a>
+                <p>빈칸2</p>
             </div>
 
-        </div>
-    </section>
-    <section>
-        <h3>베스트 레시피</h3>
-        <div class="bestrecipe" >
-
-            <div th:each="recipe : ${bestrecipe}" th:onclick="|location.href='@{ '/boardrecipe/recipe/' + ${recipe.id}}'|">
-
-                <img th:src="@{${recipe.ATT_FILE_NO_MAIN}}">
-                <h6 th:text="${recipe.RCP_NM}"></h6>
-            </div>
-        </div>
-
-        <a class="more" href="/boardRecipe/home" >레시피 더보기</a>
-
-    </section>
-    <footer>
-        <div class="footer">
-
-        </div>
+        </section>
     </footer>
-</div>
 
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const param = new URLSearchParams(window.location.search);
 
-        var type ='';
-
-        if(param.get('result')=='success'){
-            if(param.get('type')=='delete'){
-                type='회원 탈퇴가';
-                alert(type+' 완료되었습니다.');
-            }else if (param.get('type')=='join'){
-                type='회원 가입이';
-                alert(type+' 완료되었습니다.');
-            }
-
+        if(param.get('delete')=='true'){
+            alert('회원탈퇴가 완료되었습니다.');
         }
-
-
-        $(document).ready(function(){
-
-            $('.menu_btn>a').on('click', function(){
-                $('.fullscreen_menu').fadeIn();
-            });
-            $('.close_btn>a').on('click', function(){
-                $('.fullscreen_menu').hide();
-            });
-
-        });
-
-
-
 
     </script>
 </body>
