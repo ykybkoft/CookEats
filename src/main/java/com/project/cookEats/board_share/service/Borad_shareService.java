@@ -30,7 +30,7 @@ public class Borad_shareService {
     public void savePost(Board_share data) {
        // 현재 로그인 된 사용자 세션정보를 가져옴
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // 세션정보가 있다면 findMember 함수를 통해 현재 로그인 된 사용자 id를 가져옴
+        // 세션정보가 있다면 findMember 함수를 통해 사용자 id를 가져옴
         if (auth != null) {
             Member member = findMember(auth);
             data.setMember(member); // 현재 로그인된 사용자 id를 타입에 맞춰 저장

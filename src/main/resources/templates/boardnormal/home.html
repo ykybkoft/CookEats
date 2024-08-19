@@ -15,18 +15,17 @@
 <body>
 
 <!-- 검색 -->
-<form action="/search" method="post" class="search">
-
-    <input name="searchText" style="display : inline">
+<form action="/board/search" method="get" class="search">
+    <input name="keyword" style="display : inline">
     <button>검색</button>
 </form>
 
 <main class="main">
     <section class="contents">
-        <article class="board_share">
+        <div>
             <table>
                 <caption class="cnt_cap">
-                    <h1>게시판</h1>
+                    <h1>자유게시판</h1>
                 </caption>
 
                 <thead>
@@ -42,14 +41,14 @@
                 <tbody>
                 <tr class="content" th:each="i : ${list}">
                     <td th:text="${i.id}"></td>
-                    <td th:text="${i.title}"></td>
-                    <td th:text="${i.member}"></td>
-                    <td th:text="${i.sys_date}"></td>
+                    <td><a th:href="@{/board/articles/{id}(id=${i.id})}" th:text="${i.title}"></a></td>
+                    <td th:text="${i.member != null ? i.member.username : '작성자 정보 없음'}"></td>
+                    <td th:text="${i.formattedSysDate}"></td>
                     <td th:text="${i.count}"></td>
                 </tr>
                 </tbody>
             </table>
-        </article>
+        </div>
     </section>
 
 </main>
@@ -59,13 +58,8 @@
             <ul class="board">
                 <li><a href="/board/write">글쓰기</a></li>
             </ul>
-            <ul class="boardhome">
-                <li><a href="/board/list">목록</a></li>
-            </ul>
         </div>
-
     </section>
-
 </footer>
 </body>
 </html>
