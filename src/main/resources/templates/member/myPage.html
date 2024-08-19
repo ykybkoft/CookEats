@@ -54,46 +54,59 @@
 <h1>내가 쓴 글</h1>
 <hr>
 <h3>자유 게시판</h3>
-
-<table>
-    <tr>
-        <th>제목</th>
-        <th>내용</th>
-        <th>수정</th>
-        <th>삭제</th>
-    </tr>
-
-    <div th:each="normal : ${normal}">
+<div th:if="!${#lists.isEmpty(normal)}">
+    <table>
         <tr>
-            <td th:text="${normal.title}"></td>
-            <td th:text="${normal.content}"></td>
-            <th>✏️</th>
-            <th>🗑️</th>
-        <tr>
-    </div>
+            <th>제목</th>
+            <th>내용</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
 
-</table>
+        <div th:each="normal : ${normal}">
+            <tr>
+                <td th:text="${normal.title}"></td>
+                <td th:text="${normal.content}"></td>
+                <th>✏️</th>
+                <th>🗑️</th>
+            <tr>
+        </div>
+
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(normal)}">
+    <h1>작성한 게시글이 없습니다.</h1>
+</div>
+
 <hr>
 
 <h3>장터 게시판</h3>
-<table>
-    <tr>
-        <th>제목</th>
-        <th>내용</th>
-        <th>수정</th>
-        <th>삭제</th>
-    </tr>
-
-    <div th:each="share : ${share}">
+<div th:if="${!#lists.isEmpty(share)}">
+    <table>
         <tr>
-            <td th:text="${share.title}"></td>
-            <td th:text="${share.content}"></td>
-            <th>✏️</th>
-            <th>🗑️</th>
-        <tr>
-    </div>
+            <th>제목</th>
+            <th>내용</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
 
-</table>
+        <div th:each="share : ${share}">
+            <tr>
+                <td th:text="${share.title}"></td>
+                <td th:text="${share.content}"></td>
+                <th>✏️</th>
+                <th>🗑️</th>
+            <tr>
+        </div>
+
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(share)}">
+    <h1>작성한 게시글이 없습니다.</h1>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
