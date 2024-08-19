@@ -31,10 +31,10 @@ import java.util.Optional;
 public class MemberController {
 
 
-    private final MemberRepository mr;
+
     private final MemberService ms;
 
-    private final Board_shareRepository bsr;
+
 
     @GetMapping("/join")
     String join(){
@@ -45,7 +45,7 @@ public class MemberController {
     @PostMapping("/join")
     String joinProcess(@ModelAttribute Member row){
         int result =ms.join(row);
-        return "redirect:/";
+        return "redirect:/?result=success&type=join";
     }
 
     @GetMapping("/login")
@@ -89,7 +89,7 @@ public class MemberController {
 
         if(ms.checkPW(password,auth)){
             int result = ms.delete(auth);
-            return "redirect:/?delete=true";
+            return "redirect:/?result=success&type=delete";
         }
         return "redirect:/member/myPage?result=false";
 
@@ -113,6 +113,8 @@ public class MemberController {
 
         return 0;
     }
+
+
 
 
 }

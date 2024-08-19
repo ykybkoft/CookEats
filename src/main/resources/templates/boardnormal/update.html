@@ -13,7 +13,6 @@
     <section class="contents">
         <div th:if="${article != null}">
             <h1>자유게시글 수정</h1>
-            <form action="/boardNormal/update" method="post">
                 <input type="hidden" name="id" th:value="${article.id}">
                 <label for="title">제목:</label><br>
                 <input type="text" id="title" name="title" th:value="${article.title}" required><br><br>
@@ -22,11 +21,9 @@
                 <button type="submit">수정하기</button>
             </form>
 
-            <a href="/boardNormal/articles/{id}" th:href="@{/boardNormal//articles/{id}(id=${article.id})}">취소</a>
         </div>
         <div th:if="${article == null}">
             <p>게시글을 찾을 수 없습니다.</p>
-            <a href="/boardNormal/home">목록</a>
         </div>
     </section>
 </main>

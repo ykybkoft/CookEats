@@ -1,4 +1,4 @@
-package com.project.cookEats.board_recipe;
+package com.project.cookEats.recipe.board_recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -8,37 +8,27 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @ToString
 @Table(name = "recipedb")
-public class RecipeDB {
+public class RecipeDb {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    private Long id;
+    private Long id;    //idx
 
-    @JsonBackReference(value = "member-RecipeDB")
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "member_id")
+    @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("member")
     private Member member;
-
-    @JsonManagedReference(value = "RecipeDB-Comment")
-    @OneToMany(mappedBy = "recipeDB", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeComment> recipeCommentList = new ArrayList<>();
 
     @JsonProperty("RCP_SEQ")
     private Long RCP_SEQ;   // OpenApi 일련번호
@@ -205,27 +195,4 @@ public class RecipeDB {
 
     @JsonProperty("RCP_NA_TIP")
     private String RCP_NA_TIP; // 저감 조리법 TIP
-
-    @Column(columnDefinition = "TEXT")
-    @JsonProperty("MANUAL")
-    private String MANUAL;
-
-    @Column(columnDefinition = "TEXT")
-    @JsonProperty("MANUAL_IMG")
-    private String MANUAL_IMG;
-
-    @Column(name = "LLIKE")
-    @ColumnDefault("0")
-    private int LLIKE;
-
-    @Column(name = "CCOUNT")
-    @ColumnDefault("0")
-    private int CCOUNT;
-
-    @Column(name = "SYSDATE", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @CreatedDate
-    private LocalDateTime SYSDATE = LocalDateTime.now(); // 기본값 설정
-
-    @Transient
-    private String formattedSysDate;
 }
