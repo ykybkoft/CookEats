@@ -45,7 +45,7 @@ public class BoardRecipe {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    @Column(name = "sysDate", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "sysDate", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate
     private LocalDateTime sysDate;
 
