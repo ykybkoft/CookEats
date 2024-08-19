@@ -11,10 +11,12 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -30,6 +32,22 @@ public class BoardRecipe {
     @JsonProperty("id")
     private Long id;
 
+    @JsonBackReference(value = "member-boardRecipe")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn()
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Member member;
+
+    @JsonManagedReference(value = "boardRecipe-boardRecipeComment")
+    @OneToMany(mappedBy = "boardRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardRecipeComment> boardRecipeComments;
+
+    @JsonBackReference(value = "recipeDb-boardRecipe")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_db_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private RecipeDb recipeDb;
+
     // 게시글 제목 varchar(100)
     @Column(length = 100, nullable = false)
     @JsonProperty("title")
@@ -39,15 +57,9 @@ public class BoardRecipe {
     @JsonProperty("content")
     private String content;
 
-    @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Member member;
-
     @Column(name = "sysDate", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate
-    private LocalDateTime sysDate;
+    private LocalDateTime sys_date;
 
     @Column(name = "cntView")
     @ColumnDefault("0")
@@ -57,13 +69,7 @@ public class BoardRecipe {
     @ColumnDefault("0")
     private int cntLike;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "boardRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardRecipeComment> boardRecipeComments;
+    @Column(name = "formattedSysDate")
+    private LocalDateTime formattedSysDate;
 
-    @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_db_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private RecipeDb recipeDb;
 }

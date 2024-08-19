@@ -11,6 +11,8 @@ import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -21,14 +23,18 @@ public class RecipeDb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    private Long id;    //idx
+    private Long id;
 
-    @JsonBackReference
+    @JsonBackReference(value = "member-recipeDb")
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn()
+    @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("member")
     private Member member;
+
+    @JsonManagedReference(value = "recipeDb-boardRecipe")
+    @OneToMany(mappedBy = "recipeDb", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardRecipe> boardRecipeList;
 
     @JsonProperty("RCP_SEQ")
     private Long RCP_SEQ;   // OpenApi 일련번호
@@ -195,4 +201,12 @@ public class RecipeDb {
 
     @JsonProperty("RCP_NA_TIP")
     private String RCP_NA_TIP; // 저감 조리법 TIP
+
+    @Column(columnDefinition = "TEXT")
+    @JsonProperty("MANUAL")
+    private String MANUAL;
+
+    @Column(columnDefinition = "TEXT")
+    @JsonProperty("MANUAL_IMG")
+    private String MANUAL_IMG;
 }
