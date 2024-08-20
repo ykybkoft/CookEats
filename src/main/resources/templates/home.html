@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,19 +8,38 @@
 
     <title>홈페이지</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
-    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
 </head>
 <body>
 
 <div class="container">
-
-    <div class="top" xmlns:sec="http://www.w3.org/1999/xhtml">
-        <ul>
+    <div class="menu">
+    <div class="menu_btn">
+        <a href="#">
+            <i class="fas fa-bars fa-lg"></i>
+        </a>
+    </div>
+    <div class="fullscreen_menu">
+        <div class="close_btn">
+            <a href="#">
+                <i class="fa-solid fa-x"></i>
+            </a>
+        </div>
+        <ul class="menu_wrap">
+            <li><a href="/boardrecipe/recipehome">레시피</a></li>
+            <li><a href="/board_share">장터 게시판</a></li>
+            <li><a href="/board/board_normal">자유 게시판</a></li>
+            <li sec:authorize="isAuthenticated()"><a href="/member/myPage">마이페이지</a></li>
+        </ul>
+    </div>
+    <div class="top">
+        <ul class="member_menu">
         <li sec:authorize="isAnonymous()"><a href="/member/login">login</a>│</li>
         <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
         <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a>│</li>
         <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
         </ul>
+    </div>
     </div>
     <header>
         <div class="header">
@@ -31,7 +50,7 @@
     <section>
 
         <div class="section">
-            <form action="/searchbyingredient" method="get">
+            <form action="/search" method="get">
                 <div class="form-bar">
                     <div>
                         <i class="fas fa-search"></i>
@@ -44,13 +63,24 @@
     <section>
         <div class="section-contents">
             <div>
-                <a href="/boardrecipe/home"><img src="img/recipe.png"></a>
-                <a href="/boardshare/home"><img src="img/share.png"></a>
-                <a href="/boardnormal/home"><img src="img/normal.png"></a>
-                <a href="/member/mypage"><img src="img/member.png"></a>
+                <a href="/boardrecipe/recipehome"><img src="img/recipe.png"></a>
+                <a href="/board_share"><img src="img/share.png"></a>
+                <a href="/board/board_normal"><img src="img/normal.png"></a>
+                <a sec:authorize="isAuthenticated()" href="/member/myPage"><img src="img/member.png"></a>
+                <a sec:authorize="isAnonymous()" href="/member/join"><img src="img/member.png"></a>
             </div>
 
         </div>
+    </section>
+    <section>
+        <h3>베스트 레시피</h3>
+        <div class="bestrecipe" >
+            <div th:each="recipe : ${bestrecipe}">
+                <img th:src="@{${recipe.ATT_FILE_NO_MAIN}}">
+                <h6 th:text="${recipe.RCP_NM}"></h6>
+            </div>
+        </div>
+        <a class="more" href="/boardrecipe/recipehome" >레시피 더보기</a>
     </section>
     <footer>
         <div class="footer">
@@ -77,6 +107,20 @@
             }
 
         }
+
+
+        $(document).ready(function(){
+
+            $('.menu_btn>a').on('click', function(){
+                $('.fullscreen_menu').fadeIn();
+            });
+            $('.close_btn>a').on('click', function(){
+                $('.fullscreen_menu').hide();
+            });
+
+        });
+
+
 
 
 

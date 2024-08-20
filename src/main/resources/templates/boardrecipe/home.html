@@ -23,6 +23,7 @@
                 <caption class="cnt_cap">
                     <h1>레시피 게시판</h1>
                 </caption>
+
                 <thead>
                 <tr class="title">
                     <th>순서</th>
@@ -33,6 +34,7 @@
                     <th>조회수</th>
                 </tr>
                 </thead>
+
                 <tbody>
                 <tr th:each="recipe : ${list}">
                     <td th:text="${recipe.id}"></td>

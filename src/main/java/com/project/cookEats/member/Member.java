@@ -1,10 +1,10 @@
 package com.project.cookEats.member;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.project.cookEats.board_share.entityClasses.Board_share;
-import com.project.cookEats.board_share.entityClasses.Board_share_comment;
 import com.project.cookEats.board_recipe.RecipeComment;
 import com.project.cookEats.board_recipe.RecipeDB;
+import com.project.cookEats.board_share.entityClasses.Board_share;
+import com.project.cookEats.board_share.entityClasses.Board_share_comment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
