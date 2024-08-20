@@ -209,6 +209,4 @@ public class RecipeDb {
     @Column(columnDefinition = "TEXT")
     @JsonProperty("MANUAL_IMG")
     private String MANUAL_IMG;
-
-
 }
