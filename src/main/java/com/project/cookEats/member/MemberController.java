@@ -5,6 +5,7 @@ import com.project.cookEats.board_normal.BoardNormal;
 import com.project.cookEats.board_normal.BoardNormalRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
+import com.project.cookEats.recipe.board_recipe.RecipeDb;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,8 @@ public class MemberController {
         model.addAttribute("normal", normal);
         List<Board_share> share = ms.findBoardShare(auth);
         model.addAttribute("share",share);
+        List<RecipeDb> recipe = ms.findRecipe(auth);
+        model.addAttribute("recipe",recipe);
 
         return "member/myPage.html";
     }
@@ -113,6 +116,8 @@ public class MemberController {
 
         return 0;
     }
+
+
 
 
 

@@ -106,6 +106,31 @@
 <div th:if="${#lists.isEmpty(share)}">
     <h1>작성한 게시글이 없습니다.</h1>
 </div>
+<hr>
+
+<h3>나의 레시피</h3>
+<div th:if="${!#lists.isEmpty(recipe)}">
+    <table>
+        <tr>
+            <th>제목</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+
+        <div th:each="recipe : ${recipe}">
+            <tr>
+                <td th:text="${recipe.RCP_NM}"></td>
+                <th>✏️</th>
+                <th>🗑️</th>
+            <tr>
+        </div>
+
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(recipe)}">
+    <h1>작성한 레시피가 없습니다.</h1>
+</div>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

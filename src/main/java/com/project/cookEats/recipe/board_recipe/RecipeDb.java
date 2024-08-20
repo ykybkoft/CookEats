@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -195,4 +196,16 @@ public class RecipeDb {
 
     @JsonProperty("RCP_NA_TIP")
     private String RCP_NA_TIP; // 저감 조리법 TIP
+
+    @Column(columnDefinition = "TEXT")
+    @JsonProperty("MANUAL")
+    private String MANUAL;
+
+    @Column(columnDefinition = "TEXT")
+    @JsonProperty("MANUAL_IMG")
+    private String MANUAL_IMG;
+
+
+    @ColumnDefault("0")
+    private int LLIKE;
 }
