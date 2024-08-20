@@ -39,9 +39,9 @@
                 <table class="listBoard">
                     <caption>
                         <span class="blind">게시글 목록</span>
-                    <div style='width:80px; float: right;'>
-                        <input type='button' class='btn' onclick="location.href='/board_share/b_write'" value='글쓰기'>
-                    </div>
+                        <div style='width:80px; float: right;'>
+                            <input type='button' class='btn' onclick="location.href='/board_share/b_write'" value='글쓰기'>
+                        </div>
                     </caption>
                     <colgroup>
                         <col>
@@ -60,12 +60,12 @@
                     </thead>
                     <tbody class="content" th:each="i : ${list}">
                     <tr>
-                        <td th:text="${i.title}"></td>
+                        <td><a th:text="${i.title}" th:href="@{ '/board_share/detail/{id}' (id=${i.id}) }"></a></td>
                         <td th:text="${i.member.getUsername()}"></td>
                         <td th:text="${i.sysDate}"></td>
                         <td th:text="${i.vCount}"></td>
                     </tr>
-                </tbody>
+                    </tbody>
                 </table>
             </div>
             <!--페이지 버튼-->
