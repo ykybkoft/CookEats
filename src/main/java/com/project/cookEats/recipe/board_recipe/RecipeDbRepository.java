@@ -1,10 +1,14 @@
+
 package com.project.cookEats.recipe.board_recipe;
 
+import com.project.cookEats.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+
 
 public interface RecipeDbRepository extends JpaRepository<RecipeDb, Long> {
 
@@ -30,4 +34,9 @@ public interface RecipeDbRepository extends JpaRepository<RecipeDb, Long> {
             + "(r.MANUAL19 IS NOT NULL AND r.MANUAL19 <> '' AND r.MANUAL18 IS NOT NULL AND r.MANUAL18 <> '') OR "
             + "(r.MANUAL20 IS NOT NULL AND r.MANUAL20 <> '' AND r.MANUAL19 IS NOT NULL AND r.MANUAL19 <> ''))")
     List<RecipeDb> findByIngredientName(@Param("ingredientName") String ingredientName);
+  
+  
+    //혜정
+    List<RecipeDb> findTop5ByOrderByLLIKEDesc();
+    List<RecipeDb> findAllByMember(Member member);
 }

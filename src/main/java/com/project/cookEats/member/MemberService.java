@@ -4,6 +4,8 @@ import com.project.cookEats.board_normal.BoardNormal;
 import com.project.cookEats.board_normal.BoardNormalRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
+import com.project.cookEats.recipe.board_recipe.RecipeDb;
+import com.project.cookEats.recipe.board_recipe.RecipeDbRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,8 +22,8 @@ public class MemberService {
 
     private final Board_shareRepository bsr;
     private final BoardNormalRepository bnr;
-    @Autowired
     private final MemberRepository mr;
+    private final RecipeDbRepository rdbr;
     private final PasswordEncoder pe;
     public int join(Member row) {
         row.setPassword(pe.encode(row.getPassword()));
@@ -90,7 +92,6 @@ public class MemberService {
     public List<Board_share> findBoardShare(Authentication auth) {
         Member member =new Member();
         member.setId(findId(auth));
-
         return bsr.findAllByMember(member);
     }
 
@@ -102,5 +103,12 @@ public class MemberService {
         } else {
             throw new RuntimeException("Member not found"); // 값이 없으면 예외를 던짐
         }
+    }
+
+    //혜정 write
+    public List<RecipeDb> findRecipe(Authentication auth) {
+        Member member = new Member();
+        member.setId(findId(auth));
+        return rdbr.findAllByMember(member);
     }
 }
