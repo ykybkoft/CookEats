@@ -1,3 +1,4 @@
+
 package com.project.cookEats.recipe.board_recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -209,3 +210,4 @@ public class RecipeDb {
     @ColumnDefault("0")
     private int LLIKE;
 }
+

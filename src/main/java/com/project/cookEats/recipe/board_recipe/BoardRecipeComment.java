@@ -25,25 +25,28 @@ public class BoardRecipeComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JsonBackReference(value = "member-boardRecipeComment")
+    @ManyToOne(cascade = CascadeType.MERGE)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(nullable = false)
-    private String comment;
-
-    @Column(name = "sysDate",  updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date sysDate;
-
-    @Column(name = "cntcmtLike")
-    @ColumnDefault("0")
-    private int cntcmtLike;
-
-    @JsonBackReference
+    @JsonBackReference(value = "boardRecipe-boardRecipeComment")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "board_recipe_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private BoardRecipe boardRecipe;
+
+    @Column(length = 255, nullable = false)
+    private String comment_contents;
+
+    @Column(name = "cntcmtLike")
+    @ColumnDefault("0")
+    private long cntcmtLike;
+
+    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date sysDate;
+
+
+
 }
