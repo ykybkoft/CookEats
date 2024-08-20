@@ -24,7 +24,7 @@ public class BoardNormalComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference(value = "comment-member")
+    @JsonBackReference(value = "member-boardComment")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)

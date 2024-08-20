@@ -1,4 +1,4 @@
-package com.project.cookEats.recipe.board_recipe;
+package com.project.cookEats.board_recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -8,9 +8,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,23 +22,23 @@ import java.util.List;
 @Entity
 @ToString
 @Table(name = "recipedb")
-public class RecipeDb {
+public class RecipeDB {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
     private Long id;
 
-    @JsonBackReference(value = "member-recipeDb")
+    @JsonBackReference(value = "member-RecipeDB")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("member")
     private Member member;
 
-    @JsonManagedReference(value = "recipeDb-boardRecipe")
-    @OneToMany(mappedBy = "recipeDb", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardRecipe> boardRecipeList;
+    @JsonManagedReference(value = "RecipeDB-Comment")
+    @OneToMany(mappedBy = "recipeDB", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeComment> recipeCommentList = new ArrayList<>();
 
     @JsonProperty("RCP_SEQ")
     private Long RCP_SEQ;   // OpenApi 일련번호
@@ -210,5 +214,18 @@ public class RecipeDb {
     @JsonProperty("MANUAL_IMG")
     private String MANUAL_IMG;
 
+    @Column(name = "LLIKE")
+    @ColumnDefault("0")
+    private int LLIKE;
 
+    @Column(name = "CCOUNT")
+    @ColumnDefault("0")
+    private int CCOUNT;
+
+    @Column(name = "SYSDATE", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreatedDate
+    private LocalDateTime SYSDATE = LocalDateTime.now(); // 기본값 설정
+
+    @Transient
+    private String formattedSysDate;
 }

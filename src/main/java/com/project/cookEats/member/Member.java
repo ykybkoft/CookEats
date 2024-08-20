@@ -3,13 +3,11 @@ package com.project.cookEats.member;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.entityClasses.Board_share_comment;
-import com.project.cookEats.recipe.board_recipe.BoardRecipe;
-import com.project.cookEats.recipe.board_recipe.BoardRecipeComment;
-import com.project.cookEats.recipe.board_recipe.RecipeDb;
+import com.project.cookEats.board_recipe.RecipeComment;
+import com.project.cookEats.board_recipe.RecipeDB;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.Date;
 import java.util.List;
@@ -51,19 +49,15 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board_share> boardShare;
 
-    @JsonManagedReference("member-boardComment")
+    @JsonManagedReference("member-boardShareComment")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board_share_comment> board_comment;
 
-    @JsonManagedReference("member-boardRecipe")
+    @JsonManagedReference("member-RecipeDB")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardRecipe> boardRecipeList;
+    private List<RecipeDB> recipeDBList;
 
-    @JsonManagedReference("member-boardRecipeComment")
+    @JsonManagedReference("member-RecipeComment")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardRecipeComment> boardRecipeCommentList;
-
-    @JsonManagedReference("member-recipeDb")
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeDb> recipeDbList;
+    private List<RecipeComment> recipeCommentList;
 }

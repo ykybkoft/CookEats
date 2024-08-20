@@ -1,4 +1,4 @@
-package com.project.cookEats.recipe.openapi;
+package com.project.cookEats.open_api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
