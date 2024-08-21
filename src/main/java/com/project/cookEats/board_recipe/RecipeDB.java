@@ -1,3 +1,4 @@
+
 package com.project.cookEats.recipe.board_recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -8,10 +9,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,18 +23,14 @@ public class RecipeDb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    private Long id;
+    private Long id;    //idx
 
-    @JsonBackReference(value = "member-recipeDb")
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "member_id")
+    @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonProperty("member")
     private Member member;
-
-    @JsonManagedReference(value = "recipeDb-boardRecipe")
-    @OneToMany(mappedBy = "recipeDb", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardRecipe> boardRecipeList;
 
     @JsonProperty("RCP_SEQ")
     private Long RCP_SEQ;   // OpenApi 일련번호
@@ -209,4 +205,9 @@ public class RecipeDb {
     @Column(columnDefinition = "TEXT")
     @JsonProperty("MANUAL_IMG")
     private String MANUAL_IMG;
+
+
+    @ColumnDefault("0")
+    private int LLIKE;
 }
+

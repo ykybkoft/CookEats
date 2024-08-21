@@ -1,7 +1,7 @@
-package com.project.cookEats.recipe.openapi;
+package com.project.cookEats.open_api;
 
-import com.project.cookEats.recipe.board_recipe.RecipeDb;
+import com.project.cookEats.board_recipe.RecipeDB;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OpenApiRepository extends JpaRepository<RecipeDb, Long> {
+public interface OpenApiRepository extends JpaRepository<RecipeDB, Long> {
 }

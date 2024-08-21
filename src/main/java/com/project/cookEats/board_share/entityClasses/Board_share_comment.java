@@ -24,7 +24,7 @@ public class Board_share_comment {
     private Long id;
 
     // 댓글 작성자
-    @JsonBackReference(value = "member-boardComment")
+    @JsonBackReference(value = "member-boardShareComment")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
