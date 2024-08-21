@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>레시피 상세페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+</head>
+<body>
+
+<main class="main">
+    <section class="contents">
+        <div th:if="${recipe != null}">
+            <h1 th:text="${recipe.RCP_NM}">레시피 이름</h1>
+            <p><strong>작성자:</strong>
+                <span th:text="${recipe.member != null ? recipe.member.username : 'CookEats 제공'}"></span>
+            </p>
+            <p><strong>날짜:</strong>
+                <span th:text="${formattedDate}">날짜</span>
+            </p>
+            <p><strong>조회수:</strong>
+                <span th:text="${recipe.CCOUNT}">조회수</span>
+            </p>
+            <p><strong>추천:</strong>
+                <span th:text="${recipe.LLIKE}">추천수</span>
+            </p>
+
+            <div>
+                <p th:text="${recipe.MANUAL}">레시피 설명</p>
+            </div>
+            <a href="/boardrecipe/home">
+                <button type="button">목록</button>
+            </a>
+        </div>
+        <div th:if="${recipe == null}">
+            <p>게시글을 찾을 수 없습니다.</p>
+            <a href="/boardrecipe/home">
+                <button type="button">목록</button>
+            </a>
+        </div>
+        <div>

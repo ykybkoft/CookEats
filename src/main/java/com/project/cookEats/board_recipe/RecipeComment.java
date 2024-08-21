@@ -1,4 +1,4 @@
-package com.project.cookEats.recipe.board_recipe;
+package com.project.cookEats.board_recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.cookEats.member.Member;
@@ -11,42 +11,38 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "board_recipe_comment")
+@Table(name = "recipe_comment")
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-public class BoardRecipeComment {
+public class RecipeComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference(value = "member-boardRecipeComment")
+    @JsonBackReference(value = "member-RecipeComment")
     @ManyToOne(cascade = CascadeType.MERGE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @JsonBackReference(value = "boardRecipe-boardRecipeComment")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_recipe_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private BoardRecipe boardRecipe;
+    @JsonBackReference(value = "RecipeDB-Comment")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipedb_id") // 컬럼 이름은 RecipeDB의 ID와 일치해야 합니다.
+    private RecipeDB recipeDB;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String comment_contents;
 
-    @Column(name = "cntcmtLike")
+    @Column(name = "LLIKE")
     @ColumnDefault("0")
-    private long cntcmtLike;
+    private long LLIKE;
 
-    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date sysDate;
-
-
-
+    @Column(name = "sysDate", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime sys_date;
 }

@@ -3,19 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>레시피 게시판</title>
+    <title>검색 결과</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
     <div th:replace="~{/header.html :: navbar}"></div>
 </head>
 <body>
 
 <!-- 검색 폼 -->
-<form action="#" th:action="@{/boardrecipe/home}" method="get" class="search">
-    <select name="searchType">
-        <option value="ingredient">재료</option>
-        <option value="author">작성자</option>
-    </select>
-    <input name="searchValue" placeholder="검색어 입력" style="display: inline">
+<form action="#" th:action="@{/boardrecipe/searchbyingredient}" method="get" class="search">
+    <input name="ingredientName" placeholder="재료로 검색" style="display: inline;">
     <button type="submit">검색</button>
 </form>
 
@@ -25,28 +21,24 @@
         <div>
             <table>
                 <caption class="cnt_cap">
-                    <h1>레시피 게시판</h1>
+                    <h1>검색 결과</h1>
                 </caption>
-
                 <thead>
                 <tr class="title">
                     <th>순서</th>
                     <th>제목</th>
                     <th>작성자</th>
                     <th>날짜</th>
-                    <th>추천수</th>
                     <th>조회수</th>
                 </tr>
                 </thead>
-
                 <tbody>
-                <tr th:each="recipe : ${list}">
-                    <td th:text="${recipe.id}"></td>
-                    <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
-                    <td th:text="${recipe.member != null ? recipe.member.username : '-'}"></td>
-                    <td th:text="${recipe.formattedSysDate}"></td>
-                    <td th:text="${recipe.LLIKE}"></td>
-                    <td th:text="${recipe.CCOUNT}"></td>
+                <tr th:each="recipe, iterStat : ${list}">
+                    <td th:text="${iterStat.index + 1}"></td> <!-- 순서 -->
+                    <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td> <!-- 제목 -->
+                    <td th:text="${recipe.member != null ? recipe.member.username : '작성자 정보 없음'}"></td> <!-- 작성자 -->
+                    <td th:text="${recipe.formattedSysDate}"></td> <!-- 날짜 -->
+                    <td th:text="${recipe.LLIKE}"></td> <!-- 조회수 -->
                 </tr>
                 </tbody>
             </table>
