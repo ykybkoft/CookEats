@@ -163,3 +163,39 @@ h6{
     height: 25px;
     outline: none;
 }
+
+/* 페이징 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+.pagination a.current {
+    background-color: #3367D6;
+    color: white;
+}
+
+.pagination a.disabled {
+    color: #aaa;
+    pointer-events: none;
+}
+
+.pagination a.disabled:hover {
+    background-color: #fff;
+}

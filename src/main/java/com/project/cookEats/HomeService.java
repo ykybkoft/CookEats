@@ -1,6 +1,5 @@
 package com.project.cookEats;
 
-
 import com.project.cookEats.board_recipe.RecipeDB;
 import com.project.cookEats.board_recipe.RecipeDBRepository;
 import lombok.RequiredArgsConstructor;

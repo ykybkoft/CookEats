@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
     <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
 
+
 </head>
 <body>
 
@@ -31,9 +32,11 @@
             <div>
                 <p th:text="${recipe.MANUAL}">레시피 설명</p>
             </div>
+
             <a th:href="@{ '/boardrecipe/boardLike/' + ${recipe.id} }" sec:authorize="isAuthenticated()">
                 <i class="fa-regular fa-thumbs-up fa-lg"></i>
             </a>
+
             <a href="/boardrecipe/home">
                 <button type="button">목록</button>
             </a>
