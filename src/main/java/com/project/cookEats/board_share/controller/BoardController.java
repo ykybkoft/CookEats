@@ -4,7 +4,9 @@ import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.service.Borad_shareService;
 import com.project.cookEats.member.Member;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,11 +32,11 @@ public class BoardController {
     }
 
     // 게시판 글 내용 보기 페이지 매핑
-    @GetMapping("/detail")
-    String view(){
-        List<Board_share> result = br.findAll();
-        System.out.println(result.get(0));
-        return "board_share/detail.html";
+    @GetMapping("/view/{id}")
+    String detail(@PathVariable Long id, Model model){
+        model.addAttribute("data", bs.getContents(id));
+
+        return "board_share/view.html";
     }
 
     // 게시판 글 작성 페이지 매핑
@@ -52,6 +54,30 @@ public class BoardController {
 
         bs.savePost(data);
 
+        return "redirect:/board_share/list";
+    }
+    // 게시글 수정 데이터 불러오기
+    @GetMapping("/edit/{id}")
+    String edit(@PathVariable Long id, Model model){
+        model.addAttribute("data", bs.getEdit(id));
+
+        return "board_share/edit.html";
+    }
+    //게시글 수정
+    @PostMapping("/edit")
+    String editPost(@ModelAttribute Board_share data){
+
+        bs.editPost(data);
+
+        // 리턴 뒤에 게시글 id를 붙여줘야 해당 수정된 개시글로 이동 됨.
+        return "redirect:/board_share/view/" + data.getId();
+    }
+
+    // 게시글 삭제
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id){
+
+        bs.deleteContents(id);
         return "redirect:/board_share/list";
     }
 }

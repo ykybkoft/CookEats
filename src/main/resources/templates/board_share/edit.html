@@ -1,0 +1,53 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>글쓰기</title>
+
+    <!--navbar inculude-->
+    <div th:replace="~{header.html :: navbar}"></div>
+
+    <!--Link css-->
+
+</head>
+<body>
+<!--board contents view code-->
+<form action="/board_share/edit" method="post" class="contents_layout" style="background-color: rgb(193, 253, 221)">
+    <div class="detail_title">
+        <hr>
+        <h3 th:utext="${data.title}">글 제목</h3>
+        <input name="id" th:value="${data.id}" type="hidden">
+        <hr>
+    </div>
+    <div class="writer_info" style="display: flex; justify-content: space-between">
+        <div style="padding-right: 30px; background-color: rgb(116, 217, 251)">
+            <strong>닉네임 :</strong>
+            <span th:text="${data.member.getNick()}"></span>
+            <input name="member" th:value="${data.member.getId()}" type="hidden">
+            <p style="display: inline" ></p>
+        </div>
+        <div style="display: flex; background-color: rgb(116, 217, 251); justify-content: left">
+            <div style="padding-right: 30px">
+                <strong>조회수 :</strong>
+                <p style="display: inline" th:text="${data.vCount}"></p>
+            </div>
+            <div style="padding-right: 30px">
+                <strong>날짜 :</strong>
+                <p style="display: inline" th:text="${data.sysDate}"></p>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="detail_text" style="justify-content: center; background-color: rgb(116, 251, 157)">
+        <textarea name="content" th:utext="${data.content}"></textarea>
+        <div style="padding-right: 30px; float: right">
+            <button type="submit">수정완료</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

@@ -60,12 +60,12 @@
                     </thead>
                     <tbody class="content" th:each="i : ${list}">
                     <tr>
-                        <td th:text="${i.title}"></td>
-                        <td th:text="${i.member.getUsername()}"></td>
+                        <td th:text="${i.title}" th:onclick="location.href='/board_share/view/' + [[${i.id}]]"></td>
+                        <td th:text="${i.member.getNick()}"></td>
                         <td th:text="${i.sysDate}"></td>
                         <td th:text="${i.vCount}"></td>
                     </tr>
-                </tbody>
+                    </tbody>
                 </table>
             </div>
             <!--페이지 버튼-->
