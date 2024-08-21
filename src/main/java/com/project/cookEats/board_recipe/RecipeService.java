@@ -1,5 +1,6 @@
 package com.project.cookEats.board_recipe;
 
+import com.project.cookEats.board_normal.BoardNormal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,13 @@ public class RecipeService {
     @Autowired
     private RecipeDBRepository recipeDBRepository;
 
+    // 모든 게시글을 반환
+    public List<RecipeDB> findAll() {
+        return recipeDBRepository.findAll();
     }
 
+    public List<RecipeDB> findByIngredientName(String ingredientName) {
+        return recipeDBRepository.findByIngredientName(ingredientName);
     }
 
     public List<RecipeDB> searchRecipes(String keyword, String sortBy) {

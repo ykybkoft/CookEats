@@ -1,31 +1,31 @@
 <!doctype html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>레시피 게시판</title>
-
-    <div th:replace="~{header.html :: navbar}"></div>
-    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
-
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+    <div th:replace="~{/header.html :: navbar}"></div>
 </head>
 <body>
 
-<!-- 검색 -->
-<form action="/search" method="post" class="search">
-    <input name="searchText" style="display : inline">
-    <button>검색</button>
+<!-- 검색 폼 -->
+<form action="#" th:action="@{/boardrecipe/home}" method="get" class="search">
+    <select name="searchType">
+        <option value="ingredient">재료</option>
+        <option value="author">작성자</option>
+    </select>
+    <input name="searchValue" placeholder="검색어 입력" style="display: inline">
+    <button type="submit">검색</button>
 </form>
 
+<!-- 레시피 리스트 -->
 <main class="main">
     <section class="contents">
-        <article class="board_recipe">
+        <div>
             <table>
                 <caption class="cnt_cap">
-                    <h1>게시판</h1>
+                    <h1>레시피 게시판</h1>
                 </caption>
 
                 <thead>
@@ -34,37 +34,35 @@
                     <th>제목</th>
                     <th>작성자</th>
                     <th>날짜</th>
+                    <th>추천수</th>
                     <th>조회수</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr class="content" th:each="i : ${list}">
-                    <td th:text="${i.id}"></td>
-                    <td th:text="${i.title}"></td>
-                    <td th:text="${i.member}"></td>
-                    <td th:text="${i.sys_date}"></td>
-                    <td th:text="${i.count}"></td>
+                <tr th:each="recipe : ${list}">
+                    <td th:text="${recipe.id}"></td>
+                    <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
+                    <td th:text="${recipe.member != null ? recipe.member.username : '-'}"></td>
+                    <td th:text="${recipe.formattedSysDate}"></td>
+                    <td th:text="${recipe.LLIKE}"></td>
+                    <td th:text="${recipe.CCOUNT}"></td>
                 </tr>
                 </tbody>
             </table>
-        </article>
+        </div>
     </section>
-
 </main>
+
 <footer class="footer">
     <section>
         <div>
             <ul class="board">
-                <li><a href="write.html">글쓰기</a></li>
-            </ul>
-            <ul class="boardhome">
-                <li><a href="list.html">목록</a></li>
+                <li><a href="/boardrecipe/write">글쓰기</a></li>
             </ul>
         </div>
-
     </section>
-
 </footer>
+
 </body>
 </html>
