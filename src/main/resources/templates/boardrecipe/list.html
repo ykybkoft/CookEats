@@ -34,6 +34,7 @@
                     <th>제목</th>
                     <th>작성자</th>
                     <th>날짜</th>
+                    <th>추천수</th>
                     <th>조회수</th>
                 </tr>
                 </thead>
@@ -42,9 +43,10 @@
                 <tr class="content" th:each="recipe : ${recipes}">
                     <td th:text="${recipe.id}"></td>
                     <td><a th:href="@{/boardrecipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
-                    <td th:text="${recipe.member != null ? recipe.member.username : '작성자 정보 없음'}"></td>
+                    <td th:text="${recipe.member != null ? recipe.member.username : '-'}"></td>
                     <td th:text="${#dates.format(recipe.sys_date, 'yyyy-MM-dd')}"></td>
                     <td th:text="${recipe.LLIKE}"></td>
+                    <td th:text="${recipe.CCOUNT}"></td>
                 </tr>
                 </tbody>
             </table>

@@ -1,5 +1,6 @@
 package com.project.cookEats.board_recipe;
 
+import com.project.cookEats.board_normal.BoardNormal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class RecipeService {
             default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
         };
     }
+    public RecipeDB getRecipeById(Long id) {
+        return recipeDBRepository.findById(id).orElse(null);
+    }
 
     public void saveRecipe(RecipeDB recipe) {
         recipeDBRepository.save(recipe);
@@ -41,5 +45,6 @@ public class RecipeService {
     public void deleteRecipe(Long id) {
         recipeDBRepository.deleteById(id);
     }
+
 
 }

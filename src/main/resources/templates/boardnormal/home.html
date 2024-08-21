@@ -5,20 +5,36 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <title>게시판</title>
 
-    <div th:replace="~{header.html :: navbar}"></div>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
-
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
 </head>
 <body>
 
 <!-- 검색 -->
-<form action="/board/search" method="get" class="search">
-    <input name="keyword" style="display : inline">
-    <button>검색</button>
-</form>
+<div class="section">
+    <form action="/boardnormal/search" method="get">
+        <div class="form-bar">
+            <div>
+                <i class="fas fa-search"></i>
+                <input class="search" type="text" name="keyword" placeholder="검색어를 입력해주세요." >
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+
+<!-- 정렬 옵션 -->
+<div class="dropdown">
+    <button class="dropbtn">옵션</button>
+    <div class="dropdown-content">
+        <a th:href="@{/boardnormal/search(keyword=${param.keyword}, sort='recommend')}" th:text="'추천순'"></a>
+        <a th:href="@{/boardnormal/search(keyword=${param.keyword}, sort='latest')}" th:text="'최신순'"></a>
+        <a th:href="@{/boardnormal/search(keyword=${param.keyword}, sort='views')}" th:text="'조회순'"></a>
+    </div>
+</div>
 
 <main class="main">
     <section class="contents">
@@ -41,7 +57,7 @@
                 <tbody>
                 <tr class="content" th:each="i : ${list}">
                     <td th:text="${i.id}"></td>
-                    <td><a th:href="@{/board/articles/{id}(id=${i.id})}" th:text="${i.title}"></a></td>
+                    <td><a th:href="@{/boardnormal/articles/{id}(id=${i.id})}" th:text="${i.title}"></a></td>
                     <td th:text="${i.member != null ? i.member.username : '작성자 정보 없음'}"></td>
                     <td th:text="${i.formattedSysDate}"></td>
                     <td th:text="${i.count}"></td>
@@ -50,16 +66,23 @@
             </table>
         </div>
     </section>
-
 </main>
+
 <footer class="footer">
     <section>
         <div>
             <ul class="board">
-                <li><a href="/board/write">글쓰기</a></li>
+                <!-- 로그인된 사용자에게만 글쓰기 버튼이 보임 -->
+                <li th:if="${#authentication.principal != null}">
+                    <a href="/boardnormal/write">글쓰기</a>
+                </li>
+                <li th:if="${#authentication.principal == null}">
+                    <a href="/member/login">로그인 후 글쓰기가 가능합니다.</a>
+                </li>
             </ul>
         </div>
     </section>
 </footer>
+
 </body>
 </html>

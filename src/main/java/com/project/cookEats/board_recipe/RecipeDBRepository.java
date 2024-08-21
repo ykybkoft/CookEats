@@ -1,5 +1,6 @@
 package com.project.cookEats.board_recipe;
 
+import com.project.cookEats.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -42,4 +43,8 @@ public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
     // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
     @Query("SELECT r FROM RecipeDB r WHERE r.RCP_NM LIKE %:keyword% ORDER BY r.SYSDATE DESC")
     List<RecipeDB> findByTitleContainingOrderBySysDateDesc(@Param("keyword") String keyword);
+
+    //혜정
+    List<RecipeDB> findTop5ByOrderByLLIKEDesc();
+    List<RecipeDB> findAllByMember(Member member);
 }
