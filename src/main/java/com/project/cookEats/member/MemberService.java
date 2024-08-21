@@ -2,10 +2,10 @@ package com.project.cookEats.member;
 
 import com.project.cookEats.board_normal.BoardNormal;
 import com.project.cookEats.board_normal.BoardNormalRepository;
+import com.project.cookEats.board_recipe.RecipeDB;
+import com.project.cookEats.board_recipe.RecipeDBRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
-import com.project.cookEats.recipe.board_recipe.RecipeDb;
-import com.project.cookEats.recipe.board_recipe.RecipeDbRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +22,7 @@ public class MemberService {
     private final Board_shareRepository bsr;
     private final BoardNormalRepository bnr;
     private final MemberRepository mr;
-    private final RecipeDbRepository rdbr;
+    private final RecipeDBRepository rdbr;
     private final PasswordEncoder pe;
     public int join(Member row) {
         row.setPassword(pe.encode(row.getPassword()));
@@ -105,7 +105,7 @@ public class MemberService {
     }
 
     //혜정 write
-    public List<RecipeDb> findRecipe(Authentication auth) {
+    public List<RecipeDB> findRecipe(Authentication auth) {
         Member member = new Member();
         member.setId(findId(auth));
         return rdbr.findAllByMember(member);

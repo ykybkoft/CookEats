@@ -29,11 +29,14 @@
             <div>
                 <p th:text="${recipe.MANUAL}">레시피 설명</p>
             </div>
+            <a href="/boardrecipe/home">
                 <button type="button">목록</button>
             </a>
         </div>
         <div th:if="${recipe == null}">
             <p>게시글을 찾을 수 없습니다.</p>
+            <a href="/boardrecipe/home">
                 <button type="button">목록</button>
             </a>
         </div>
+        <div>
