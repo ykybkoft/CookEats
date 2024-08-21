@@ -1,7 +1,6 @@
 package com.project.cookEats;
 
-import com.project.cookEats.recipe.board_recipe.RecipeController;
-import com.project.cookEats.recipe.board_recipe.RecipeDb;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
