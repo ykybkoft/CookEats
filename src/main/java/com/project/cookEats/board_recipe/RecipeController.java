@@ -8,8 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -35,12 +36,14 @@ public class RecipeController {
         // 날짜 형식 설정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         for (RecipeDB board : resultPage) {
+
             if (board.getSYSDATE() != null) {
                 board.setFormattedSysDate(board.getSYSDATE().format(formatter));
             } else {
                 board.setFormattedSysDate(null);
             }
         }
+
 
         // 모델에 데이터 추가
         model.addAttribute("list", resultPage.getContent());
@@ -63,10 +66,23 @@ public class RecipeController {
             model.addAttribute("recipe", recipe);
             model.addAttribute("formattedDate", formattedDate);
 
+
             return "boardrecipe/recipeDetail";
+
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
     }
+
+
+    //혜정 코드
+    @GetMapping("/boardLike/{id}")
+    String like(@PathVariable Long id){
+        recipeService.upLike(id);
+        return "redirect:/boardrecipe/recipe/"+id;
+    }
+
+
+
 }

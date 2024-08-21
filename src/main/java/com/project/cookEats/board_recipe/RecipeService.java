@@ -15,6 +15,7 @@ public class RecipeService {
     @Autowired
     private RecipeDBRepository recipeDBRepository;
 
+
     // 모든 게시글을 반환, Paging
     public Page<RecipeDB> findAll(Pageable pageable) {
         return recipeDBRepository.findAll(pageable);
@@ -51,5 +52,12 @@ public class RecipeService {
         recipeDBRepository.deleteById(id);
     }
 
+
+    //혜정
+    public void upLike(Long id) {
+        RecipeDB recipe = recipeDBRepository.findById(id).get();
+        recipe.setLLIKE(recipe.getLLIKE()+1);
+        recipeDBRepository.save(recipe);
+    }
 
 }

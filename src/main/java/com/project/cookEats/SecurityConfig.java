@@ -19,9 +19,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable());
+
+        //myPage에 url 로 접근 하면 로그인 페이지로 이동 시켜준다.
+        http.authorizeHttpRequests((authorize) ->
+                authorize.requestMatchers("/member/myPage","/board_share/edit","/board_share/b_write","/boardrecipe/write","/boardrecipe/update","/boardrecipe/boardLike").hasAuthority("normal")
+
+        );
+
         http.authorizeHttpRequests((authorize) ->
                 authorize.requestMatchers("/**").permitAll()
         );//.requestMatchers()에 URL 기재 가능 , /**는 모든 이라는 뜻이다.
+
+
+
         http.formLogin((formLogin) -> formLogin.loginPage("/member/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/member/login?result=false")
