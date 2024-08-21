@@ -40,6 +40,7 @@
                 </thead>
 
                 <tbody>
+
                 <tr th:each="recipe, iterStat : ${list}">
                     <td th:text="${recipe.id}"></td>
                     <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
@@ -52,6 +53,7 @@
             </table>
         </div>
     </section>
+
 
     <!-- 페이징 네비게이션 -->
     <div class="pagination">
@@ -73,6 +75,7 @@
         <!-- >> 버튼 -->
         <a href="#" th:if="${endPage < totalPages}" th:href="@{/boardrecipe/home(page=${endPage + 1})}">&gt;&gt;</a>
     </div>
+
 </main>
 
 <footer class="footer">

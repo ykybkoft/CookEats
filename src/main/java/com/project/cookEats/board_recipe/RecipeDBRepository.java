@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import java.util.List;
 
 public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
@@ -32,6 +31,7 @@ public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
             + "(r.MANUAL18 IS NOT NULL AND r.MANUAL18 <> '' AND r.MANUAL17 IS NOT NULL AND r.MANUAL17 <> '') OR "
             + "(r.MANUAL19 IS NOT NULL AND r.MANUAL19 <> '' AND r.MANUAL18 IS NOT NULL AND r.MANUAL18 <> '') OR "
             + "(r.MANUAL20 IS NOT NULL AND r.MANUAL20 <> '' AND r.MANUAL19 IS NOT NULL AND r.MANUAL19 <> ''))")
+
     Page<RecipeDB> findByIngredientName(@Param("ingredientName") String ingredientName, Pageable pageable);
 
     // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
@@ -48,6 +48,7 @@ public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
 
     // 총 레시피 수를 반환
     long count();
+
 
     //혜정
     List<RecipeDB> findTop5ByOrderByLLIKEDesc();

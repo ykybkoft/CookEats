@@ -75,12 +75,16 @@
     <section>
         <h3>베스트 레시피</h3>
         <div class="bestrecipe" >
-            <div th:each="recipe : ${bestrecipe}">
+
+            <div th:each="recipe : ${bestrecipe}" th:onclick="|location.href='@{ '/boardrecipe/recipe/' + ${recipe.id}}'|">
+
                 <img th:src="@{${recipe.ATT_FILE_NO_MAIN}}">
                 <h6 th:text="${recipe.RCP_NM}"></h6>
             </div>
         </div>
+
         <a class="more" href="/boardrecipe/home" >레시피 더보기</a>
+
     </section>
     <footer>
         <div class="footer">
@@ -119,7 +123,6 @@
             });
 
         });
-
 
 
 
