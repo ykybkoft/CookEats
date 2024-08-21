@@ -7,7 +7,6 @@ import com.project.cookEats.board_recipe.RecipeDBRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
