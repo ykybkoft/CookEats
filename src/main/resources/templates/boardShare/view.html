@@ -38,9 +38,9 @@
             </div>
         </div>
         <div style="padding-right: 15px; float: right; display: flex">
-            <button th:onclick="|location.href='/board_share/edit/${data.id}'|">수정</button>
+            <button th:onclick="|location.href='/boardShare/edit/${data.id}'|">수정</button>
 
-            <form th:action="@{/board_share/delete/{id}(id=${data.id})}" method="post" style="padding-left: 5px">
+            <form th:action="@{/boardShare/delete/{id}(id=${data.id})}" method="post" style="padding-left: 5px">
                 <button type="submit">삭제</button>
             </form>
         </div>
