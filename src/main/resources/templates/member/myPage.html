@@ -30,14 +30,118 @@
         <form action="/member/password" method="post">
             <td>
                 <input name="password" type="password">
+                <input name="type" type="hidden" value="password">
                 <button>비밀번호 변경</button>
             </td>
+        </form>
 
+    </tr>
+    <tr>
+        <th>회원탈퇴</th>
+        <form action="/member/password" method="post">
+            <td>
+                <input name="password" type="password" placeholder="비밀번호 입력">
+                <input name="type" type="hidden" value="delete">
+                <button>회원 탈퇴</button>
+            </td>
         </form>
 
     </tr>
 
 </table>
-  
+
+<hr>
+<h1>내가 쓴 글</h1>
+<hr>
+<h3>자유 게시판</h3>
+<div th:if="!${#lists.isEmpty(normal)}">
+    <table>
+        <tr>
+            <th>제목</th>
+            <th>내용</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+
+        <div th:each="normal : ${normal}">
+            <tr>
+                <td th:text="${normal.title}"></td>
+                <td th:text="${normal.content}"></td>
+                <th>✏️</th>
+                <th>🗑️</th>
+            <tr>
+        </div>
+
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(normal)}">
+    <h1>작성한 게시글이 없습니다.</h1>
+</div>
+
+<hr>
+
+<h3>장터 게시판</h3>
+<div th:if="${!#lists.isEmpty(share)}">
+    <table>
+        <tr>
+            <th>제목</th>
+            <th>내용</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+
+        <div th:each="share : ${share}">
+            <tr>
+                <td th:text="${share.title}"></td>
+                <td th:text="${share.content}"></td>
+                <th>✏️</th>
+                <th>🗑️</th>
+            <tr>
+        </div>
+
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(share)}">
+    <h1>작성한 게시글이 없습니다.</h1>
+</div>
+<hr>
+
+<h3>나의 레시피</h3>
+<div th:if="${!#lists.isEmpty(recipe)}">
+    <table>
+        <tr>
+            <th>제목</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+
+        <div th:each="recipe : ${recipe}">
+            <tr>
+                <td th:text="${recipe.RCP_NM}"></td>
+                <th>✏️</th>
+                <th>🗑️</th>
+            <tr>
+        </div>
+
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(recipe)}">
+    <h1>작성한 레시피가 없습니다.</h1>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const param = new URLSearchParams(window.location.search);
+
+    if(param.get('result')=='false'){
+        alert('비밀번호가 틀렸습니다.');
+    }
+
+</script>
+
 </body>
 </html>

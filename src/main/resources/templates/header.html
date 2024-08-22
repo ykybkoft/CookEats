@@ -1,26 +1,27 @@
 
 <div class="nav" th:fragment="navbar" xmlns:sec="http://www.w3.org/1999/xhtml" >
 
-    <link rel="stylesheet" type="text/css" th:href="@{/header.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
 
-    <div class="home_title">
-        <ul class="menu">
-            <h1>사이트이미지(삽입)</h1>
-            <img src="img/로고.png" alt=""　width="100" height="100">
+    <ul class="menu">
+        <a href="/">
+            <img class="logo" src="/img/로고.png" alt="logo"　width="150" height="150">
+        </a>
 
-            <li><a href="/">Home</a></li>
-            <li sec:authorize="isAnonymous()"><a href="/member/login">login</a></li>
+        <div class="board">
+            <li><a href="/boardNormal/home">게시판</a></li>
+            <li><a href="/boardShare/home">나눔게시판</a></li>
+            <li><a href="/boardRecipe/home">레시피게시판</a></li>
+        </div>
+
+        <div class="top">
+
+
+            <li sec:authorize="isAnonymous()"><a href="/member/login">login</a>│</li>
             <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
-            <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a></li>
+            <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a>│</li>
             <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
-        </ul>
-    </div>
+        </div>
+    </ul>
 
-    <div class="second_menu">
-        <span class="drop_bt" aria-hidden="true">게시판</span>
-        <ul class="board_menu">
-            <li><a href="/board/board_normal">자유 게시판</a></li>
-            <li><a href="/board_share/list">공유 게시판</a></li>
-        </ul>
-    </div>
 </div>

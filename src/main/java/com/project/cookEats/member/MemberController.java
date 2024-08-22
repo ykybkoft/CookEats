@@ -1,6 +1,12 @@
 package com.project.cookEats.member;
 
 
+import com.project.cookEats.board_normal.BoardNormal;
+import com.project.cookEats.board_normal.BoardNormalRepository;
+import com.project.cookEats.board_recipe.RecipeDB;
+import com.project.cookEats.board_share.entityClasses.Board_share;
+import com.project.cookEats.board_share.repositories.Board_shareRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +23,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+import java.util.Optional;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -24,8 +33,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberController {
 
 
-    private final MemberRepository mr;
+
     private final MemberService ms;
+
+
 
     @GetMapping("/join")
     String join(){
@@ -35,7 +46,7 @@ public class MemberController {
     @PostMapping("/join")
     String joinProcess(@ModelAttribute Member row){
         int result =ms.join(row);
-        return "redirect:/";
+        return "redirect:/?result=success&type=join";
     }
 
     @GetMapping("/login")
@@ -60,23 +71,39 @@ public class MemberController {
     String myPage(Authentication auth, Model model){
         Member result = ms.findMember(auth);
         model.addAttribute("user",result);
+        List<BoardNormal> normal = ms.findBoardNormal(auth);
+        model.addAttribute("normal", normal);
+        List<Board_share> share = ms.findBoardShare(auth);
+        model.addAttribute("share",share);
+        List<RecipeDB> recipe = ms.findRecipe(auth);
+        model.addAttribute("recipe",recipe);
 
         return "member/myPage.html";
     }
 
     @PostMapping("/password")
-    String password(@RequestParam String password, Authentication auth){
-        if(ms.checkPW(password, auth)){
-            return "member/password.html";
+    String password(@RequestParam String password,@RequestParam String type ,Authentication auth){
+        if(type.equals("password")){
+            if(ms.checkPW(password, auth)){
+                return "member/password.html";
+            }
+            return "redirect:/member/myPage?result=false";
+        }
+
+        if(ms.checkPW(password,auth)){
+            int result = ms.delete(auth);
+            return "redirect:/?result=success&type=delete";
         }
         return "redirect:/member/myPage?result=false";
+
+
+
     }
 
 
-
-    @PostMapping("/changPW")
-    String changePW(){
-
+    @PostMapping("/changePW")
+    String changePW(@RequestParam String newPW, @RequestParam Long id){
+        int result = ms.changePW(newPW, id);
         return "redirect:/";
     }
 
@@ -89,6 +116,10 @@ public class MemberController {
 
         return 0;
     }
+
+
+
+
 
 
 }
