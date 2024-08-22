@@ -40,7 +40,7 @@
                     <caption>
                         <span class="blind">게시글 목록</span>
                     <div style='width:80px; float: right;'>
-                        <input type='button' class='btn' onclick="location.href='/board_share/b_write'" value='글쓰기'>
+                        <input type='button' class='btn' onclick="location.href='/boardShare/write'" value='글쓰기'>
                     </div>
                     </caption>
                     <colgroup>
@@ -58,14 +58,14 @@
                         <th>조회수</th>
                     </tr>
                     </thead>
-                    <tbody class="content" th:each="i : ${list}">
+                    <tbody class="content" th:each="i : ${home}">
                     <tr>
-                        <td th:text="${i.title}"></td>
-                        <td th:text="${i.member.getUsername()}"></td>
+                        <td th:text="${i.title}" th:onclick="location.href='/boardShare/view/' + [[${i.id}]]"></td>
+                        <td th:text="${i.member.getNick()}"></td>
                         <td th:text="${i.sysDate}"></td>
                         <td th:text="${i.vCount}"></td>
                     </tr>
-                </tbody>
+                    </tbody>
                 </table>
             </div>
             <!--페이지 버튼-->
