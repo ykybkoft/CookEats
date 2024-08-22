@@ -36,8 +36,6 @@ public class MemberController {
 
     private final MemberService ms;
 
-
-
     @GetMapping("/join")
     String join(){
         return "member/join.html";

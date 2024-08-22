@@ -80,3 +80,37 @@ section {
     display: flex;
     justify-content : center;
 }
+
+.recipe {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2px;
+    justify-content:center;
+}
+
+.recipe > div > img {
+    margin: 10px 10px;
+    height: 100px;
+    width:100px;
+}
+
+h6{
+    margin: 10px;
+
+}
+
+.more{
+    color: black;
+    float: right;
+    font-size: 10px;
+    font: bold;
+    margin-right: 20px;
+
+}
+
+.search-result {
+    display : flex;
+    flex-direction : column;
+    justify-content: center;
+    align-items : center;
+}

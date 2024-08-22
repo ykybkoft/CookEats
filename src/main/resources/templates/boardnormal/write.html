@@ -10,9 +10,10 @@
 <body>
 
 <h1>자유게시판</h1>
-<form action="/board/write" method="POST">
+<form action="/boardNormal/write" method="POST">
     <label for="nickname">닉네임:</label><br>
-    <p id="nickname"th:text="${username}"></p><br><br>
+    <!-- username 변수를 p 태그의 내용으로 출력 -->
+    <p id="nickname" th:text="${username}">닉네임</p><br><br>
 
     <label for="title">제목:</label><br>
     <input type="text" id="title" name="title" required><br><br>
@@ -24,7 +25,7 @@
 </form>
 
 <ul class="boardhome">
-    <li><a href="/board/board_normal">목록</a></li>
+    <li><a href="/boardNormal/home">목록</a></li>
 </ul>
 
 </body>
