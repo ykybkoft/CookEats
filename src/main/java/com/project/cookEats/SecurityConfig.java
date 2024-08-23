@@ -22,7 +22,8 @@ public class SecurityConfig {
 
         //myPage에 url 로 접근 하면 로그인 페이지로 이동 시켜준다.
         http.authorizeHttpRequests((authorize) ->
-                authorize.requestMatchers("/member/myPage","/board_share/edit","/board_share/b_write","/boardrecipe/write","/boardrecipe/update","/boardrecipe/boardLike").hasAuthority("normal")
+                authorize.requestMatchers("/member/myPage","/board_share/edit","/board_share/b_write","/boardrecipe/write","/boardrecipe/update","/boardrecipe/boardLike"
+                ).hasAuthority("normal")
 
         );
 

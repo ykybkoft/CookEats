@@ -12,7 +12,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/boardnormal")
+@RequestMapping("/boardNormal")
 public class BoardNormalController {
 
     private final BoardNormalService bs;
@@ -33,7 +33,7 @@ public class BoardNormalController {
         }
 
         model.addAttribute("list", result);
-        return "boardnormal/home"; // home.html
+        return "boardNormal/home"; // home.html
     }
 
     // 검색 및 정렬
@@ -57,7 +57,7 @@ public class BoardNormalController {
         model.addAttribute("list", articles);
         model.addAttribute("keyword", keyword);
         model.addAttribute("sort", sort);
-        return "boardnormal/searchResults"; // 검색 결과를 보여줄 HTML 템플릿
+        return "boardNormal/searchResults"; // 검색 결과를 보여줄 HTML 템플릿
     }
 
     // 게시글 상세 페이지
@@ -69,10 +69,10 @@ public class BoardNormalController {
             String formattedDate = article.getSysDate() != null ? article.getSysDate().format(formatter) : "";
             model.addAttribute("article", article);
             model.addAttribute("formattedDate", formattedDate);
-            return "boardnormal/articleDetail";
+            return "boardNormal/articleDetail"; // articleDetail.html
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
-            return "error";
+            return "error"; // error.html
         }
     }
 
@@ -84,7 +84,7 @@ public class BoardNormalController {
             return "redirect:/member/login"; // 로그인 페이지로 리다이렉트
         }
         model.addAttribute("username", username);
-        return "boardnormal/write"; // write.html
+        return "boardNormal/write"; // write.html
     }
 
     @PostMapping("/write")
@@ -102,7 +102,7 @@ public class BoardNormalController {
         post.setMember(member);
 
         bs.save(post);
-        return "redirect:/board/board_normal";
+        return "redirect:/boardNormal/home";
     }
 
     // 게시글 수정 폼
@@ -111,10 +111,10 @@ public class BoardNormalController {
         BoardNormal article = bs.getArticleById(id);
         if (article != null) {
             model.addAttribute("article", article);
-            return "boardnormal/update"; // update.html
+            return "boardNormal/update"; // update.html
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
-            return "error";
+            return "error"; // error.html
         }
     }
 
@@ -126,9 +126,9 @@ public class BoardNormalController {
             article.setTitle(title);
             article.setContent(content);
             bs.save(article);
-            return "redirect:/board/articles/" + id;
+            return "redirect:/boardNormal/articles/" + id;
         } else {
-            return "error";
+            return "error"; // error.html
         }
     }
 
@@ -136,6 +136,6 @@ public class BoardNormalController {
     @PostMapping("/delete/{id}")
     public String deleteArticle(@PathVariable("id") Long id) {
         bs.deleteById(id);
-        return "redirect:/board/board_normal";
+        return "redirect:/boardNormal/home";
     }
 }

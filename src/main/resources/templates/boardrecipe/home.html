@@ -6,87 +6,204 @@
     <title>레시피 게시판</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
     <div th:replace="~{/header.html :: navbar}"></div>
+    <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
+    <style>
+         body {
+             font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #17A96D;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #17A96D;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: #17A96D;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+        }
+        .pagination a.current {
+            background-color: #17A96D;
+            color: white;
+            border: 1px solid #17A96D;
+        }
+        .footer {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .footer a {
+            background-color: #17A96D;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .form-bar {
+            display: flex;
+            width : 500px;
+            margin: 0 auto;
+            box-shadow:0 1px 6px 0 rgba(32, 33, 36, .28);
+            height: 45px;
+            border-radius: 30px;
+            border: 1px solid white;
+            text-indent: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search {
+            border: none;
+
+        }
+        .search:focus {
+            outline: none;
+            border: none;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-type-container {
+        position: relative;
+        display: inline-block;
+        }
+
+    .search-type {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: #17A96D;
+        color: white;
+        padding: 10px 30px 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.3s;
+    }
+
+    .search-type:hover {
+        background-color: #27ae60;
+    }
+
+    .search-type-container::after {
+        content: "\25BC";
+        font-size: 12px;
+        color: white;
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    /* 옵션 스타일링 */
+    .search-type option {
+        background-color: white;
+        color: #333;
+    }
+
+
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>레시피 게시판</h1>
 
-<!-- 검색 폼 -->
-<form action="#" th:action="@{/boardrecipe/home}" method="get" class="search">
-    <select name="searchType">
-        <option value="ingredient">재료</option>
-        <option value="author">작성자</option>
-    </select>
-    <input name="searchValue" placeholder="검색어 입력" style="display: inline">
-    <button type="submit">검색</button>
-</form>
-
-<!-- 레시피 리스트 -->
-<main class="main">
-    <section class="contents">
-        <div>
-            <table>
-                <caption class="cnt_cap">
-                    <h1>레시피 게시판</h1>
-                </caption>
-
-                <thead>
-                <tr class="title">
-                    <th>순서</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>날짜</th>
-                    <th>추천수</th>
-                    <th>조회수</th>
-                </tr>
-                </thead>
-
-                <tbody>
-
-                <tr th:each="recipe, iterStat : ${list}">
-                    <td th:text="${recipe.id}"></td>
-                    <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
-                    <td th:text="${recipe.member != null ? recipe.member.username : 'CookEats'}"></td>
-                    <td th:text="${recipe.formattedSysDate}"></td>
-                    <td th:text="${recipe.LLIKE}"></td>
-                    <td th:text="${recipe.CCOUNT}"></td>
-                </tr>
-                </tbody>
-            </table>
+    <!-- 검색 폼 -->
+    <form action="#" th:action="@{/boardrecipe/home}" method="get" class="search-bar">
+        <div class="search-type-container">
+            <select name="searchType" class="search-type">
+                <option value="ingredient">재료</option>
+                <option value="author">작성자</option>
+            </select>
         </div>
-    </section>
+        <div class="form-bar">
 
+            <div>
+                <i class="fas fa-search"></i>
+                <input class="search" type="text" name="search" placeholder="검색어를 입력해주세요.">
+            </div>
+        </div>
+    </form>
+
+    <!-- 레시피 리스트 -->
+    <table>
+        <thead>
+        <tr>
+            <th>순서</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>날짜</th>
+            <th>추천수</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="recipe, iterStat : ${list}">
+            <td th:text="${recipe.id}"></td>
+            <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
+            <td th:text="${recipe.member != null ? recipe.member.username : 'CookEats'}"></td>
+            <td th:text="${recipe.formattedSysDate}"></td>
+            <td th:text="${recipe.LLIKE}"></td>
+            <td th:text="${recipe.CCOUNT}"></td>
+        </tr>
+        </tbody>
+    </table>
 
     <!-- 페이징 네비게이션 -->
     <div class="pagination">
-        <!-- << 버튼 -->
         <a href="#" th:if="${startPage > 10}" th:href="@{/boardrecipe/home(page=${startPage - 1})}">&lt;&lt;</a>
-
-        <!-- < 버튼 -->
         <a href="#" th:if="${currentPage > 1}" th:href="@{/boardrecipe/home(page=${currentPage - 1})}">&lt;</a>
-
-        <!-- 페이지 번호 -->
-        <a href="#" th:each="i : ${#numbers.sequence(startPage, endPage)}"
-           th:classappend="${currentPage == i} ? 'current' : ''"
-           th:href="@{/boardrecipe/home(page=${i})}"
-           th:text="${i}">1</a>
-
-        <!-- > 버튼 -->
+        <a href="#" th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${currentPage == i} ? 'current' : ''" th:href="@{/boardrecipe/home(page=${i})}" th:text="${i}">1</a>
         <a href="#" th:if="${currentPage < totalPages}" th:href="@{/boardrecipe/home(page=${currentPage + 1})}">&gt;</a>
-
-        <!-- >> 버튼 -->
         <a href="#" th:if="${endPage < totalPages}" th:href="@{/boardrecipe/home(page=${endPage + 1})}">&gt;&gt;</a>
     </div>
 
-</main>
-
-<footer class="footer">
-    <section>
-        <div>
-            <ul class="board">
-                <li><a href="/boardrecipe/write">글쓰기</a></li>
-            </ul>
-        </div>
-    </section>
-</footer>
-
+    <!-- 글쓰기 버튼 -->
+    <div class="footer">
+        <a href="/boardrecipe/write">글쓰기</a>
+    </div>
+</div>
 </body>
 </html>

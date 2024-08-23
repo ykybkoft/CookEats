@@ -49,6 +49,10 @@ public class BoardNormal {
     @ColumnDefault("0")
     private int likes;
 
+    @Column(name = "views")
+    @ColumnDefault("0") // 기본값 설정
+    private int views;
+
     @JsonManagedReference(value = "boardNormal-comments")
     @OneToMany(mappedBy = "boardNormal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardNormalComment> commentList = new ArrayList<>();
