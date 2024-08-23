@@ -31,13 +31,13 @@ public class Borad_shareService {
 
     // member ID get
     public Member findMember(Authentication auth) {
-            CustomUser user = (CustomUser) auth.getPrincipal();
+        CustomUser user = (CustomUser) auth.getPrincipal();
 
-            return mr.findById(user.getId()).get();
+        return mr.findById(user.getId()).get();
     }
 
     public void savePost(Board_share data) {
-       // 현재 로그인 된 사용자 세션정보를 가져옴
+        // 현재 로그인 된 사용자 세션정보를 가져옴
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // 세션정보가 있다면 findMember 함수를 통해 사용자 id를 가져옴
         if (auth != null) {

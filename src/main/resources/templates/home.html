@@ -34,9 +34,9 @@
     </div>
     <div class="top">
         <ul class="member_menu">
-        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a>│</li>
+        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a></li>
         <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a>│</li>
+        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a></li>
         <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
         </ul>
     </div>
@@ -65,7 +65,7 @@
             <div>
                 <a href="/boardrecipe/home"><img src="img/recipe.png"></a>
                 <a href="/board_share"><img src="img/share.png"></a>
-                <a href="/board/board_normal"><img src="img/normal.png"></a>
+                <a href="/boardNormal/home"><img src="img/normal.png"></a>
                 <a sec:authorize="isAuthenticated()" href="/member/myPage"><img src="img/member.png"></a>
                 <a sec:authorize="isAnonymous()" href="/member/join"><img src="img/member.png"></a>
             </div>

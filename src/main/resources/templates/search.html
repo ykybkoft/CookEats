@@ -6,25 +6,55 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>홈페이지</title>
+    <title>통합 검색</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
-    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/search.css}">
+    <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
+    <div th:replace="~{header.html :: navbar}"></div>
 </head>
 <body>
-<h1>일단 통합 검색 </h1>
+<section>
 
-<h2>검색 레시피</h2>
+    <div class="section">
+        <form action="/search" method="get">
+            <div class="form-bar">
+                <div>
+                    <i class="fas fa-search"></i>
+                    <input class="search" type="text" name="search" placeholder="검색어를 입력해주세요.">
+                </div>
+            </div>
+        </form>
+        <div class="options">
+        <a href="/boardrecipe/home"><button class="searchOption">레시피</button></a>
+        <a><button class="searchOption">자유 게시판</button></a>
+        <a><button class="searchOption">장터 게시판</button></a>
+        </div>
+    </div>
 
-<hr>
 
-<h2>당근 게시판</h2>
+</section>
 
-<hr>
 
-<h2>자유 게시판</h2>
 
-<hr>
+<section>
 
+    <div class="section-box">
+        <h2>검색 레시피</h2>
+    </div>
+
+</section>
+
+<section>
+    <div class="section-box">
+        <h2>장터 게시판 검색</h2>
+    </div>
+</section>
+
+<section>
+    <div class="section-box">
+        <h2>자유 게시판 검색</h2>
+    </div>
+</section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

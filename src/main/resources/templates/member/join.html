@@ -8,56 +8,52 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>회원가입</title>
-    <div th:replace="~{header.html :: navbar}"></div>
+
     <link rel="stylesheet" type="text/css" th:href="@{/css/join.css}">
 </head>
 <body>
-
-<form action="/member/join" method="POST" onsubmit="return checkField();">
-
-    <table>
-        <tr>
-            <td><h2>회원가입</h2></td>
-        </tr>
-        <tr><td>아이디</td></tr>
-        <tr><td>
-            <input type="text" class="text" name="username" id="username"><br>
-            <label id="msg1"></label>
-        </td></tr>
-        <tr><td>비밀번호</td></tr>
-        <tr><td>
-            <input type="password" class="text" name="password" id="password" ><br>
-            <label id="msg5"></label>
-        </td></tr>
-        <tr><td>이름</td></tr>
-        <tr><td>
-            <input type="text" class="text" name="name"><br>
-
-        </td></tr>
-        <tr><td>생년월일</td></tr>
-        <tr><td>
-            <input type="date" class="text" name="birth" ><br>
-
-        </td></tr>
-        <tr><td>닉네임</td></tr>
-        <tr><td>
-            <input type="text" class="text" name="nick" id="nick"><br>
-            <label id="msg2"></label>
-        </td></tr>
-        <tr><td>전화번호</td></tr>
-        <tr><td>
-            <input type="phone" class="text" name="phone" id="phone"><br>
-            <label id="msg4"></label>
-        </td></tr>
-        <tr><td>이메일</td></tr>
-        <tr>
-            <td><input type="email" class="text" name="email" id="email" >
-            <label id="msg3"></label></td>
-
-        </tr>
-        <tr><td><input type="submit" value="가입하기" class="btn"></td></tr>
-    </table>
-</form>
+<div th:replace="~{header.html :: navbar}"></div>
+<div class="signup-container">
+    <form action="/member/join" method="POST" onsubmit="return checkField();">
+        <h2>회원가입</h2>
+        <div class="form-group">
+            <label for="username">아이디</label>
+            <input type="text" id="username" name="username" required>
+            <span id="msg1" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" required>
+            <span id="msg5" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="birth">생년월일</label>
+            <input type="date" id="birth" name="birth" required>
+        </div>
+        <div class="form-group">
+            <label for="nick">닉네임</label>
+            <input type="text" id="nick" name="nick" required>
+            <span id="msg2" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <label for="phone">전화번호</label>
+            <input type="tel" id="phone" name="phone" required>
+            <span id="msg4" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" required>
+            <span id="msg3" class="error-message"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="가입하기">
+        </div>
+    </form>
+</div>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

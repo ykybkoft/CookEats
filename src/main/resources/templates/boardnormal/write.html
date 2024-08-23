@@ -9,15 +9,23 @@
 </head>
 <body>
 
-<h1>게시판</h1>
-<form action="/boardnormal/write" method="POST">
-    게시판 번호 :<br>
-    닉네임 : <br>
-    제목 : <input name="title"><br>
-    내용 : <input name="content"><br>
+<h1>자유게시판</h1>
+<form action="/board/write" method="POST">
+    <label for="nickname">닉네임:</label><br>
+    <p id="nickname"th:text="${username}"></p><br><br>
+
+    <label for="title">제목:</label><br>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="content">내용:</label><br>
+    <textarea id="content" name="content" rows="5" cols="33" required></textarea><br><br>
 
     <button type="submit">작성하기</button>
 </form>
+
+<ul class="boardhome">
+    <li><a href="/board/board_normal">목록</a></li>
+</ul>
 
 </body>
 </html>

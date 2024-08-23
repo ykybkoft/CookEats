@@ -52,4 +52,7 @@ public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
     //혜정
     List<RecipeDB> findTop5ByOrderByLLIKEDesc();
     List<RecipeDB> findAllByMember(Member member);
+
+    @Query(nativeQuery = true, value = "select * from recipedb where rcp_nm like %?1% or manual like %?1% order by id desc limit 5")
+    List<RecipeDB> findTotalSearch(String search);
 }

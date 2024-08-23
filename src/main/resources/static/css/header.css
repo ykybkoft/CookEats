@@ -1,4 +1,6 @@
 .nav {
+    width: 1000px;
+    margin:auto;
     justify-content: space-between;
     text-decoration-line: none;
 }

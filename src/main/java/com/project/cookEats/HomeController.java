@@ -25,6 +25,8 @@ public class HomeController {
 
     @GetMapping("/search")
     String search(@RequestParam String search, Model model){
+        model = hs.totalSearch(search,model);
+
         return "search.html";
     }
 
