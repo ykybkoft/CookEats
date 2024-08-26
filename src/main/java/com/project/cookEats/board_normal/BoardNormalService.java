@@ -6,25 +6,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class BoardNormalService {
 
     private final BoardNormalRepository br; // BoardNormalRepository 의존성 주입
 
-    // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
-    public Page<BoardNormal> findByKeywordOrderByViewsDesc(String keyword, Pageable pageable) {
-        return br.findByTitleContainingOrderByCountDesc(keyword, pageable);
-    }
-
-    // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
-    public Page<BoardNormal> findByKeywordOrderByLikesDesc(String keyword, Pageable pageable) {
-        return br.findByTitleContainingOrderByLikesDesc(keyword, pageable);
-    }
-
-    // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
+    // 최신순 내림차순 정렬
     public Page<BoardNormal> findByKeywordOrderBySysDateDesc(String keyword, Pageable pageable) {
         return br.findByTitleContainingOrderBySysDateDesc(keyword, pageable);
+    }
+
+    // 조회수 기준으로 내림차순 정렬
+    public Page<BoardNormal> findByKeywordOrderByViewsDesc(String keyword, Pageable pageable) {
+        return br.findByTitleContainingOrderByViewsDesc(keyword, pageable);
+    }
+
+    // 추천수 기준으로 내림차순 정렬
+    public Page<BoardNormal> findByKeywordOrderByLikesDesc(String keyword, Pageable pageable) {
+        return br.findByTitleContainingOrderByLikesDesc(keyword, pageable);
     }
 
     // 모든 게시글을 페이징하여 조회
@@ -58,4 +60,28 @@ public class BoardNormalService {
     public void deleteById(Long id) {
         br.deleteById(id);
     }
+
+    // 조회수 증가 메서드
+    @Transactional
+    public void increaseViewCount(Long id) {
+        BoardNormal article = br.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 게시글 입니다."));
+        article.setViews(article.getViews() + 1);
+        br.save(article);
+    }
+
+    // 게시글의 추천수만 증가시키는 메서드
+    public boolean incrementLikes(Long id) {
+        Optional<BoardNormal> optionalArticle = br.findById(id);
+        if (optionalArticle.isPresent()) {
+            BoardNormal article = optionalArticle.get();
+            article.setLikes(article.getLikes() + 1); // 추천수 증가
+            br.save(article);
+            return true;
+        }
+        return false;
+    }
+
+
 }
+
+

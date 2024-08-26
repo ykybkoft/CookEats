@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class BoardNormalController {
     private final BoardNormalService bs; // 게시판 서비스
     private final UserService us; // 사용자 서비스 (로그인 사용자 정보 관리)
     private final MemberService ms; // 멤버 서비스 (회원 정보 관리)
+    private final BoardNormalCommentService commentService; // 댓글 서비스
 
     // 게시판 홈 화면 + 페이징 기능
     @GetMapping("/home")
@@ -77,9 +79,16 @@ public class BoardNormalController {
         // ID를 통해 특정 게시글 조회
         BoardNormal article = bs.getArticleById(id);
         if (article != null) {
+            // 조회수 증가
+            bs.increaseViewCount(id);
+
             // 날짜 포맷 설정
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedDate = article.getSysDate() != null ? article.getSysDate().format(formatter) : "";
+
+            // 게시글에 대한 댓글 목록을 조회하여 모델에 추가
+            List<BoardNormalComment> comments = commentService.getCommentsByArticleId(id);
+            model.addAttribute("comments", comments);
 
             // 모델에 게시글과 포맷팅된 날짜 추가
             model.addAttribute("article", article);
@@ -168,5 +177,53 @@ public class BoardNormalController {
         // ID를 통해 게시글 삭제
         bs.deleteById(id);
         return "redirect:/boardNormal/home"; // 게시판 홈으로 리다이렉트
+    }
+
+    // 좋아요 증가 처리
+    @PostMapping("/articles/{id}/like")
+    public String likeArticle(@PathVariable("id") Long id) {
+        try {
+            boolean result = bs.incrementLikes(id); // 좋아요 수 증가
+            if (result) {
+                return "redirect:/boardNormal/articles/" + id; // 성공 시 게시글 상세 페이지로 리다이렉트
+            } else {
+                return "error"; // 실패 시 에러 페이지로 리다이렉트
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error"; // 예외 발생 시 에러 페이지로 리다이렉트
+        }
+    }
+
+    // 댓글 추가 처리
+    @PostMapping("/articles/{id}/comment")
+    public String addComment(@PathVariable("id") Long id,
+                             @RequestParam String contents) {
+        // 현재 로그인된 사용자 정보 조회
+        Member currentMember = us.getCurrentMember();
+        if (currentMember == null) {
+            return "redirect:/member/login"; // 로그인 페이지로 리다이렉트
+        }
+
+        // 댓글 작성
+        BoardNormal article = bs.getArticleById(id);
+        if (article != null) {
+            BoardNormalComment comment = new BoardNormalComment();
+            comment.setContents(contents);
+            comment.setBoardNormal(article);
+            comment.setMember(currentMember);
+
+            // 댓글 저장
+            commentService.addComment(id, contents, currentMember);
+        }
+
+        return "redirect:/boardNormal/articles/" + id; // 게시글 상세 페이지로 리다이렉트
+    }
+
+    // 댓글 삭제 처리
+    @PostMapping("/comments/{id}/delete")
+    public String deleteComment(@PathVariable("id") Long id, @RequestParam Long boardId) {
+        commentService.deleteComment(id);
+        return "redirect:/boardNormal/articles/" + id; // 게시글 상세 페이지로 리다이렉트
     }
 }

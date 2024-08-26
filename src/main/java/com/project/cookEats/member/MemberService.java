@@ -9,6 +9,7 @@ import com.project.cookEats.board_share.repositories.Board_shareRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -110,5 +111,14 @@ public class MemberService {
         Member member = new Member();
         member.setId(findId(auth));
         return rdbr.findAllByMember(member);
+    }
+
+    // 현주 댓글
+    public Member getCurrentMember() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof Member) {
+            return (Member) authentication.getPrincipal();
+        }
+        return null;
     }
 }
