@@ -10,7 +10,7 @@
 <body>
 
 <!-- 검색 폼 -->
-<form action="#" th:action="@{/boardrecipe/searchbyingredient}" method="get" class="search">
+<form action="#" th:action="@{/boardRecipe/searchbyingredient}" method="get" class="search">
     <input name="ingredientName" placeholder="재료로 검색" style="display: inline;">
     <button type="submit">검색</button>
 </form>
@@ -35,7 +35,7 @@
                 <tbody>
                 <tr th:each="recipe, iterStat : ${list}">
                     <td th:text="${iterStat.index + 1}"></td> <!-- 순서 -->
-                    <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td> <!-- 제목 -->
+                    <td><a th:href="@{/boardRecipe/Recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td> <!-- 제목 -->
                     <td th:text="${recipe.member != null ? recipe.member.username : '작성자 정보 없음'}"></td> <!-- 작성자 -->
                     <td th:text="${recipe.formattedSysDate}"></td> <!-- 날짜 -->
                     <td th:text="${recipe.LLIKE}"></td> <!-- 조회수 -->
@@ -50,7 +50,7 @@
     <section>
         <div>
             <ul class="board">
-                <li><a href="/boardrecipe/write">글쓰기</a></li>
+                <li><a href="/boardRecipe/write">글쓰기</a></li>
             </ul>
         </div>
     </section>

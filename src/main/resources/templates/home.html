@@ -26,9 +26,9 @@
             </a>
         </div>
         <ul class="menu_wrap">
-            <li><a href="/boardrecipe/home">레시피</a></li>
-            <li><a href="/board_share">장터 게시판</a></li>
-            <li><a href="/boardnormal/home">자유 게시판</a></li>
+            <li><a href="/boardRecipe/home">레시피</a></li>
+            <li><a href="/boardShare/home">장터 게시판</a></li>
+            <li><a href="/boardNormal/home">자유 게시판</a></li>
             <li sec:authorize="isAuthenticated()"><a href="/member/myPage">마이페이지</a></li>
         </ul>
     </div>
@@ -63,8 +63,8 @@
     <section>
         <div class="section-contents">
             <div>
-                <a href="/boardrecipe/home"><img src="img/recipe.png"></a>
-                <a href="/board_share"><img src="img/share.png"></a>
+                <a href="/boardRecipe/home"><img src="img/recipe.png"></a>
+                <a href="/boardShare_home"><img src="img/share.png"></a>
                 <a href="/boardNormal/home"><img src="img/normal.png"></a>
                 <a sec:authorize="isAuthenticated()" href="/member/myPage"><img src="img/member.png"></a>
                 <a sec:authorize="isAnonymous()" href="/member/join"><img src="img/member.png"></a>
@@ -76,14 +76,14 @@
         <h3>베스트 레시피</h3>
         <div class="bestrecipe" >
 
-            <div th:each="recipe : ${bestrecipe}" th:onclick="|location.href='@{ '/boardrecipe/recipe/' + ${recipe.id}}'|">
+            <div th:each="recipe : ${bestrecipe}" th:onclick="|location.href='@{ '/boardRecipe/recipe/' + ${recipe.id}}'|">
 
                 <img th:src="@{${recipe.ATT_FILE_NO_MAIN}}">
                 <h6 th:text="${recipe.RCP_NM}"></h6>
             </div>
         </div>
 
-        <a class="more" href="/boardrecipe/home" >레시피 더보기</a>
+        <a class="more" href="/boardRecipe/home" >레시피 더보기</a>
 
     </section>
     <footer>

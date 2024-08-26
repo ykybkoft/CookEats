@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
@@ -39,6 +40,17 @@ public class RecipeDB {
     @JsonManagedReference(value = "RecipeDB-Comment")
     @OneToMany(mappedBy = "recipeDB", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeComment> recipeCommentList = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "MANUALS", joinColumns = @JoinColumn(name = "recipe_id"))
+    @OrderColumn(name = "step_order")
+    private List<String> manuals = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "MANUAL_IMAGES", joinColumns = @JoinColumn(name = "recipe_id"))
+    @OrderColumn(name = "step_order")
+    private List<String> manualImages = new ArrayList<>();
+
 
     @JsonProperty("RCP_SEQ")
     private Long RCP_SEQ;   // OpenApi 일련번호
@@ -222,6 +234,7 @@ public class RecipeDB {
     @ColumnDefault("0")
     private int CCOUNT;
 
+    @CreationTimestamp
     @Column(name = "SYSDATE", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate
     private LocalDateTime SYSDATE = LocalDateTime.now(); // 기본값 설정

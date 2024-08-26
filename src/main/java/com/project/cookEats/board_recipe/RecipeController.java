@@ -1,6 +1,9 @@
 package com.project.cookEats.board_recipe;
 
+import com.project.cookEats.common_module.file.FileUpLoadService;
+import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.Member;
+import com.project.cookEats.member.MemberRepository;
 import com.project.cookEats.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,17 +13,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/boardrecipe")
+@RequestMapping("/boardRecipe")
 public class RecipeController {
 
     private final RecipeService recipeService;
+    private final RecipeDBRepository recipeDBRepository;
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final FileUpLoadService fileUpLoadService;
 
     @GetMapping("/home")
     public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
@@ -54,7 +64,7 @@ public class RecipeController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        return "boardrecipe/home"; // home.html로 반환
+        return "boardRecipe/home"; // home.html로 반환
     }
 
     // 상세 레시피
@@ -69,7 +79,7 @@ public class RecipeController {
             model.addAttribute("formattedDate", formattedDate);
 
 
-            return "boardrecipe/recipeDetail";
+            return "boardRecipe/recipeDetail";
 
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
@@ -89,14 +99,42 @@ public class RecipeController {
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
-        return "boardrecipe/write.html";
+        return "boardRecipe/write.html";
     }
 
     @PostMapping("/write")
-    String writePro(@ModelAttribute RecipeDB recipe, Authentication auth){
-        int result = recipeService.write(recipe, auth);
-        return "redirect:/boardrecipe/home";
+    public String writePro(@ModelAttribute RecipeDB recipe,
+                           Authentication auth,
+                           @RequestParam("manual[]") String[] manuals,
+                           @RequestParam("manualImage[]") MultipartFile[] manualImages) throws IOException {
+        CustomUser user = (CustomUser) auth.getPrincipal();
+
+        List<String> manualList = new ArrayList<>();
+        List<String> manualImageList = new ArrayList<>();
+        String manual = "";
+
+        for (int i = 0; i < manuals.length; i++) {
+            // 각각의 조리순서를 처리
+            manualList.add(manuals[i]);
+
+            // 파일 저장
+            String imagePath = fileUpLoadService.saveFile(manualImages[i]);
+            manualImageList.add(imagePath);
+
+            // 필요한 경우 조리 순서와 이미지를 결합
+            manual += manuals[i] + "%<";
+        }
+
+        // RecipeDB 객체에 수동으로 값 설정
+        recipe.setManuals(manualList);
+        recipe.setManualImages(manualImageList);
+        recipe.setMANUAL(manual);
+        recipe.setMember(memberRepository.findById(user.getId()).get());
+
+        recipeDBRepository.save(recipe);
+        return "redirect:/boardRecipe/home";
     }
+
 
 
 
