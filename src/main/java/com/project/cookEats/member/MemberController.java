@@ -3,8 +3,10 @@ package com.project.cookEats.member;
 
 import com.project.cookEats.board_normal.BoardNormal;
 import com.project.cookEats.board_normal.BoardNormalRepository;
+import com.project.cookEats.board_recipe.RecipeDB;
 import com.project.cookEats.board_share.entityClasses.Board_share;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,21 +33,18 @@ import java.util.Optional;
 public class MemberController {
 
 
-    private final MemberRepository mr;
-    private final MemberService ms;
 
-    private final Board_shareRepository bsr;
+    private final MemberService ms;
 
     @GetMapping("/join")
     String join(){
-
         return "member/join.html";
     }
 
     @PostMapping("/join")
     String joinProcess(@ModelAttribute Member row){
         int result =ms.join(row);
-        return "redirect:/";
+        return "redirect:/?result=success&type=join";
     }
 
     @GetMapping("/login")
@@ -74,6 +73,8 @@ public class MemberController {
         model.addAttribute("normal", normal);
         List<Board_share> share = ms.findBoardShare(auth);
         model.addAttribute("share",share);
+        List<RecipeDB> recipe = ms.findRecipe(auth);
+        model.addAttribute("recipe",recipe);
 
         return "member/myPage.html";
     }
@@ -89,7 +90,7 @@ public class MemberController {
 
         if(ms.checkPW(password,auth)){
             int result = ms.delete(auth);
-            return "redirect:/?delete=true";
+            return "redirect:/?result=success&type=delete";
         }
         return "redirect:/member/myPage?result=false";
 
@@ -113,6 +114,10 @@ public class MemberController {
 
         return 0;
     }
+
+
+
+
 
 
 }

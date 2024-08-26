@@ -1,5 +1,7 @@
 package com.project.cookEats;
 
+import com.project.cookEats.member.OAuth2MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,18 +12,39 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final OAuth2MemberService oAuth2MemberService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable());
+
+        //myPage에 url 로 접근 하면 로그인 페이지로 이동 시켜준다.
+        http.authorizeHttpRequests((authorize) ->
+                authorize.requestMatchers("/member/myPage","/board_share/edit","/board_share/b_write","/boardrecipe/write","/boardrecipe/update","/boardrecipe/boardLike"
+                ).hasAuthority("normal")
+
+        );
+
         http.authorizeHttpRequests((authorize) ->
                 authorize.requestMatchers("/**").permitAll()
         );//.requestMatchers()에 URL 기재 가능 , /**는 모든 이라는 뜻이다.
+
+
+
         http.formLogin((formLogin) -> formLogin.loginPage("/member/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/member/login?result=false")
         );
+        http.oauth2Login(oauth2Login -> oauth2Login
+                .loginPage("/member/login")
+                .defaultSuccessUrl("/")
+                .userInfoEndpoint(userInfo -> userInfo
+                        .userService(oAuth2MemberService)
+                )
+        );
+
         http.logout( logout -> logout.logoutUrl("/member/logout").logoutSuccessUrl("/") );
 
         return http.build();

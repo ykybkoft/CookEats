@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/" th:text="#{home}">Home</a></li>
+            <li><a href="/boardrecipe/recipehome" th:text="#{recipes}">Recipes</a></li>
+            <li><a href="/board/write" th:text="#{write}">Write</a></li>
+            <li><a href="/about" th:text="#{about}">About</a></li>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>

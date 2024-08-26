@@ -1,0 +1,46 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>글쓰기</title>
+
+    <!--navbar inculude-->
+    <div th:replace="~{header.html :: navbar}"></div>
+
+    <!--Link css-->
+
+</head>
+<body>
+
+    <div class="layoutContent">
+        <div class="panelCenter">
+            <div class="writeWrap">
+                <div class="write_header_area">
+                    <strong class="write_header_title">글쓰기</strong>
+                </div>
+                <form action="/boardShare/write" method="post">
+                    <div class="nick_area">
+                        <div style="display : flex;">
+                            닉네임 :
+                            <div class="nick_show" th:text="${nick}"></div>
+                        </div>
+                    </div>
+                    <div class="write_title_area">
+                        <input class="write_input" type="text" name="title" minlength="1" placeholder="제목을 입력해주세요">
+                    </div>
+                    <div class="write_editor_area">
+                        <textarea rows="5" cols="50" name="content" minlength="1" placeholder="재료를 공유해보세요"></textarea>
+                    </div>
+                    <div class="write_bt">
+                        <button type="submit">등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
