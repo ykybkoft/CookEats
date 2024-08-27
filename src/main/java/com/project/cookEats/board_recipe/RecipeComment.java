@@ -1,12 +1,14 @@
 package com.project.cookEats.board_recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,7 +34,8 @@ public class RecipeComment {
     private Member member;
 
     @JsonBackReference(value = "RecipeDB-Comment")
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "recipedb_id") // 컬럼 이름은 RecipeDB의 ID와 일치해야 합니다.
     private RecipeDB recipeDB;
 
@@ -43,6 +46,7 @@ public class RecipeComment {
     @ColumnDefault("0")
     private long LLIKE;
 
+    @CreationTimestamp
     @Column(name = "sysDate", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime sys_date;
 }

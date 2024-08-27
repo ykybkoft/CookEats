@@ -1,11 +1,9 @@
 package com.project.cookEats.board_recipe;
 
 
-import com.project.cookEats.board_normal.BoardNormal;
 import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;

@@ -33,7 +33,7 @@
                 <p th:text="${recipe.MANUAL}">레시피 설명</p>
             </div>
 
-            <a th:href="@{ '/boardrecipe/boardLike/' + ${recipe.id} }" sec:authorize="isAuthenticated()">
+            <a th:href="@{ '/boardRecipe/boardLike/' + ${recipe.id} }" sec:authorize="isAuthenticated()">
                 <i class="fa-regular fa-thumbs-up fa-lg"></i>
             </a>
 

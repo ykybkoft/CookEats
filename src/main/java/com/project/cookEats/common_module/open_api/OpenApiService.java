@@ -70,9 +70,34 @@ public class OpenApiService {
 
                         List<RecipeDB> recipeDBS = new ArrayList<>();
                         for (JsonNode node : dataList) {
-                            RecipeDB recipeDb = objectMapper.treeToValue(node, RecipeDB.class);
+                            RecipeDB recipeDb = new RecipeDB();
+                            recipeDb.setRCP_NM(node.path("RCP_NM").asText());
+                            recipeDb.setRCP_PARTS_DTLS(node.path("RCP_PARTS_DTLS").asText());
+
+                            List<String> manuals = new ArrayList<>();
+                            List<String> manualImages = new ArrayList<>();
+
+                            for (int i = 1; i <= 20; i++) {
+                                String manualKey = "MANUAL" + String.format("%02d", i);
+                                String manualImageKey = "MANUAL_IMG" + String.format("%02d", i);
+
+                                String manual = node.path(manualKey).asText();
+                                String manualImage = node.path(manualImageKey).asText();
+
+                                if (!manual.isEmpty()) {
+                                    manuals.add(manual);
+                                }
+                                if (!manualImage.isEmpty()) {
+                                    manualImages.add(manualImage);
+                                }
+                            }
+
+                            recipeDb.setManuals(manuals);
+                            recipeDb.setManualImages(manualImages);
+
                             recipeDBS.add(recipeDb);
                         }
+
                         repository.saveAll(recipeDBS);
                         logger.info("Data saved to database: {} records", recipeDBS.size());
 
@@ -94,4 +119,3 @@ public class OpenApiService {
                 });
     }
 }
-

@@ -151,7 +151,7 @@
     <h1>레시피 게시판</h1>
 
     <!-- 검색 폼 -->
-    <form action="#" th:action="@{/boardrecipe/home}" method="get" class="search-bar">
+    <form action="#" th:action="@{/boardRecipe/home}" method="get" class="search-bar">
         <div class="search-type-container">
             <select name="searchType" class="search-type">
                 <option value="ingredient">재료</option>
@@ -182,7 +182,7 @@
         <tbody>
         <tr th:each="recipe, iterStat : ${list}">
             <td th:text="${recipe.id}"></td>
-            <td><a th:href="@{/boardrecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
+            <td><a th:href="@{/boardRecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
             <td th:text="${recipe.member != null ? recipe.member.username : 'CookEats'}"></td>
             <td th:text="${recipe.formattedSysDate}"></td>
             <td th:text="${recipe.LLIKE}"></td>
@@ -193,16 +193,16 @@
 
     <!-- 페이징 네비게이션 -->
     <div class="pagination">
-        <a href="#" th:if="${startPage > 10}" th:href="@{/boardrecipe/home(page=${startPage - 1})}">&lt;&lt;</a>
-        <a href="#" th:if="${currentPage > 1}" th:href="@{/boardrecipe/home(page=${currentPage - 1})}">&lt;</a>
-        <a href="#" th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${currentPage == i} ? 'current' : ''" th:href="@{/boardrecipe/home(page=${i})}" th:text="${i}">1</a>
-        <a href="#" th:if="${currentPage < totalPages}" th:href="@{/boardrecipe/home(page=${currentPage + 1})}">&gt;</a>
-        <a href="#" th:if="${endPage < totalPages}" th:href="@{/boardrecipe/home(page=${endPage + 1})}">&gt;&gt;</a>
+        <a href="#" th:if="${startPage > 10}" th:href="@{/boardRecipe/home(page=${startPage - 1})}">&lt;&lt;</a>
+        <a href="#" th:if="${currentPage > 1}" th:href="@{/boardRecipe/home(page=${currentPage - 1})}">&lt;</a>
+        <a href="#" th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${currentPage == i} ? 'current' : ''" th:href="@{/boardRecipe/home(page=${i})}" th:text="${i}">1</a>
+        <a href="#" th:if="${currentPage < totalPages}" th:href="@{/boardRecipe/home(page=${currentPage + 1})}">&gt;</a>
+        <a href="#" th:if="${endPage < totalPages}" th:href="@{/boardRecipe/home(page=${endPage + 1})}">&gt;&gt;</a>
     </div>
 
     <!-- 글쓰기 버튼 -->
     <div class="footer">
-        <a href="/boardrecipe/write">글쓰기</a>
+        <a href="/boardRecipe/write">글쓰기</a>
     </div>
 </div>
 </body>
