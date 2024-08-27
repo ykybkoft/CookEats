@@ -32,8 +32,11 @@ public class MemberService {
     }
 
     public Member findMember(Authentication auth) {
-
-        return mr.findById(findId(auth)).get();
+            Optional<Member> member = mr.findById(findId(auth));
+            if (member.isEmpty()){
+                return null;
+            }
+            return member.get();
     }
 
 
@@ -80,8 +83,10 @@ public class MemberService {
     }
 
     public Long findId(Authentication auth){
+        if(auth.isAuthenticated()){
         CustomUser user = (CustomUser) auth.getPrincipal();
-        return user.getId();
+        return user.getId();}
+        return null;
     }
     public List<BoardNormal> findBoardNormal(Authentication auth) {
         Member member =new Member();

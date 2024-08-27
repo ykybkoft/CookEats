@@ -7,7 +7,7 @@
     <title>레시피 상세페이지</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
     <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
-
+    <div th:replace="~{header.html :: navbar}"></div>
 
 </head>
 <body>
@@ -47,4 +47,121 @@
                 <button type="button">목록</button>
             </a>
         </div>
+    </section>
+
+    <!--혜정 코드 -->
+    <section class="comments">
+        <h3>댓글</h3>
         <div>
+        <form th:if="${member != null}" class="comment-write" method="post" action="/boardrecipe/commentWrite">
+            <input name="comment_contents" placeholder="댓글 작성">
+            <input type="hidden" name="recipeDB" th:value="${recipe.id}">
+            <input type="hidden" name="member" th:value="${member.id}">
+            <button>등록</button>
+        </form>
+        </div>
+
+        <table>
+            <th:block th:each="comment : ${comments}">
+            <tr>
+                <td th:text="${comment.member.nick}"></td>
+                <td th:text="${#temporals.format(comment.sys_date, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <a th:if="${member != null}" th:href="@{ '/boardrecipe/commentLike/' + ${comment.id} }">
+                        <i class="fa-regular fa-thumbs-up fa-lg"></i>
+                        <input type="hidden" name="recipeDB" th:value="${comment.recipeDB.id}">
+                    </a>
+                    <p th:text="${comment.LLIKE}"></p>
+                </td>
+
+                <td th:if="${member != null and #authentication.principal.id == comment.member.id}">
+                    <a href="#" th:onclick="'showEditForm('+${comment.id}+')'">✏️</a>
+                    <a th:href="@{ '/boardrecipe/commentDelete/' + ${comment.id}(recipeID=${comment.recipeDB.id})}">🗑️</a>
+                </td>
+            </tr>
+                <tr>
+                    <td th:text="${comment.comment_contents}"></td>
+                </tr>
+
+            </th:block>
+
+
+
+
+
+
+
+
+
+
+        </table>
+
+
+
+
+
+
+    </section>
+
+</main>
+
+<!-- 혜정 코드 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        const param = new URLSearchParams(window.location.search);
+
+        var type ='';
+
+        if(param.get('result')=='success'){
+            if(param.get('type')=='commentDelete'){
+                type='댓글 삭제가';
+                alert(type+' 완료되었습니다.');
+            }else if (param.get('type')=='commentModify'){
+                type='댓글 수정이';
+                alert(type+' 완료되었습니다.');
+            }
+
+        }
+
+        rm(commentId) {function showEditForm(commentId) {
+    document.getElementById('edit-form-' + commentId).style.display = 'table-row';
+}
+
+function cancelEdit(commentId) {
+    document.getElementById('edit-form-' + commentId).style.display = 'none';
+}
+
+function submitEditFo
+    const content = document.getElementById('edit-content-' + commentId).value;
+    const recipeID = document.getElementById('recipe-id-' + commentId).value;
+
+    fetch(`/boardrecipe/commentModify/${commentId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `content=${encodeURIComponent(content)}&recipeID=${recipeID}`,
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById('comment-content-' + commentId).textContent = content;
+            cancelEdit(commentId);
+        } else {
+            alert('댓글 수정에 실패했습니다.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('댓글 수정 중 오류가 발생했습니다.');
+    });
+
+    return false; // 폼 제출을 막음
+}
+
+
+
+
+
+    </script>
+</body>
+</html>

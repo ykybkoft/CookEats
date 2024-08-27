@@ -1,0 +1,222 @@
+body {
+
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f8f0;
+}
+
+h1 {
+    color: #1FB685;
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+section {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p {
+    color: #333;
+    font-size: 1.1em;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.search{
+    width: 600px;
+}
+
+.ingredient  {
+    padding: 12px;
+    font-size: 1em;
+    border: 2px solid #2ecc71;
+    border-radius: 25px;
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    width: calc(100% - 24px);
+}
+
+.ingredient:focus {
+    border-color: #27ae60;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+}
+
+.recommend-btn {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.recommend-btn a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.recommend-btn button {
+    background: linear-gradient(45deg, #2ecc71, #27ae60, #1abc9c);
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 25px 60px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.recommend-btn button::before,
+.recommend-btn button::after {
+    font-size: 28px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.recommend-btn button::before {
+    content: "🥗";
+    left: 20px;
+}
+
+.recommend-btn button::after {
+    content: "🥗";
+    right: 20px;
+}
+
+.recommend-btn button .shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    transform: scale(0);
+    transition: transform 0.5s ease-out;
+}
+
+.recommend-btn button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(46, 204, 113, 0.4);
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+.recommend-btn button:hover::before {
+    opacity: 1;
+    left: 25px;
+}
+
+.recommend-btn button:hover::after {
+    opacity: 1;
+    right: 25px;
+}
+
+.recommend-btn button:hover .shine {
+    transform: scale(1);
+}
+
+.recommend-btn button:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+
+
+h2 {
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.recipe {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.15);
+}
+
+.recipe th, .recipe td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    text-size-adjust: 12px;
+
+}
+
+.recipe th {
+    background-color: #17A96D;
+    color: white;
+    font-weight: bold;
+}
+
+.recipe tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.recipe tr:hover {
+    background-color: #e8f5e9;
+}
+
+.recipe img {
+    width: 600px;
+    height: 600px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* 버튼 스타일 수정 */
+.recommend-btn button {
+    margin-top: 20px;
+}
+
+.recipe td .content {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* 이미지는 애니메이션에서 제외 */
+.recipe td img {
+    opacity: 1;
+}
+
+/* 나타난 글자에 대한 스타일 */
+.visible {
+    opacity: 1 !important;
+}
+
+.recipe tr:first-child th {
+    border-top-left-radius: 10px;
+}
+.recipe tr:first-child td {
+    border-top-right-radius: 10px;
+}
+.recipe tr:last-child th {
+    border-bottom-left-radius: 10px;
+}
+.recipe tr:last-child td {
+    border-bottom-right-radius: 10px;
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>레시피 추천</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/recommend.css}">
+    <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
+</head>
+<body>
+<div th:replace="~{header.html :: navbar}"></div>
+
+    <section>
+        <h1>🍅 레시피 추천 🍅</h1>
+    <form action="/recommend" method="post">
+        <p>검색하고 싶은 레시피의 재료를 입력해주세요.(재료를 입력하지 않으면 랜덤 추천됩니다.)</p>
+        <div class="search" th:if="${ingredient_reload}!= null">
+            <input class="ingredient" name="ingredient"  placeholder="예: 토마토, 치즈, 바질"  th:value="${ingredient_reload}">
+        </div>
+        <div class="search" th:unless="${ingredient_reload}!= null">
+            <input class="ingredient" name="ingredient"  placeholder="예: 토마토, 치즈, 바질">
+        </div>
+
+        <div class="recommend-btn">
+            <a href="/recommend">
+                <button th:if="${reload} != null">
+                    레시피 다시 찾기
+                    <span class="shine"></span>
+                </button>
+                <button th:unless="${reload} != null">
+                    레시피 추천
+                    <span class="shine"></span>
+                </button>
+            </a>
+        </div>
+    </form>
+
+        <div th:if="${recipe} != null">
+            <table class="recipe">
+                <tr>
+                    <th>음식 이름</th>
+                    <td th:text="${recipe.RCP_NM}"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <img th:src="${recipe.ATT_FILE_NO_MAIN}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        재료
+                    </th>
+                    <td th:text="${recipe.RCP_PARTS_DTLS}"></td>
+                </tr>
+                <tr>
+                    <th colspan="2">조리방법</th>
+                </tr>
+
+                <tr th:each="manual : ${manual}">
+                    <td colspan="2" th:text="${manual}"></td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div th:if="${recipe} == null and ${reload} != null">
+            <h2>검색된 레시피가 없습니다. 다시 검색해주세요.</h2>
+        </div>
+    </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const cells = document.querySelectorAll('.recipe td');
+
+    cells.forEach(cell => {
+        if (!cell.querySelector('img')) {  // 이미지가 없는 셀만 처리
+            const content = cell.innerHTML;
+            cell.innerHTML = '<span class="content">' + content + '</span>';
+            const contentSpan = cell.querySelector('.content');
+
+            let text = contentSpan.textContent;
+            contentSpan.textContent = '';
+
+            let index = 0;
+            function typeWriter() {
+                if (index < text.length) {
+                    contentSpan.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(typeWriter, 50);  // 타이핑 속도 조절 (밀리초)
+                }
+            }
+
+            // IntersectionObserver를 사용하여 셀이 화면에 보일 때 애니메이션 시작
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        contentSpan.classList.add('visible');
+                        typeWriter();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(cell);
+        }
+    });
+});
+</script>
+</body>
+</html>
