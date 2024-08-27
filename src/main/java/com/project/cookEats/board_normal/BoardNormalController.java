@@ -224,6 +224,41 @@ public class BoardNormalController {
     @PostMapping("/comments/{id}/delete")
     public String deleteComment(@PathVariable("id") Long id, @RequestParam Long boardId) {
         commentService.deleteComment(id);
-        return "redirect:/boardNormal/articles/" + id; // 게시글 상세 페이지로 리다이렉트
+        return "redirect:/boardNormal/articles/" + boardId; // 게시글 ID로 리다이렉트
     }
+
+    // 댓글 수정 폼 페이지
+    @GetMapping("/comments/{id}/editForm")
+    public String showCommentEditForm(@PathVariable("id") Long id, Model model) {
+        BoardNormalComment comment = commentService.getCommentById(id);
+
+        if (comment != null) {
+            model.addAttribute("comment", comment);
+            model.addAttribute("articleId", comment.getBoardNormal().getId());
+            return "boardNormal/commentEditForm"; // 댓글 수정 폼 템플릿 반환
+        } else {
+            model.addAttribute("errorMessage", "댓글을 찾을 수 없습니다.");
+            return "error"; // 댓글을 찾을 수 없을 때 에러 페이지 반환
+        }
+    }
+
+    // 댓글 수정 처리
+    @PostMapping("/comments/{id}/edit")
+    public String updateComment(@PathVariable("id") Long id, @RequestParam String contents) {
+        BoardNormalComment comment = commentService.getCommentById(id);
+
+        if (comment != null) {
+            comment.setContents(contents);
+            commentService.updateComment(comment);
+
+            Long boardId = comment.getBoardNormal().getId(); // 댓글이 속한 게시글 ID를 가져옴
+            return "redirect:/boardNormal/articles/" + boardId; // 수정된 댓글이 포함된 게시글 상세 페이지로 리다이렉트
+        } else {
+            return "error"; // 댓글을 찾을 수 없을 때 에러 페이지 반환
+        }
+    }
+
+
+
+
 }

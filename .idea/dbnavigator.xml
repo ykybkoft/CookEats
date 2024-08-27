@@ -77,7 +77,7 @@ select * from board_normal_comment_list]]></console>
           <driver-library value="" />
           <driver value="" />
           <url-type value="DATABASE" />
-          <host value="125.182.143.24" />
+          <host value="192.168.113.15" />
           <port value="3306" />
           <database value="cookeats" />
           <tns-folder value="" />

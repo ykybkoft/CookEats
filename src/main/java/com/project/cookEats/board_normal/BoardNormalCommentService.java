@@ -38,4 +38,15 @@ public class BoardNormalCommentService {
     public List<BoardNormalComment> getCommentsByArticleId(Long articleId) {
         return commentRepository.findByBoardNormalId(articleId);
     }
+
+    // 댓글 업데이트 (저장)
+    public void updateComment(BoardNormalComment comment) {
+        commentRepository.save(comment);
+    }
+
+    // 댓글 ID로 댓글 조회
+    public BoardNormalComment getCommentById(Long id) {
+        return commentRepository.findById(id).orElse(null);
+    }
+
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자유게시글 상세 페이지</title>
+
+    <!-- 외부 스타일시트 링크 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
+</head>
+<body>
+<h1>댓글 수정</h1>
+<form th:action="@{/boardNormal/comments/{id}/edit(id=${comment.id})}" method="post">
+    <label for="contents">내용</label><br>
+    <textarea id="contents" name="contents" rows="4" cols="20" th:text="${comment.contents}"></textarea><br><br>
+    <input type="submit" value="수정">
+</form>
+<a th:href="@{/boardNormal/articles/{id}(id=${comment.boardNormal.id})}">
+    <button>취소</button>
+</a>
+</body>
+</html>
