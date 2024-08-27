@@ -19,7 +19,6 @@ public class RecipeService {
 
 
     private final RecipeDBRepository recipeDBRepository;
-
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
 
@@ -68,6 +67,7 @@ public class RecipeService {
         recipeDBRepository.save(recipe);
     }
 
+
     //레시피 저장 - 혜정 코드
     public int write(RecipeDB recipe, Authentication auth) {
         CustomUser user = (CustomUser) auth.getPrincipal();
@@ -89,31 +89,37 @@ public class RecipeService {
         recipeDBRepository.save(recipe);
     }
 
+    //혜정 코드
     public int saveComment(RecipeComment comment) {
         recipeCommentRepository.save(comment);
         return 1;
     }
-
+  
+    //혜정 코드
     public List<RecipeComment> commentList(Long id) {
 
         return recipeCommentRepository.findAllByRecipeDB(recipeDBRepository.findById(id).get());
     }
-
+  
+    //혜정 코드
     public RecipeComment upCommentLike(Long id) {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
         comment.setLLIKE(comment.getLLIKE()+1);
         recipeCommentRepository.save(comment);
         return comment;
     }
-
+  
+     //혜정 코드
     public int commentDelete(Long id) {
         recipeCommentRepository.deleteById(id);
         return 1;
     }
-
+  
+    //혜정 코드
     public void updateComment(Long id, String content) {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
         comment.setComment_contents(content);
         recipeCommentRepository.save(comment);  // 변경된 내용 저장
     }
+
 }

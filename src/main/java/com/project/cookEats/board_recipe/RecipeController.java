@@ -97,19 +97,24 @@ public class RecipeController {
         return "redirect:/boardrecipe/recipe/"+id;
     }
 
+
     //혜정코드
+
     @GetMapping("/write")
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
         return "boardrecipe/write.html";
     }
+
     //혜정코드
+
     @PostMapping("/write")
     String writePro(@ModelAttribute RecipeDB recipe, Authentication auth){
         int result = recipeService.write(recipe, auth);
         return "redirect:/boardrecipe/home";
     }
+
 
     //혜정코드
     @PostMapping("/commentWrite")
@@ -126,13 +131,14 @@ public class RecipeController {
         return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
     }
 
-    //혜정 코드
+    //혜정 코드 - 아직 구현 못함
     @PostMapping("/commentModify/{commentId}")
     public ResponseEntity<String> modifyComment(@PathVariable Long commentId, @RequestParam String content) {
         recipeService.updateComment(commentId, content);
         return ResponseEntity.ok("댓글 수정 성공");
     }
-
+  
+    //혜정 코드
     @GetMapping("/commentDelete/{id}")
     String commentDelete(@PathVariable Long id, @RequestParam Long recipeID){
 
@@ -140,8 +146,6 @@ public class RecipeController {
         return "redirect:/boardrecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
 
     }
-
-
 
 
 
