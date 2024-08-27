@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/boardrecipe")
+@RequestMapping("/boardRecipe")
 public class RecipeController {
 
     private final RecipeService recipeService;
@@ -52,7 +52,7 @@ public class RecipeController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        return "boardrecipe/home"; // home.html로 반환
+        return "boardRecipe/home"; // home.html로 반환
     }
 
     // 상세 레시피
@@ -67,7 +67,7 @@ public class RecipeController {
             model.addAttribute("formattedDate", formattedDate);
 
 
-            return "boardrecipe/recipeDetail";
+            return "boardRecipe/recipeDetail";
 
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
@@ -80,7 +80,7 @@ public class RecipeController {
     @GetMapping("/boardLike/{id}")
     String like(@PathVariable Long id){
         recipeService.upLike(id);
-        return "redirect:/boardrecipe/recipe/"+id;
+        return "redirect:/boardRecipe/recipe/"+id;
     }
 
 

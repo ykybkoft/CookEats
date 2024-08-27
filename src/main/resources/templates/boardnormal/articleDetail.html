@@ -1,4 +1,5 @@
 <!doctype html>
+<div th:replace="~{header.html :: navbar}"></div>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,23 +26,23 @@
             <div>
                 <p th:text="${article.content}"></p>
             </div>
-            <a href="/board/board_normal">
+            <a href="/boardNormal/home">
                 <button type="button">목록</button>
             </a>
         </div>
         <div th:if="${article == null}">
             <p>게시글을 찾을 수 없습니다.</p>
-            <a href="/board/board_normal">
+            <a href="/boardNormal/home">
                 <button type="button">목록</button>
             </a>
         </div>
         <div>
-            <a th:href="@{/board/update/{id}(id=${article.id})}">
+            <a sec:authorize="isAuthenticated()" th:href="@{/boardNormal/update/{id}(id=${article.id})}">
                 <button type="button">수정</button>
             </a>
         </div>
         <div>
-            <form th:action="@{/board/delete/{id}(id=${article.id})}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+            <form sec:authorize="isAuthenticated()" th:action="@{/boardNormal/delete/{id}(id=${article.id})}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
                 <button type="submit">삭제</button>
             </form>
         </div>

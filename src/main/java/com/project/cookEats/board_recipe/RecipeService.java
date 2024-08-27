@@ -12,8 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecipeService {
 
-    @Autowired
-    private RecipeDBRepository recipeDBRepository;
+    private final RecipeDBRepository recipeDBRepository;
 
 
     // 모든 게시글을 반환, Paging

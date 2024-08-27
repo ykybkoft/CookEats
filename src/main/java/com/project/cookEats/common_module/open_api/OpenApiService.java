@@ -1,4 +1,4 @@
-package com.project.cookEats.open_api;
+package com.project.cookEats.common_module.open_api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
