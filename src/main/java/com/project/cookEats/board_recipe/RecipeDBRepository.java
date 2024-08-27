@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
+import java.util.Optional;
 
 public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
 
@@ -50,10 +51,16 @@ public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
     long count();
 
 
-    //혜정
+    //혜정 코드 
     List<RecipeDB> findTop5ByOrderByLLIKEDesc();
     List<RecipeDB> findAllByMember(Member member);
-
+  
+    //혜정 코드 
     @Query(nativeQuery = true, value = "select * from recipedb where rcp_nm like %?1% or manual like %?1% order by id desc limit 5")
     List<RecipeDB> findTotalSearch(String search);
+
+    //혜정 코드 
+    @Query(nativeQuery = true, value="select * from recipedb where rcp_parts_dtls like %?1% or manual like %?1% order by rand() limit 1")
+    Optional<RecipeDB> findRecommandRecipe(String ingredient);
+
 }

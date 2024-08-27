@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ public class RecipeController {
 
     private final RecipeService recipeService;
     private final MemberService memberService;
+    private final RecipeCommentRepository recipeCommentRepository;
 
     @GetMapping("/home")
     public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
@@ -59,8 +61,9 @@ public class RecipeController {
 
     // 상세 레시피
     @GetMapping("/recipe/{id}")
-    public String getRecipeDetail(@PathVariable("id") Long id, Model model) {
+    public String getRecipeDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         RecipeDB recipe = recipeService.getRecipeById(id);
+
 
         if (recipe != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -69,12 +72,21 @@ public class RecipeController {
             model.addAttribute("formattedDate", formattedDate);
 
 
+            //혜정 코드
+            recipeService.viewCount(id);
+            if(auth != null){model.addAttribute("member", memberService.findMember(auth));};
+            model.addAttribute("comments", recipeService.commentList(id));
+
+
             return "boardrecipe/recipeDetail";
 
-        } else {
+    }else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
+
+
+
     }
 
 
@@ -85,6 +97,9 @@ public class RecipeController {
         return "redirect:/boardrecipe/recipe/"+id;
     }
 
+
+    //혜정코드
+
     @GetMapping("/write")
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
@@ -92,10 +107,44 @@ public class RecipeController {
         return "boardrecipe/write.html";
     }
 
+    //혜정코드
+
     @PostMapping("/write")
     String writePro(@ModelAttribute RecipeDB recipe, Authentication auth){
         int result = recipeService.write(recipe, auth);
         return "redirect:/boardrecipe/home";
+    }
+
+
+    //혜정코드
+    @PostMapping("/commentWrite")
+    String commentWrite(@ModelAttribute RecipeComment comment){
+
+        int result = recipeService.saveComment(comment);
+        return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
+    }
+
+    //혜정 코드
+    @GetMapping("/commentLike/{id}")
+    String commentLike(@PathVariable Long id){
+        RecipeComment comment = recipeService.upCommentLike(id);
+        return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
+    }
+
+    //혜정 코드 - 아직 구현 못함
+    @PostMapping("/commentModify/{commentId}")
+    public ResponseEntity<String> modifyComment(@PathVariable Long commentId, @RequestParam String content) {
+        recipeService.updateComment(commentId, content);
+        return ResponseEntity.ok("댓글 수정 성공");
+    }
+  
+    //혜정 코드
+    @GetMapping("/commentDelete/{id}")
+    String commentDelete(@PathVariable Long id, @RequestParam Long recipeID){
+
+        int result = recipeService.commentDelete(id);
+        return "redirect:/boardrecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
+
     }
 
 

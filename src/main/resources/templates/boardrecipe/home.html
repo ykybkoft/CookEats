@@ -77,7 +77,6 @@
 
         .form-bar {
             display: flex;
-            width : 500px;
             margin: 0 auto;
             box-shadow:0 1px 6px 0 rgba(32, 33, 36, .28);
             height: 45px;
@@ -99,7 +98,8 @@
         }
         .search-bar {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+
         }
 
         .search-type-container {
@@ -108,12 +108,14 @@
         }
 
     .search-type {
+        margin-top: 5px;
+        margin-left : 15px;
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
         background-color: #17A96D;
         color: white;
-        padding: 10px 30px 10px 15px;
+        padding: 10px 15px 10px 15px;  /* 오른쪽 패딩을 약간 늘렸습니다 */
         font-size: 16px;
         border: none;
         border-radius: 25px;
@@ -127,14 +129,16 @@
     }
 
     .search-type-container::after {
-        content: "\25BC";
+       
         font-size: 12px;
         color: white;
         position: absolute;
         top: 50%;
-        right: 10px;
+        text-align: center;
         transform: translateY(-50%);
         pointer-events: none;
+        line-height: 1;  /* 추가: 라인 높이를 1로 설정 */
+
     }
 
     /* 옵션 스타일링 */
@@ -158,8 +162,8 @@
                 <option value="author">작성자</option>
             </select>
         </div>
+    <!-- 혜정 코드 (검색바)-->
         <div class="form-bar">
-
             <div>
                 <i class="fas fa-search"></i>
                 <input class="search" type="text" name="search" placeholder="검색어를 입력해주세요.">

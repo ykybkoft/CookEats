@@ -223,3 +223,85 @@ h6{
   a:hover {
     color: #007bff;
   }
+
+.recommend-btn {
+        text-align: center;
+        margin: 40px 0;
+    }
+
+    .recommend-btn a {
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .recommend-btn button {
+        background: linear-gradient(45deg, #2ecc71, #27ae60, #1abc9c);
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        padding: 25px 60px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .recommend-btn button::before,
+    .recommend-btn button::after {
+        font-size: 28px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .recommend-btn button::before {
+        content: "🍽️";
+        left: 20px;
+    }
+
+    .recommend-btn button::after {
+        content: "🍽️";
+        right: 20px;
+    }
+
+    .recommend-btn button .shine {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+        transform: scale(0);
+        transition: transform 0.5s ease-out;
+    }
+
+    .recommend-btn button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(46, 204, 113, 0.4);
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+
+    .recommend-btn button:hover::before {
+        opacity: 1;
+        left: 25px;
+    }
+
+    .recommend-btn button:hover::after {
+        opacity: 1;
+        right: 25px;
+    }
+
+    .recommend-btn button:hover .shine {
+        transform: scale(1);
+    }
+
+    .recommend-btn button:active {
+        transform: translateY(-2px) scale(1.02);
+    }
+
