@@ -13,8 +13,8 @@
     <div th:replace="~{header.html :: navbar}"></div>
 </head>
 <body>
-<section>
-
+<div class="content-wrapper">
+    <section>
     <div class="section">
         <form action="/search" method="get">
             <div class="form-bar">
@@ -36,25 +36,63 @@
 
 
 
-<section>
+<section class="search-result">
 
     <div class="section-box">
         <h2>검색 레시피</h2>
+        <div class="recipe" th:if="${!#lists.isEmpty(recipe)}">
+
+            <div th:each="recipe : ${recipe}" th:onclick="|location.href='@{ '/boardrecipe/recipe/' + ${recipe.id}}'|">
+
+                <img th:src="@{${recipe.ATT_FILE_NO_MAIN}}">
+                <h6 th:text="${recipe.RCP_NM}"></h6>
+            </div>
+        </div>
+
+        <a class="more" href="/boardrecipe/home" th:if="${!#lists.isEmpty(recipe)}">레시피 더보기</a>
+
+        <div th:if="${#lists.isEmpty(recipe)}">
+            <h2>검색된 레시피가 없습니다.</h2>
+        </div>
     </div>
 
-</section>
 
-<section>
     <div class="section-box">
         <h2>장터 게시판 검색</h2>
-    </div>
-</section>
+        <div class="boards" th:if="${!#lists.isEmpty(share)}">
 
-<section>
+            <div th:each="share : ${share}" th:onclick="|location.href='@{ '/boardShare/view/' + ${share.id}}'|">
+
+                <h6 th:text="${share.title}"></h6>
+            </div>
+        </div>
+
+        <a class="more" href="/boardShare/home" th:if="${!#lists.isEmpty(share)}">게시글 더보기</a>
+
+        <div th:if="${#lists.isEmpty(share)}">
+            <h2>검색된 게시글이 없습니다.</h2>
+        </div>
+
+    </div>
+
     <div class="section-box">
         <h2>자유 게시판 검색</h2>
+        <div class="boards" th:if="!${#lists.isEmpty(normal)}">
+
+            <div th:each="normal : ${normal}" th:onclick="|location.href='@{ '/boardnormal/articles/' + ${normal.id}}'|">
+
+                <h6 th:text="${normal.title}"></h6>
+            </div>
+        </div>
+
+        <a class="more" href="/boardnormal/home" th:if="!${#lists.isEmpty(normal)}">게시글 더보기</a>
+
+        <div th:if="${#lists.isEmpty(normal)}">
+            <h2>검색된 게시글이 없습니다.</h2>
+        </div>
     </div>
 </section>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

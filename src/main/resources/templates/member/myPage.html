@@ -6,131 +6,250 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>마이페이지</title>
     <div th:replace="~{header.html :: navbar}"></div>
+    <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .profile-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 20px 0;
+        font-family: Arial, sans-serif;
+        }
+        .user-info-table th, .user-info-table td {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+        }
+        .user-info-table th {
+            background-color: #f5f5f5;
+            text-align: right;
+            width: 30%;
+            font-weight: bold;
+        }
+        .user-info-table tr:first-child th {
+            border-top-left-radius: 10px;
+        }
+        .user-info-table tr:first-child td {
+            border-top-right-radius: 10px;
+        }
+        .user-info-table tr:last-child th {
+            border-bottom-left-radius: 10px;
+        }
+        .user-info-table tr:last-child td {
+            border-bottom-right-radius: 10px;
+        }
+        .user-info-table input[type="password"] {
+            width: 200px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .user-info-table button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-info-table button:hover {
+            background-color: #45a049;
+        }
+        .board-container {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        }
+        h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #45A048;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .edit-delete {
+            text-align: center;
+            font-size: 18px;
+        }
+        .empty-message {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+            margin: 20px 0;
+        }
+
+
+    </style>
 </head>
 <body>
-
-<h1>마이페이지</h1><hr>
-<h4>회원 정보 수정</h4>
-
-<table>
-    <tr>
-        <th>이름</th>
-        <td th:text="${user.name}"></td>
-    </tr>
-    <tr>
-        <th>닉네임</th>
-        <td th:text="${user.nick}"></td>
-    </tr>
-    <tr>
-        <th>이메일</th>
-        <td th:text="${user.email}"></td>
-    </tr>
-    <tr>
-        <th>현재 비밀번호 입력</th>
-        <form action="/member/password" method="post">
-            <td>
-                <input name="password" type="password">
-                <input name="type" type="hidden" value="password">
-                <button>비밀번호 변경</button>
-            </td>
-        </form>
-
-    </tr>
-    <tr>
-        <th>회원탈퇴</th>
-        <form action="/member/password" method="post">
-            <td>
-                <input name="password" type="password" placeholder="비밀번호 입력">
-                <input name="type" type="hidden" value="delete">
-                <button>회원 탈퇴</button>
-            </td>
-        </form>
-
-    </tr>
-
-</table>
-
-<hr>
-<h1>내가 쓴 글</h1>
-<hr>
-<h3>자유 게시판</h3>
-<div th:if="!${#lists.isEmpty(normal)}">
-    <table>
+<div class="container">
+    <h1>마이페이지</h1>
+    <div class="profile-info">
+        <i class="fa-regular fa-user fa-2x" style="margin:10px;"></i>
+        <div>
+            <h2 th:text="${user.name}"></h2>
+        </div>
+    </div>
+    <h2>개인 정보 수정</h2>
+    <table class="user-info-table">
         <tr>
-            <th>제목</th>
-            <th>내용</th>
-            <th>수정</th>
-            <th>삭제</th>
+            <th>이름</th>
+            <td th:text="${user.name}"></td>
+        </tr>
+        <tr>
+            <th>닉네임</th>
+            <td th:text="${user.nick}"></td>
+        </tr>
+        <tr>
+            <th>이메일</th>
+            <td th:text="${user.email}"></td>
+        </tr>
+        <tr>
+            <th>현재 비밀번호 입력</th>
+            <form action="/member/password" method="post">
+                <td>
+                    <input name="password" type="password" placeholder="비밀번호 입력">
+                    <input name="type" type="hidden" value="password">
+                    <button>비밀번호 변경</button>
+                </td>
+            </form>
+
+        </tr>
+        <tr>
+            <th>회원탈퇴</th>
+            <form action="/member/password" method="post">
+                <td>
+                    <input name="password" type="password" placeholder="비밀번호 입력">
+                    <input name="type" type="hidden" value="delete">
+                    <button>회원 탈퇴</button>
+                </td>
+            </form>
+
         </tr>
 
-        <div th:each="normal : ${normal}">
-            <tr>
-                <td th:text="${normal.title}"></td>
-                <td th:text="${normal.content}"></td>
-                <th>✏️</th>
-                <th>🗑️</th>
-            <tr>
+    </table>
+
+
+    <h2>활동 요약</h2>
+    <div class="board-container">
+        <h3>자유 게시판</h3>
+        <div th:if="!${#lists.isEmpty(normal)}">
+            <table>
+                <tr>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+                <tr th:each="normal : ${normal}">
+                    <td th:text="${normal.title}"></td>
+                    <td th:text="${normal.content}"></td>
+                    <td class="edit-delete">✏️</td>
+                    <td class="edit-delete">🗑️</td>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${#lists.isEmpty(normal)}" class="empty-message">
+            <p>작성한 게시글이 없습니다.</p>
         </div>
 
-    </table>
-</div>
+        <hr>
 
-<div th:if="${#lists.isEmpty(normal)}">
-    <h1>작성한 게시글이 없습니다.</h1>
-</div>
-
-<hr>
-
-<h3>장터 게시판</h3>
-<div th:if="${!#lists.isEmpty(share)}">
-    <table>
-        <tr>
-            <th>제목</th>
-            <th>내용</th>
-            <th>수정</th>
-            <th>삭제</th>
-        </tr>
-
-        <div th:each="share : ${share}">
-            <tr>
-                <td th:text="${share.title}"></td>
-                <td th:text="${share.content}"></td>
-                <th>✏️</th>
-                <th>🗑️</th>
-            <tr>
+        <h3>장터 게시판</h3>
+        <div th:if="${!#lists.isEmpty(share)}">
+            <table>
+                <tr>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+                <tr th:each="share : ${share}">
+                    <td th:text="${share.title}"></td>
+                    <td th:text="${share.content}"></td>
+                    <td class="edit-delete">✏️</td>
+                    <td class="edit-delete">🗑️</td>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${#lists.isEmpty(share)}" class="empty-message">
+            <p>작성한 게시글이 없습니다.</p>
         </div>
 
-    </table>
-</div>
+        <hr>
 
-<div th:if="${#lists.isEmpty(share)}">
-    <h1>작성한 게시글이 없습니다.</h1>
-</div>
-<hr>
-
-<h3>나의 레시피</h3>
-<div th:if="${!#lists.isEmpty(recipe)}">
-    <table>
-        <tr>
-            <th>제목</th>
-            <th>수정</th>
-            <th>삭제</th>
-        </tr>
-
-        <div th:each="recipe : ${recipe}">
-            <tr>
-                <td th:text="${recipe.RCP_NM}"></td>
-                <th>✏️</th>
-                <th>🗑️</th>
-            <tr>
+        <h3>나의 레시피</h3>
+        <div th:if="${!#lists.isEmpty(recipe)}">
+            <table>
+                <tr>
+                    <th>제목</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+                <tr th:each="recipe : ${recipe}">
+                    <td th:text="${recipe.RCP_NM}"></td>
+                    <td class="edit-delete">✏️</td>
+                    <td class="edit-delete">🗑️</td>
+                </tr>
+            </table>
         </div>
-
-    </table>
+        <div th:if="${#lists.isEmpty(recipe)}" class="empty-message">
+            <p>작성한 레시피가 없습니다.</p>
+        </div>
+    </div>
 </div>
 
-<div th:if="${#lists.isEmpty(recipe)}">
-    <h1>작성한 레시피가 없습니다.</h1>
-</div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

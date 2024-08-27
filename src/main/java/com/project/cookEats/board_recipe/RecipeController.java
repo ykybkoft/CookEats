@@ -1,10 +1,12 @@
 package com.project.cookEats.board_recipe;
 
+import com.project.cookEats.member.Member;
 import com.project.cookEats.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +83,19 @@ public class RecipeController {
     String like(@PathVariable Long id){
         recipeService.upLike(id);
         return "redirect:/boardRecipe/recipe/"+id;
+    }
+
+    @GetMapping("/write")
+    String write(Authentication auth, Model model){
+        Member result = memberService.findMember(auth);
+        model.addAttribute("user",result);
+        return "boardrecipe/write.html";
+    }
+
+    @PostMapping("/write")
+    String writePro(@ModelAttribute RecipeDB recipe, Authentication auth){
+        int result = recipeService.write(recipe, auth);
+        return "redirect:/boardrecipe/home";
     }
 
 

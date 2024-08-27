@@ -1,18 +1,25 @@
 package com.project.cookEats.board_recipe;
 
+
+import com.project.cookEats.board_normal.BoardNormal;
+import com.project.cookEats.member.CustomUser;
+import com.project.cookEats.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
 
+
     private final RecipeDBRepository recipeDBRepository;
+
+    private final MemberRepository memberRepository;
 
 
     // 모든 게시글을 반환, Paging
@@ -26,6 +33,7 @@ public class RecipeService {
 
     public long getTotalItems() {
         return recipeDBRepository.count();
+
     }
 
     public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
@@ -52,11 +60,23 @@ public class RecipeService {
     }
 
 
-    //혜정
+    //혜정 
     public void upLike(Long id) {
         RecipeDB recipe = recipeDBRepository.findById(id).get();
         recipe.setLLIKE(recipe.getLLIKE()+1);
         recipeDBRepository.save(recipe);
     }
 
+    public int write(RecipeDB recipe, Authentication auth) {
+        CustomUser user = (CustomUser) auth.getPrincipal();
+        String tmp = "";
+        String[] manual = recipe.getMANUAL().split("\n");
+        for (int i = 0; i <manual.length ; i++) {
+            tmp += (manual[i]+"%<");
+        }
+        recipe.setMANUAL(tmp);
+        recipe.setMember(memberRepository.findById(user.getId()).get());
+        recipeDBRepository.save(recipe);
+        return 1;
+    }
 }

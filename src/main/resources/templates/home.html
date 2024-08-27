@@ -26,17 +26,17 @@
             </a>
         </div>
         <ul class="menu_wrap">
-            <li><a href="/boardRecipe/home">레시피</a></li>
-            <li><a href="/boardShare/home">장터 게시판</a></li>
-            <li><a href="/boardNormal/home">자유 게시판</a></li>
+            <li><a href="/boardrecipe/home">레시피</a></li>
+            <li><a href="/board_share">장터 게시판</a></li>
+            <li><a href="/boardnormal/home">자유 게시판</a></li>
             <li sec:authorize="isAuthenticated()"><a href="/member/myPage">마이페이지</a></li>
         </ul>
     </div>
     <div class="top">
         <ul class="member_menu">
-        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a>│</li>
+        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a></li>
         <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a>│</li>
+        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a></li>
         <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
         </ul>
     </div>
@@ -63,8 +63,8 @@
     <section>
         <div class="section-contents">
             <div>
-                <a href="/boardRecipe/home"><img src="img/recipe.png"></a>
-                <a href="/boardShare/home"><img src="img/share.png"></a>
+                <a href="/boardrecipe/home"><img src="img/recipe.png"></a>
+                <a href="/board_share"><img src="img/share.png"></a>
                 <a href="/boardNormal/home"><img src="img/normal.png"></a>
                 <a sec:authorize="isAuthenticated()" href="/member/myPage"><img src="img/member.png"></a>
                 <a sec:authorize="isAnonymous()" href="/member/join"><img src="img/member.png"></a>

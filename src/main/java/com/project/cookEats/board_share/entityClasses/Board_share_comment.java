@@ -47,4 +47,6 @@ public class Board_share_comment {
     @JoinColumn(name = "board_share_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Board_share board_share;
+
 }
+
