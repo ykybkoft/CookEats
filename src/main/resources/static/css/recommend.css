@@ -153,40 +153,92 @@ h2 {
 }
 
 .recipe {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 30px;
-    box-shadow: 0 0 20px rgba(46, 204, 113, 0.15);
-}
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 30px;
+        box-shadow: 0 0 20px rgba(46, 204, 113, 0.15);
+        border-radius: 15px;
+        overflow: hidden;
+    }
 
-.recipe th, .recipe td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    text-size-adjust: 12px;
+    .recipe th, .recipe td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
 
-}
+    .recipe th {
+        background-color: #22B04D;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
 
-.recipe th {
-    background-color: #17A96D;
-    color: white;
-    font-weight: bold;
-}
+    .recipe tr:last-child td {
+        border-bottom: none;
+    }
 
-.recipe tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
+    .recipe tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
-.recipe tr:hover {
-    background-color: #e8f5e9;
-}
+    .recipe tr:hover {
+        background-color: #e8f5e9;
+    }
 
-.recipe img {
-    width: 600px;
-    height: 600px;
-    display: block;
-    margin: 0 auto;
-}
+    .recipe img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .recipe img:hover {
+        transform: scale(1.05);
+    }
+
+    .recipe td[colspan="2"] {
+        padding: 20px;
+    }
+
+    .recipe th:first-child,
+    .recipe td:first-child {
+        padding-left: 25px;
+    }
+
+    .recipe th:last-child,
+    .recipe td:last-child {
+        padding-right: 25px;
+    }
+
+    /* 음식 이름 강조 */
+    .recipe tr:first-child td {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #2ecc71;
+    }
+
+    /* 재료와 조리방법 구분선 */
+    .recipe tr:nth-child(4) {
+        border-top: 2px solid #2ecc71;
+    }
+
+    /* 조리방법 스텝 스타일 */
+    .recipe tr:nth-child(n+6) td::before {
+        content: "Step " counter(step) ": ";
+        counter-increment: step;
+        font-weight: bold;
+        color: #2ecc71;
+    }
+
+    .recipe {
+        counter-reset: step;
+    }
 
 /* 버튼 스타일 수정 */
 .recommend-btn button {
@@ -208,15 +260,3 @@ h2 {
     opacity: 1 !important;
 }
 
-.recipe tr:first-child th {
-    border-top-left-radius: 10px;
-}
-.recipe tr:first-child td {
-    border-top-right-radius: 10px;
-}
-.recipe tr:last-child th {
-    border-bottom-left-radius: 10px;
-}
-.recipe tr:last-child td {
-    border-bottom-right-radius: 10px;
-}
