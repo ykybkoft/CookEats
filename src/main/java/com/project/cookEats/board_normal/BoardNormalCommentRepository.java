@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface BoardNormalCommentRepository extends JpaRepository<BoardNormalComment, Long> {
-   // List<BoardNormalComment> findByBoardNormalId(Long boardNormalId);
+    // List<BoardNormalComment> findByBoardNormalId(Long boardNormalId);
 
     List<BoardNormalComment> findAllByBoardNormal(BoardNormal boardNormal);
 

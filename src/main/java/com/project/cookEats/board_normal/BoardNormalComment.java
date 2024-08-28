@@ -12,7 +12,9 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -24,7 +26,7 @@ public class BoardNormalComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference(value = "comment-member")
+    @JsonBackReference(value = "member-boardComment")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn()
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -35,8 +37,9 @@ public class BoardNormalComment {
     @JoinColumn(name = "board_normal_id")
     private BoardNormal boardNormal;
 
-    @Column(name = "sysDate", updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date sys_date;
+    @Column(name = "sysDate", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreatedDate
+    private LocalDateTime sysDate = LocalDateTime.now();
 
     @Column(length = 255, nullable = false)
     private String contents;
@@ -44,4 +47,12 @@ public class BoardNormalComment {
     @Column(name = "cmtLike")
     @ColumnDefault("0")
     private long comment_like;
+
+    @Override
+    public String toString() {
+        return "BoardNormalComment{id=" + id +
+                ", contents='" + contents + '\'' +
+                ", boardNormalId=" + (boardNormal != null ? boardNormal.getId() : null) +
+                ", memberId=" + (member != null ? member.getId() : null) + '}';
+    }
 }
