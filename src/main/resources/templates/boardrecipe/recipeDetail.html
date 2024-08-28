@@ -75,13 +75,25 @@
                 </td>
 
                 <td th:if="${member != null and #authentication.principal.id == comment.member.id}">
-                    <a href="#" th:onclick="'showEditForm('+${comment.id}+')'">✏️</a>
+                    <a href="#" th:onclick="'showEditForm(' + ${comment.id} + ');'">✏️</a>
                     <a th:href="@{ '/boardrecipe/commentDelete/' + ${comment.id}(recipeID=${comment.recipeDB.id})}">🗑️</a>
                 </td>
             </tr>
                 <tr>
-                    <td th:text="${comment.comment_contents}"></td>
+                    <td th:id="'comment-content-' + ${comment.id}" th:text="${comment.comment_contents}"></td>
                 </tr>
+
+                <tr th:id="'edit-form-' + ${comment.id}" style="display: none;">
+                    <td colspan="4">
+                        <form th:onsubmit="'return submitEditForm(' + ${comment.id} + ');'">
+                            <textarea th:id="'edit-content-' + ${comment.id}" rows="4" cols="50" th:text="${comment.comment_contents}"></textarea>
+                            <input type="hidden" th:id="'recipe-id-' + ${comment.id}" th:value="${comment.recipeDB.id}" />
+                            <button type="submit">수정하기</button>
+                            <button type="button" th:onclick="'cancelEdit(' + ${comment.id} + ');'">취소</button>
+                        </form>
+                    </td>
+                </tr>
+
 
             </th:block>
 
@@ -104,10 +116,9 @@
     </section>
 
 </main>
-
 <!-- 혜정 코드 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+<script defer>
         const param = new URLSearchParams(window.location.search);
 
         var type ='';
@@ -116,52 +127,58 @@
             if(param.get('type')=='commentDelete'){
                 type='댓글 삭제가';
                 alert(type+' 완료되었습니다.');
-            }else if (param.get('type')=='commentModify'){
-                type='댓글 수정이';
-                alert(type+' 완료되었습니다.');
             }
 
         }
 
-        rm(commentId) {function showEditForm(commentId) {
-    document.getElementById('edit-form-' + commentId).style.display = 'table-row';
-}
-
-function cancelEdit(commentId) {
-    document.getElementById('edit-form-' + commentId).style.display = 'none';
-}
-
-function submitEditFo
-    const content = document.getElementById('edit-content-' + commentId).value;
-    const recipeID = document.getElementById('recipe-id-' + commentId).value;
-
-    fetch(`/boardrecipe/commentModify/${commentId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `content=${encodeURIComponent(content)}&recipeID=${recipeID}`,
-    })
-    .then(response => {
-        if (response.ok) {
-            document.getElementById('comment-content-' + commentId).textContent = content;
-            cancelEdit(commentId);
-        } else {
-            alert('댓글 수정에 실패했습니다.');
+       // 댓글 수정 폼을 보여주는 함수
+        function showEditForm(commentId) {
+            console.log("showEditForm called with commentId:", commentId);
+            document.getElementById('edit-form-' + commentId).style.display = 'table-row';
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('댓글 수정 중 오류가 발생했습니다.');
-    });
 
-    return false; // 폼 제출을 막음
-}
+        // 댓글 수정 폼을 취소하는 함수
+        function cancelEdit(commentId) {
+            document.getElementById('edit-form-' + commentId).style.display = 'none';
+        }
+
+        // 댓글 수정 내용을 서버로 전송하는 함수
+        function submitEditForm(commentId) {
+            const content = document.getElementById('edit-content-' + commentId).value;
+            const recipeID = document.getElementById('recipe-id-' + commentId).value;
+
+            fetch(`/boardrecipe/commentModify/${commentId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `content=${encodeURIComponent(content)}&recipeID=${recipeID}`,
+            })
+            .then(response => {
+                if (response.ok) {
+                    // 수정된 내용을 페이지에 반영
+                    document.getElementById('comment-content-' + commentId).textContent = content;
+                    cancelEdit(commentId);
+                    alert('댓글 수정이 완료되었습니다. ');
+                } else {
+                    alert('댓글 수정에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('댓글 수정 중 오류가 발생했습니다.');
+            });
+
+            return false; // 폼 제출을 막음
+        }
+
 
 
 
 
 
     </script>
+
+
 </body>
 </html>

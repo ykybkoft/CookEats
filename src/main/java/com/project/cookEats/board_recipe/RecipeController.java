@@ -131,7 +131,7 @@ public class RecipeController {
         return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
     }
 
-    //혜정 코드 - 아직 구현 못함
+    //혜정 코드
     @PostMapping("/commentModify/{commentId}")
     public ResponseEntity<String> modifyComment(@PathVariable Long commentId, @RequestParam String content) {
         recipeService.updateComment(commentId, content);
