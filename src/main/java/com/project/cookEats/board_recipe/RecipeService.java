@@ -31,6 +31,7 @@ public class RecipeService {
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
 
+
     //지훈 코드 -> 혜정 수정
     public Page<RecipeDB> findAll(int page,String search,String sortType) {
 
@@ -56,6 +57,7 @@ public class RecipeService {
 
         }
 
+
     }
 
 
@@ -64,17 +66,7 @@ public class RecipeService {
 
     }
 
-//    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
-//        return switch (sortBy) {
-//            // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
-//            case "likes" -> recipeDBRepository.findByTitleContainingOrderByLikesDesc(keyword);
-//            // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
-//            case "date" -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-//            // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
-//            case "count" -> recipeDBRepository.findByKeywordOrderByCountDesc(keyword);
-//            default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-//        };
-//    }
+
     public RecipeDB getRecipeById(Long id) {
         return recipeDBRepository.findById(id).orElse(null);
     }

@@ -31,6 +31,7 @@ public class RecipeController {
 
         Page<RecipeDB> resultPage = recipeService.findAll(page,search, sortType);
 
+
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
 
