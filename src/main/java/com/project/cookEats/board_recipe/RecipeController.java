@@ -61,11 +61,8 @@ public class RecipeController {
         model.addAttribute("endPage", endPage);
 
         //혜정 코드
+        model.addAttribute("search", search);
 
-        if(searchType != null){
-            model.addAttribute("searchType",searchType);
-            model.addAttribute("search", search);
-        }
 
         return "boardRecipe/home"; // home.html로 반환
 
@@ -116,7 +113,7 @@ public class RecipeController {
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
-        return "boardRecipe/write.html";
+        return "boardrecipe/write.html";
     }
 
     //혜정코드
