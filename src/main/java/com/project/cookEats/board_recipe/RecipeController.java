@@ -25,11 +25,12 @@ public class RecipeController {
     private final RecipeCommentRepository recipeCommentRepository;
 
     @GetMapping("/home")
-    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String searchType, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
+    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
 
-        int pageSize = 15; // 한 페이지에 표시할 레시피 수
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search, searchType , sortType);
+
+
+        Page<RecipeDB> resultPage = recipeService.findAll(page,search, sortType);
+
 
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
@@ -50,20 +51,24 @@ public class RecipeController {
         }
 
 
+
         // 모델에 데이터 추가
         model.addAttribute("list", resultPage.getContent());
+        //model.addAttribute("list", recipeService.findAll(pageable,search,searchType,sortType).getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
         //혜정 코드
+
         if(searchType != null){
             model.addAttribute("searchType",searchType);
             model.addAttribute("search", search);
         }
 
         return "boardRecipe/home"; // home.html로 반환
+
     }
 
     // 상세 레시피
