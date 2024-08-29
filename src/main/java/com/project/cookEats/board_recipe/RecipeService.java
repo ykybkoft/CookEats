@@ -122,7 +122,7 @@ public class RecipeService {
     //혜정 코드
     public void updateComment(Long id, String content) {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
-        comment.setComment_contents(content);
+        comment.setContents(content);
         recipeCommentRepository.save(comment);  // 변경된 내용 저장
     }
 

@@ -18,6 +18,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@ToString
 public class BoardNormalComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
