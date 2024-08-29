@@ -53,7 +53,7 @@
     <section class="comments">
         <h3>댓글</h3>
         <div>
-        <form th:if="${member != null}" class="comment-write" method="post" action="/boardrecipe/commentWrite">
+        <form th:if="${member != null}" class="comment-write" method="post" action="/boardRecipe/commentWrite">
             <input name="comment_contents" placeholder="댓글 작성">
             <input type="hidden" name="recipeDB" th:value="${recipe.id}">
             <input type="hidden" name="member" th:value="${member.id}">
@@ -67,7 +67,7 @@
                 <td th:text="${comment.member.nick}"></td>
                 <td th:text="${#temporals.format(comment.sys_date, 'yyyy-MM-dd HH:mm')}"></td>
                 <td>
-                    <a th:if="${member != null}" th:href="@{ '/boardrecipe/commentLike/' + ${comment.id} }">
+                    <a th:if="${member != null}" th:href="@{ '/boardRecipe/commentLike/' + ${comment.id} }">
                         <i class="fa-regular fa-thumbs-up fa-lg"></i>
                         <input type="hidden" name="recipeDB" th:value="${comment.recipeDB.id}">
                     </a>
@@ -76,7 +76,7 @@
 
                 <td th:if="${member != null and #authentication.principal.id == comment.member.id}">
                     <a href="#" th:onclick="'showEditForm(' + ${comment.id} + ');'">✏️</a>
-                    <a th:href="@{ '/boardrecipe/commentDelete/' + ${comment.id}(recipeID=${comment.recipeDB.id})}">🗑️</a>
+                    <a th:href="@{ '/boardRecipe/commentDelete/' + ${comment.id}(recipeID=${comment.recipeDB.id})}">🗑️</a>
                 </td>
             </tr>
                 <tr>
