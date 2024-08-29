@@ -156,12 +156,14 @@
 
     <!-- 검색 폼 -->
     <form th:action="@{/boardrecipe/home}" method="get" class="search-bar">
-        <div class="search-type-container">
+
+        <!--<div class="search-type-container">
             <select name="searchType" class="search-type">
-                <option value="contents">내용</option>
+                <option value="RCP_PARTS_DTLS">내용</option>
                 <option value="nick">작성자</option>
             </select>
-        </div>
+        </div>-->
+
 
     <!-- 혜정 코드 (검색바)-->
         <div class="form-bar">
@@ -173,10 +175,17 @@
 
 
     </form>
-    <div class="sort-container">
-        <button></button>
-        <button></button>
-        <button></button>
+
+    <div th:if="${#strings.isEmpty(search)}" class="sort-container">
+        <button th:onclick="location.href='/boardrecipe/home?sortType=LLIKE'">추천순</button>
+        <button th:onclick="location.href='/boardrecipe/home?sortType=id'">최신순</button>
+        <button th:onclick="location.href='/boardrecipe/home?sortType=CCOUNT'">조회순</button>
+    </div>
+    <div th:if="${not #strings.isEmpty(search)}" class="sort-container">
+        <button th:onclick="|location.href='@{/boardrecipe/home(search=${search}, searchType=${searchType}, sortType=LLIKE)}'|">추천순</button>
+        <button th:onclick="|location.href='@{/boardrecipe/home(search=${search}, searchType=${searchType}, sortType=ID)}'|">최신순</button>
+        <button th:onclick="|location.href='@{/boardrecipe/home(search=${search}, searchType=${searchType}, sortType=CCOUNT)}'|">조회순</button>
+
     </div>
 
     <!-- 레시피 리스트 -->

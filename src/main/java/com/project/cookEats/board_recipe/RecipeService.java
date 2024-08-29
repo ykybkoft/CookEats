@@ -5,54 +5,68 @@ import com.project.cookEats.board_normal.BoardNormal;
 import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.MemberRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
+    //혜정 코드
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
     private final RecipeDBRepository recipeDBRepository;
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
 
-    // 모든 게시글을 반환, Paging
-    public Page<RecipeDB> findAll(Pageable pageable, String search, String searchType, String sortType) {
 
-        if(search ==null && sortType == null){
-            return recipeDBRepository.findAll(pageable);
+    //지훈 코드 -> 혜정 수정
+    public Page<RecipeDB> findAll(int page,String search,String sortType) {
+
+
+        int pageSize = 15; // 한 페이지에 표시할 레시피 수
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "LLIKE"));
+
+
+        if(sortType!= null){
+            pageable = PageRequest.of(page-1, pageSize, Sort.by(Sort.Direction.DESC, sortType));
+            if(search == null || search.equals("")){
+
+                return recipeDBRepository.findAll(pageable);
+            }else{
+                return recipeDBRepository.findAllSearch(search,pageable);
+            }
+        }else{
+            if(search== null || search.equals("")){
+                return recipeDBRepository.findAll(pageable);
+            }else{
+                return recipeDBRepository.findAllSearch(search,pageable);
+            }
+
         }
 
-        return recipeDBRepository.findAll(pageable);
 
     }
 
-    public Page<RecipeDB> findByIngredientName(String ingredientName, Pageable pageable) {
-        return recipeDBRepository.findByIngredientName(ingredientName, pageable);
-    }
 
     public long getTotalItems() {
         return recipeDBRepository.count();
 
     }
 
-//    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
-//        return switch (sortBy) {
-//            // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
-//            case "likes" -> recipeDBRepository.findByTitleContainingOrderByLikesDesc(keyword);
-//            // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
-//            case "date" -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-//            // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
-//            case "count" -> recipeDBRepository.findByKeywordOrderByCountDesc(keyword);
-//            default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-//        };
-//    }
+
     public RecipeDB getRecipeById(Long id) {
         return recipeDBRepository.findById(id).orElse(null);
     }
