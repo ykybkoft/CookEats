@@ -61,11 +61,8 @@ public class RecipeController {
         model.addAttribute("endPage", endPage);
 
         //혜정 코드
-
-        if(searchType != null){
-            model.addAttribute("searchType",searchType);
-            model.addAttribute("search", search);
-        }
+        model.addAttribute("search", search);
+        
 
         return "boardRecipe/home"; // home.html로 반환
 
