@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/boardrecipe")
+@RequestMapping("/boardRecipe")
 public class RecipeController {
 
     private final RecipeService recipeService;
@@ -57,7 +57,13 @@ public class RecipeController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        return "boardrecipe/home"; // home.html로 반환
+        //혜정 코드
+        if(searchType != null){
+            model.addAttribute("searchType",searchType);
+            model.addAttribute("search", search);
+        }
+
+        return "boardRecipe/home"; // home.html로 반환
     }
 
     // 상세 레시피
@@ -79,9 +85,9 @@ public class RecipeController {
             model.addAttribute("comments", recipeService.commentList(id));
 
 
-            return "boardrecipe/recipeDetail";
+            return "boardRecipe/recipeDetail";
 
-    }else {
+        }else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
@@ -95,7 +101,7 @@ public class RecipeController {
     @GetMapping("/boardLike/{id}")
     String like(@PathVariable Long id){
         recipeService.upLike(id);
-        return "redirect:/boardrecipe/recipe/"+id;
+        return "redirect:/boardRecipe/recipe/"+id;
     }
 
 
@@ -105,7 +111,7 @@ public class RecipeController {
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
-        return "boardrecipe/write.html";
+        return "boardRecipe/write.html";
     }
 
     //혜정코드
@@ -113,7 +119,7 @@ public class RecipeController {
     @PostMapping("/write")
     String writePro(@ModelAttribute RecipeDB recipe, Authentication auth){
         int result = recipeService.write(recipe, auth);
-        return "redirect:/boardrecipe/home";
+        return "redirect:/boardRecipe/home";
     }
 
 
@@ -122,14 +128,14 @@ public class RecipeController {
     String commentWrite(@ModelAttribute RecipeComment comment){
 
         int result = recipeService.saveComment(comment);
-        return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
+        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
     }
 
     //혜정 코드
     @GetMapping("/commentLike/{id}")
     String commentLike(@PathVariable Long id){
         RecipeComment comment = recipeService.upCommentLike(id);
-        return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
+        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
     }
 
     //혜정 코드
@@ -138,16 +144,15 @@ public class RecipeController {
         recipeService.updateComment(commentId, content);
         return ResponseEntity.ok("댓글 수정 성공");
     }
-  
+
     //혜정 코드
     @GetMapping("/commentDelete/{id}")
     String commentDelete(@PathVariable Long id, @RequestParam Long recipeID){
 
         int result = recipeService.commentDelete(id);
-        return "redirect:/boardrecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
+        return "redirect:/boardRecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
 
     }
-
 
 
 }
