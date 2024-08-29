@@ -157,13 +157,17 @@
 
     <!-- 검색 폼 -->
 
-    <!--<form action="#" th:action="@{/boardRecipe/home}" method="get" class="search-bar">
-        <div class="search-type-container">
+
+    <form action="#" th:action="@{/boardRecipe/home}" method="get" class="search-bar">
+        <!-- <div class="search-type-container">
+
             <select name="searchType" class="search-type">
                 <option value="RCP_PARTS_DTLS">내용</option>
                 <option value="nick">작성자</option>
             </select>
-    </div>-->
+
+        </div> -->
+
 
 
         <!-- 혜정 코드 (검색바)-->
@@ -178,14 +182,14 @@
     </form>
 
     <div th:if="${#strings.isEmpty(search)}" class="sort-container">
-        <button th:onclick="location.href='/boardrecipe/home?sortType=LLIKE'">추천순</button>
-        <button th:onclick="location.href='/boardrecipe/home?sortType=id'">최신순</button>
-        <button th:onclick="location.href='/boardrecipe/home?sortType=CCOUNT'">조회순</button>
+        <button th:onclick="location.href='/boardRecipe/home?sortType=LLIKE'">추천순</button>
+        <button th:onclick="location.href='/boardRecipe/home?sortType=id'">최신순</button>
+        <button th:onclick="location.href='/boardRecipe/home?sortType=CCOUNT'">조회순</button>
     </div>
     <div th:if="${not #strings.isEmpty(search)}" class="sort-container">
-        <button th:onclick="|location.href='@{/boardrecipe/home(search=${search}, searchType=${searchType}, sortType=LLIKE)}'|">추천순</button>
-        <button th:onclick="|location.href='@{/boardrecipe/home(search=${search}, searchType=${searchType}, sortType=ID)}'|">최신순</button>
-        <button th:onclick="|location.href='@{/boardrecipe/home(search=${search}, searchType=${searchType}, sortType=CCOUNT)}'|">조회순</button>
+        <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=LLIKE)}'|">추천순</button>
+        <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=id)}'|">최신순</button>
+        <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=CCOUNT)}'|">조회순</button>
 
     </div>
 
