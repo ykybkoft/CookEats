@@ -23,8 +23,14 @@ public class RecipeService {
     private final RecipeCommentRepository recipeCommentRepository;
 
     // 모든 게시글을 반환, Paging
-    public Page<RecipeDB> findAll(Pageable pageable) {
+    public Page<RecipeDB> findAll(Pageable pageable, String search, String searchType, String sortType) {
+
+        if(search ==null && sortType == null){
+            return recipeDBRepository.findAll(pageable);
+        }
+
         return recipeDBRepository.findAll(pageable);
+
     }
 
     public Page<RecipeDB> findByIngredientName(String ingredientName, Pageable pageable) {
@@ -36,17 +42,17 @@ public class RecipeService {
 
     }
 
-    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
-        return switch (sortBy) {
-            // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
-            case "likes" -> recipeDBRepository.findByTitleContainingOrderByLikesDesc(keyword);
-            // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
-            case "date" -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-            // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
-            case "count" -> recipeDBRepository.findByKeywordOrderByCountDesc(keyword);
-            default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-        };
-    }
+//    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
+//        return switch (sortBy) {
+//            // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
+//            case "likes" -> recipeDBRepository.findByTitleContainingOrderByLikesDesc(keyword);
+//            // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
+//            case "date" -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
+//            // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
+//            case "count" -> recipeDBRepository.findByKeywordOrderByCountDesc(keyword);
+//            default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
+//        };
+//    }
     public RecipeDB getRecipeById(Long id) {
         return recipeDBRepository.findById(id).orElse(null);
     }

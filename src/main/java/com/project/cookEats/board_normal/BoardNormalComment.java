@@ -44,4 +44,12 @@ public class BoardNormalComment {
     @Column(name = "cmtLike")
     @ColumnDefault("0")
     private long comment_like;
+
+    @Override
+    public String toString() {
+        return "BoardNormalComment{id=" + id +
+                ", contents='" + contents + '\'' +
+                ", boardNormalId=" + (boardNormal != null ? boardNormal.getId() : null) +
+                ", memberId=" + (member != null ? member.getId() : null) + '}';
+    }
 }
