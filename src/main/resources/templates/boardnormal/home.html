@@ -31,9 +31,9 @@
 <div class="dropdown">
     <button class="dropbtn">옵션</button>
     <div class="dropdown-content">
-        <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='recommend')}" th:text="'추천순'"></a>
-        <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='latest')}" th:text="'최신순'"></a>
+        <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='sysDate')}" th:text="'최신순'"></a>
         <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='views')}" th:text="'조회순'"></a>
+        <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='likes')}" th:text="'추천순'"></a>
     </div>
 </div>
 
@@ -52,16 +52,18 @@
                     <th>작성자</th>
                     <th>날짜</th>
                     <th>조회수</th>
+                    <th>좋아요</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr class="content" th:each="i : ${list}">
+                <tr class="content" th:each="i : ${page.content}">
                     <td th:text="${i.id}"></td>
                     <td><a th:href="@{/boardNormal/articles/{id}(id=${i.id})}" th:text="${i.title}"></a></td>
                     <td th:text="${i.member != null ? i.member.username : '작성자 정보 없음'}"></td>
                     <td th:text="${i.formattedSysDate}"></td>
-                    <td th:text="${i.count}"></td>
+                    <td th:text="${i.views}"></td>
+                    <td th:text="${i.likes}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -81,6 +83,16 @@
                     <a href="/member/login">로그인 후 글쓰기가 가능합니다.</a>
                 </li>
             </ul>
+        </div>
+        <div class="pagination">
+            <!-- 이전 페이지 링크 -->
+            <a th:if="${page.hasPrevious()}" th:href="@{/boardNormal/home(page=${page.number - 1})}">이전</a>
+
+            <!-- 페이지 번호 링크 -->
+            <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:href="@{/boardNormal/home(page=${i})}" th:text="${i + 1}"></a>
+
+            <!-- 다음 페이지 링크 -->
+            <a th:if="${page.hasNext()}" th:href="@{/boardNormal/home(page=${page.number + 1})}">다음</a>
         </div>
     </section>
 </footer>

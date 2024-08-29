@@ -25,10 +25,11 @@ public class RecipeController {
     private final RecipeCommentRepository recipeCommentRepository;
 
     @GetMapping("/home")
-    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String searchType, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
+
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<RecipeDB> resultPage = recipeService.findAll(pageable);
+        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search, searchType , sortType);
 
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
