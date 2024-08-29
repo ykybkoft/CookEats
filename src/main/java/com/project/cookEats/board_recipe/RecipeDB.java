@@ -228,4 +228,5 @@ public class RecipeDB {
 
     @Transient
     private String formattedSysDate;
+    //
 }
