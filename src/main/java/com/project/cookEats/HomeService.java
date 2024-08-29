@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,4 +30,19 @@ public class HomeService {
         model.addAttribute("share",bsr.findTotalSearch(search));
         return model;
     }
+  
+    //혜정 코드 
+    public RecipeDB recipeRecommend(String ingredient) {
+        Optional<RecipeDB> recipe = rdbr.findRecommandRecipe(ingredient);
+        return recipe.orElse(null);
+    }
+    //혜정 코드 
+    public String[] manualList(RecipeDB recipe) {
+        if(recipe != null){
+            String[] manual = recipe.getMANUAL().split("%<");
+            return manual;
+        }
+        return null;
+    }
+
 }

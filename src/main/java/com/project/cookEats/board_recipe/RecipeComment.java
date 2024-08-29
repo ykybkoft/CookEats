@@ -27,8 +27,9 @@ public class RecipeComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference(value = "member-RecipeComment")
-    @ManyToOne(cascade = CascadeType.MERGE)
+
+    @JsonBackReference(value = "member-Comment")
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "member_id")
     private Member member;

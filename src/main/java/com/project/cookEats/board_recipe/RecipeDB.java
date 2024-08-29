@@ -38,7 +38,7 @@ public class RecipeDB {
     private Member member;
 
     @JsonManagedReference(value = "RecipeDB-Comment")
-    @OneToMany(mappedBy = "recipeDB", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "recipeDB", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<RecipeComment> recipeCommentList = new ArrayList<>();
 
     @ElementCollection
@@ -241,4 +241,5 @@ public class RecipeDB {
 
     @Transient
     private String formattedSysDate;
+    //
 }

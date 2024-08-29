@@ -61,4 +61,9 @@ public class BoardNormal {
     // 포맷된 날짜를 저장하기 위한 계산된 필드
     @Transient
     private String formattedSysDate;
+
+    // 조회수 증가 메서드
+    public void increaseViews() {
+        this.views++;
+    }
 }

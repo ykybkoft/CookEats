@@ -57,7 +57,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeDB> recipeDBList;
 
-    @JsonManagedReference("member-RecipeComment")
+    @JsonManagedReference("member-Comment")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeComment> recipeCommentList;
 }
