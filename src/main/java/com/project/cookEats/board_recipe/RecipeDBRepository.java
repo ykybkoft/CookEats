@@ -12,14 +12,14 @@ import java.util.Optional;
 public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
 
 
-
     // 총 레시피 수를 반환
     long count();
 
 
-    //혜정 코드 
+    //혜정 코드
     List<RecipeDB> findTop5ByOrderByLLIKEDesc();
     List<RecipeDB> findAllByMember(Member member);
+
   
     //혜정 코드 
     @Query(nativeQuery = true, value = "select * from recipedb where rcp_nm like %?1% or rcp_parts_dtls like %?1% order by id desc limit 5")
@@ -27,6 +27,7 @@ public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
 
     //혜정 코드 
     @Query(nativeQuery = true, value="select * from recipedb where rcp_parts_dtls like %?1% order by rand() limit 1")
+
     Optional<RecipeDB> findRecommandRecipe(String ingredient);
 
     //혜정 코드

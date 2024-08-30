@@ -1,5 +1,7 @@
 package com.project.cookEats.board_recipe;
 
+import com.project.cookEats.common_module.file.FileUpLoadService;
+import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.Member;
 import com.project.cookEats.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,15 +27,14 @@ public class RecipeController {
 
     private final RecipeService recipeService;
     private final MemberService memberService;
-    private final RecipeCommentRepository recipeCommentRepository;
+    private final FileUpLoadService fileUpLoadService;
 
     @GetMapping("/home")
     public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
 
-
-
-        Page<RecipeDB> resultPage = recipeService.findAll(page,search, sortType);
-
+        int pageSize = 15; // 한 페이지에 표시할 레시피 수
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search , sortType);
 
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
@@ -49,9 +53,7 @@ public class RecipeController {
                 board.setFormattedSysDate(null);
             }
         }
-
-
-
+      
         // 모델에 데이터 추가
         model.addAttribute("list", resultPage.getContent());
         //model.addAttribute("list", recipeService.findAll(pageable,search,searchType,sortType).getContent());
@@ -59,13 +61,11 @@ public class RecipeController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-
+      
         //혜정 코드
         model.addAttribute("search", search);
 
-
         return "boardRecipe/home"; // home.html로 반환
-
     }
 
     // 상세 레시피
@@ -73,11 +73,10 @@ public class RecipeController {
     public String getRecipeDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         RecipeDB recipe = recipeService.getRecipeById(id);
 
+
         if(recipe.getMember() == null){
             model = recipeService.getNutrition(model, id);
         }
-
-
 
         if (recipe != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -85,22 +84,23 @@ public class RecipeController {
             model.addAttribute("recipe", recipe);
             model.addAttribute("formattedDate", formattedDate);
 
+            // 이미지 URL 리스트를 뷰에 전달
+            List<String> manualImages = recipe.getManualImages();  // S3 URL 리스트
+            model.addAttribute("manualImages", manualImages);
 
             //혜정 코드
+            // 조회수 증가 및 사용자 정보 추가
             recipeService.viewCount(id);
-            if(auth != null){model.addAttribute("member", memberService.findMember(auth));};
+
+            if(auth != null){model.addAttribute("member", memberService.findMember(auth));}
             model.addAttribute("comments", recipeService.commentList(id));
-
-
-            return "boardrecipe/recipeDetail";
+          
+            return "boardRecipe/recipeDetail";
 
         }else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
-
-
-
     }
 
 
@@ -124,8 +124,29 @@ public class RecipeController {
     //혜정코드
 
     @PostMapping("/write")
-    String writePro(@ModelAttribute RecipeDB recipe, Authentication auth){
-        int result = recipeService.write(recipe, auth);
+    public String writePro(@ModelAttribute RecipeDB recipe,
+                           Authentication auth,
+                           @RequestParam("manual[]") String[] manuals,
+                           @RequestParam("manualImage[]") MultipartFile[] manualImages) throws Exception {
+        CustomUser user = (CustomUser) auth.getPrincipal();
+
+        List<String> manualList = new ArrayList<>();
+        List<String> manualImageList = new ArrayList<>();
+
+        for (int i = 0; i < manuals.length; i++) {
+            manualList.add(manuals[i]);
+            // Set the board type to "recipe"
+            String boardType = "recipe";  // Adjust this value as necessary for different board types
+            String imagePath = fileUpLoadService.saveFile(manualImages[i], boardType);
+            manualImageList.add(imagePath);
+        }
+
+        recipe.setManuals(manualList);
+        recipe.setManualImages(manualImageList);
+        recipe.setMember(memberService.findMember(auth));
+
+        recipeService.saveRecipe(recipe);
+
         return "redirect:/boardRecipe/home";
     }
 
