@@ -34,7 +34,7 @@ public class RecipeController {
 
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search , sortType);
+        Page<RecipeDB> resultPage = recipeService.findAll(page, search , sortType);
 
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
