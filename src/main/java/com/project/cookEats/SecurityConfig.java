@@ -6,9 +6,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
 
 @Configuration
 @EnableWebSecurity
@@ -20,39 +25,33 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable());
 
-        //myPage에 url 로 접근 하면 로그인 페이지로 이동 시켜준다.
         http.authorizeHttpRequests((authorize) ->
-                authorize.requestMatchers("/member/myPage","/board_share/edit","/board_share/b_write","/boardrecipe/write","/boardrecipe/update","/boardrecipe/boardLike"
+                authorize.requestMatchers("/member/myPage","/board_share/edit","/board_share/b_write","/boardRecipe/write","/boardRecipe/update"
                 ).hasAuthority("normal")
-
         );
 
         http.authorizeHttpRequests((authorize) ->
                 authorize.requestMatchers("/**").permitAll()
-        );//.requestMatchers()에 URL 기재 가능 , /**는 모든 이라는 뜻이다.
-
-
+        );
 
         http.formLogin((formLogin) -> formLogin.loginPage("/member/login")
-                .defaultSuccessUrl("/")
+                .successHandler(authenticationSuccessHandler()) // 커스텀 핸들러 사용
+                .permitAll()
                 .failureUrl("/member/login?result=false")
         );
-        http.oauth2Login(oauth2Login -> oauth2Login
-                .loginPage("/member/login")
-                .defaultSuccessUrl("/")
-                .userInfoEndpoint(userInfo -> userInfo
-                        .userService(oAuth2MemberService)
-                )
-        );
 
-        http.logout( logout -> logout.logoutUrl("/member/logout").logoutSuccessUrl("/") );
+        http.logout(logout -> logout.logoutUrl("/member/logout").logoutSuccessUrl("/"));
 
         return http.build();
     }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }

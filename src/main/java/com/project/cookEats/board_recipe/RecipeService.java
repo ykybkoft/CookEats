@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class RecipeService {
     private final RecipeDBRepository recipeDBRepository;
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
+    private final RecipeDBSubInfoRepository recipeDBSubInfoRepository;
 
 
     //지훈 코드 -> 혜정 수정
@@ -88,17 +92,12 @@ public class RecipeService {
     }
 
 
-    //레시피 저장 - 혜정 코드
+    //레시피 저장
     public int write(RecipeDB recipe, Authentication auth) {
         CustomUser user = (CustomUser) auth.getPrincipal();
-        String tmp = "";
-        String[] manual = recipe.getMANUAL().split("\n");
-        for (int i = 0; i <manual.length ; i++) {
-            tmp += (manual[i]+"%<");
-        }
-        recipe.setMANUAL(tmp);
-        recipe.setMember(memberRepository.findById(user.getId()).get());
+        recipe.setMember(memberRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found")));
         recipeDBRepository.save(recipe);
+
         return 1;
     }
 
@@ -140,6 +139,19 @@ public class RecipeService {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
         comment.setComment_contents(content);
         recipeCommentRepository.save(comment);  // 변경된 내용 저장
+    }
+
+    //혜정 코드
+    public Model getNutrition(Model model, Long id) {
+        Optional<RecipeDBSubInfo> recipeInfo = recipeDBSubInfoRepository.findById(id);
+        if(recipeInfo.isEmpty()){
+            return model;
+        }
+        model.addAttribute("car", recipeInfo.get().getINFO_CAR());
+        model.addAttribute("fat", recipeInfo.get().getINFO_FAT());
+        model.addAttribute("pro", recipeInfo.get().getINFO_PRO());
+
+        return model;
     }
 
 }

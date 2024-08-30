@@ -39,10 +39,13 @@ public class HomeService {
     //혜정 코드 
     public String[] manualList(RecipeDB recipe) {
         if(recipe != null){
-            String[] manual = recipe.getMANUAL().split("%<");
+            String[] manual = recipe.getManuals().toArray(new String[0]);
             return manual;
         }
         return null;
     }
 
 }
+
+
+

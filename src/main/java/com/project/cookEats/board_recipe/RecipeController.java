@@ -73,6 +73,11 @@ public class RecipeController {
     public String getRecipeDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         RecipeDB recipe = recipeService.getRecipeById(id);
 
+        if(recipe.getMember() == null){
+            model = recipeService.getNutrition(model, id);
+        }
+
+
 
         if (recipe != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -87,7 +92,7 @@ public class RecipeController {
             model.addAttribute("comments", recipeService.commentList(id));
 
 
-            return "boardRecipe/recipeDetail";
+            return "boardrecipe/recipeDetail";
 
         }else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
