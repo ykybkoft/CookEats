@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecipeService {
 
-
     private final RecipeDBRepository recipeDBRepository;
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
@@ -32,7 +31,6 @@ public class RecipeService {
         return recipeDBRepository.count();
 
     }
-
 //    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
 //        return switch (sortBy) {
 //            // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
@@ -44,6 +42,7 @@ public class RecipeService {
 //            default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
 //        };
 //    }
+  
     public RecipeDB getRecipeById(Long id) {
         return recipeDBRepository.findById(id).orElse(null);
     }

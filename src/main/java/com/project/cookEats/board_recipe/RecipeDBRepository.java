@@ -42,4 +42,16 @@ public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
     @Query(nativeQuery = true, value="select * from recipedb where rcp_parts_dtls like %?1% or manual like %?1% order by rand() limit 1")
     Optional<RecipeDB> findRecommandRecipe(String ingredient);
 
+    //혜정 코드
+//    @Query(nativeQuery = true, value="select * from recipedb order by ?1 desc;")
+//    Page<RecipeDB> findAllSort(String sortType);
+
+    Page<RecipeDB> findAllByOrderByLLIKEDesc(Pageable pageable);
+
+    @Query(value = "SELECT * FROM recipedb WHERE rcp_parts_dtls LIKE %?1% ",
+            countQuery = "SELECT COUNT(*) FROM recipedb WHERE rcp_parts_dtls LIKE %?1%",
+            nativeQuery = true)
+    Page<RecipeDB> findAllSearch( String search, Pageable pageable);
+
+
 }

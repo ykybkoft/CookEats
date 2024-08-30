@@ -1,45 +1,109 @@
 package com.project.cookEats.board_share.controller;
 
+import com.project.cookEats.board_share.entityClasses.Board_share_comment;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
+import com.project.cookEats.board_share.repositories.CommentRepository;
 import com.project.cookEats.board_share.service.Borad_shareService;
+import com.project.cookEats.board_share.service.CommentService;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/boardShare")
 public class BoardController {
     // 의존성 주입
-    private final Board_shareRepository br;
     private final Borad_shareService bs;
+    private final CommentRepository cr;
+    private final CommentService cs;
 
-    // 게시글 리스트 페이지
+
+    // 게시글 페이지네이션
+    // 1-1. @RequestParam를 사용하면 쿼리파라미터방식으로 데이터를 받아오기에 html의 url주소를 변경할 필요가 없음
+    // 1-2. 위와 같이 처리하지 않고 /home{abc} 처럼 url경로일부로 데이터를 받아올 경우 클래스들 return 경로 및 html의 경로 모두 수정해야 됨.....
+    // @PageableDefault = (최신글순 정렬) / 페이지 수 나눔
     @GetMapping("/home")
-    String title(Model model){
-        List<Board_share> result = br.findAll();
-        model.addAttribute("home", result);
+    String page(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                Model model){
+
+        // 페이지 번호를 pageable의 첫 페이지로 설정
+        Pageable pageRequest = PageRequest.of(page, pageable.getPageSize(), pageable.getSort());
+
+        // 서비스 메서드를 호출하여 페이지네이션 처리
+        bs.pageNavigation(pageRequest, model);
 
         return "boardShare/home.html";
     }
 
-    // 게시판 글 내용 보기 페이지 매핑
+    // 조회수 업데이트
+    // 응답을 JSON으로 반환하기 위해 ResponseBody사용
+    @PostMapping("/updateCount/{id}")
+    @ResponseBody
+    public ResponseEntity<String> updateCount(@PathVariable Long id) {
+
+        bs.updateCount(id);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    // 좋아요 기능
+    @PostMapping("/upLike/{id}")
+    @ResponseBody
+    public ResponseEntity<String> upLike(@PathVariable Long id) {
+
+        cs.upLike(id);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    // 게시판 글 및 댓글 내용 보기
     @GetMapping("/view/{id}")
     String detail(@PathVariable Long id, Model model){
-        model.addAttribute("data", bs.getContents(id));
+        bs.getContents(id, model);
 
         return "boardShare/view.html";
     }
 
-    // 게시판 글 작성 페이지 매핑
+    // 1. html에서 사용자가 url의 게시글 pk아이디 정보와 댓글 정보를 controller에 post요청
+    @PostMapping("/comment/{id}")
+    String setComments(@PathVariable Long id, @ModelAttribute Board_share_comment data){
+        cs.setComments(id, data);
+
+        return "redirect:/boardShare/view/{id}";
+    }
+
+    // 댓글 수정 기능
+    @PostMapping("/editComment/{id}")
+    String editComment(@PathVariable Long id, @ModelAttribute Board_share_comment data){
+        cs.editComments(id, data);
+
+        // 해당 댓글이 있는 게시글로 리다이렉트하기 위해 게시글 id를 불러옴
+        Board_share number = cr.findById(id).get().getBoardShare();
+
+        return "redirect:/boardShare/view/" + number.getId();
+    }
+    // 댓글 삭제
+    @DeleteMapping("/deleteComment/")
+    ResponseEntity<String> deleteComment(Long id){
+        cs.deleteComment(id);
+
+        return ResponseEntity.ok("댓글이 삭제 되었습니다.");
+    }
+    // 게시판 글 작성 페이지 불러오기
     @GetMapping("/write")
     String write(Authentication auth, Model model){
         //게시글 로그인 된 유저의 아이디 가져옴 -my page- 활용
@@ -49,6 +113,7 @@ public class BoardController {
         return "boardShare/write.html";
     }
 
+    // 게시판 글 작성 기능
     @PostMapping("/write")
     public String addPost(@ModelAttribute Board_share data) {
 
@@ -56,6 +121,7 @@ public class BoardController {
 
         return "redirect:/boardShare/home";
     }
+
     // 게시글 수정 데이터 불러오기
     @GetMapping("/edit/{id}")
     String edit(@PathVariable Long id, Model model){
@@ -63,13 +129,14 @@ public class BoardController {
 
         return "boardShare/edit.html";
     }
+
     //게시글 수정
     @PostMapping("/edit")
     String editPost(@ModelAttribute Board_share data){
 
         bs.editPost(data);
 
-        // 리턴 뒤에 게시글 id를 붙여줘야 해당 수정된 개시글로 이동 됨.
+        // 리턴 뒤에 게시글 id를 붙여줘야 해당 수정된 게시글로 이동 됨.
         return "redirect:/boardShare/view/" + data.getId();
     }
 
@@ -80,4 +147,5 @@ public class BoardController {
         bs.deleteContents(id);
         return "redirect:/boardShare/home";
     }
+
 }

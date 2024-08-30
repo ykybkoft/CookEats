@@ -1,6 +1,185 @@
 <!doctype html>
-<div th:replace="~{header.html :: navbar}"></div>
 <html lang="en">
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+       line-height: 1.6;
+       color: #333;
+       max-width: 800px;
+       margin: 0 auto;
+       padding: 20px;
+       background-color: #f4f4f4;
+   }
+   .container {
+       max-width: 800px;
+       margin: 0 auto;
+       background-color: #fff;
+       padding: 20px;
+       border-radius: 5px;
+       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+   }
+   h1 {
+       color: #17A96D;
+       text-align: center;
+   }
+
+   table {
+       width: 100%;
+       border-collapse: collapse;
+   }
+   th, td {
+       padding: 12px;
+       text-align: left;
+       border-bottom: 1px solid #ddd;
+   }
+   th {
+       background-color: #17A96D;
+       color: white;
+   }
+   tr:hover {
+       background-color: #f5f5f5;
+   }
+   .pagination {
+       text-align: center;
+       margin-top: 20px;
+   }
+   .pagination a {
+       color: #17A96D;
+       padding: 8px 16px;
+       text-decoration: none;
+       transition: background-color .3s;
+       border: 1px solid #ddd;
+       margin: 0 4px;
+   }
+   .pagination a.current {
+       background-color: #17A96D;
+       color: white;
+       border: 1px solid #17A96D;
+   }
+   .footer {
+       text-align: right;
+       margin-top: 20px;
+   }
+   .footer a {
+       background-color: #17A96D;
+       color: white;
+       padding: 10px 20px;
+       text-decoration: none;
+       border-radius: 5px;
+   }
+
+   .form-bar {
+       display: flex;
+       margin: 0 auto;
+       box-shadow:0 1px 6px 0 rgba(32, 33, 36, .28);
+       height: 45px;
+       border-radius: 30px;
+       border: 1px solid white;
+       text-indent: 15px;
+       justify-content: space-between;
+       align-items: center;
+       margin-bottom: 20px;
+       width: 500px;}
+
+   .search {
+       border: none;
+
+   }
+   .search:focus {
+       outline: none;
+       border: none;
+   }
+   .search-bar {
+       display: flex;
+       justify-content: center;
+
+   }
+
+   .search-type-container {
+   position: relative;
+   display: inline-block;
+   }
+
+.search-type {
+   margin-top: 5px;
+   margin-left : 15px;
+   appearance: none;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   background-color: #17A96D;
+   color: white;
+   padding: 10px 15px 10px 15px;  /* 오른쪽 패딩을 약간 늘렸습니다 */
+   font-size: 16px;
+   border: none;
+   border-radius: 25px;
+   cursor: pointer;
+   outline: none;
+   transition: background-color 0.3s;
+}
+
+.search-type:hover {
+   background-color: #27ae60;
+}
+
+.search-type-container::after {
+
+   font-size: 12px;
+   color: white;
+   position: absolute;
+   top: 50%;
+   text-align: center;
+   transform: translateY(-50%);
+   pointer-events: none;
+   line-height: 1;  /* 추가: 라인 높이를 1로 설정 */
+}
+
+/* 옵션 스타일링 */
+.options {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: white;
+    color: #374151;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f5f9;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,11 +187,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>게시판</title>
 
+    <div th:replace="~{/header.html :: navbar}"></div>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
+
 </head>
 <body>
-
+<div class="container">
+    <h1>자유 게시판</h1>
 <!-- 검색 -->
 <div class="section">
     <form action="/boardNormal/search" method="get">
@@ -31,22 +212,37 @@
 <div class="dropdown">
     <button class="dropbtn">옵션</button>
     <div class="dropdown-content">
-        <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='sysDate')}" th:text="'최신순'"></a>
-        <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='views')}" th:text="'조회순'"></a>
-        <a th:href="@{/boardNormal/search(keyword=${param.keyword}, sort='likes')}" th:text="'추천순'"></a>
+        <a href="#" onclick="sortArticles('sysDate')">최신순</a>
+        <a href="#" onclick="sortArticles('likes')">추천순</a>
+        <a href="#" onclick="sortArticles('views')">조회순</a>
     </div>
 </div>
+
+<!-- 검색 결과 리스트 -->
+<section class="article-list" id="articleList">
+    <div id="articlesContainer">
+        <!-- 검색 결과는 여기서 동적으로 로드됩니다. -->
+        <div th:if="${articles != null}">
+            <div th:each="article : ${articles}">
+                <div class="article-card">
+                    <h3 th:text="${article.title}"></h3>
+                    <p th:text="${article.content}"></p>
+                    <p><strong>최신수:</strong> <span th:text="${article.sysDate}"></span></p>
+                    <p><strong>추천수:</strong> <span th:text="${article.likes}"></span></p>
+                    <p><strong>조회수:</strong> <span th:text="${article.views}"></span></p>
+                    <a th:href="@{/boardNormal/articles/{id}(id=${article.id})}">더보기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <main class="main">
     <section class="contents">
         <div>
             <table>
-                <caption class="cnt_cap">
-                    <h1>자유게시판</h1>
-                </caption>
-
                 <thead>
-                <tr class="title">
+                <tr>
                     <th>순서</th>
                     <th>제목</th>
                     <th>작성자</th>
@@ -71,31 +267,62 @@
     </section>
 </main>
 
-<footer class="footer">
+<footer>
     <section>
+        <!-- 글쓰기 버튼 -->
         <div>
-            <ul class="board">
+            <ul class="footer">
                 <!-- 로그인된 사용자에게만 글쓰기 버튼이 보임 -->
                 <li th:if="${#authentication.principal != null}">
-                    <a href="/boardNormal/write">글쓰기</a>
+                    <a href="/boardNormal/write" class="write-btn">글쓰기</a>
                 </li>
                 <li th:if="${#authentication.principal == null}">
                     <a href="/member/login">로그인 후 글쓰기가 가능합니다.</a>
                 </li>
             </ul>
         </div>
+
+        <!-- 페이징 -->
         <div class="pagination">
             <!-- 이전 페이지 링크 -->
-            <a th:if="${page.hasPrevious()}" th:href="@{/boardNormal/home(page=${page.number - 1})}">이전</a>
-
+            <a th:if="${page.hasPrevious()}" th:href="@{/boardNormal/home(page=${page.number - 1})}" i data-lucide="chevron-left">이전</a>
             <!-- 페이지 번호 링크 -->
-            <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:href="@{/boardNormal/home(page=${i})}" th:text="${i + 1}"></a>
-
+            <a th:each="i : ${#numbers.sequence(
+                            (page.number - 2 > 0 ? page.number - 2 : 0),
+                            (page.number + 2 < page.totalPages - 1 ? page.number + 2 : page.totalPages - 1)
+                        )}"
+               th:href="@{/boardNormal/home(page=${i})}"
+               th:classappend="${i == page.number} ? 'current'"
+               th:text="${i + 1}"></a>
             <!-- 다음 페이지 링크 -->
-            <a th:if="${page.hasNext()}" th:href="@{/boardNormal/home(page=${page.number + 1})}">다음</a>
+            <a th:if="${page.hasNext()}" th:href="@{/boardNormal/home(page=${page.number + 1})}" i data-lucide="chevron-right">다음</a>
         </div>
     </section>
 </footer>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // 게시글을 정렬하는 함수
+    function sortArticles(sortBy) {
+        const query = $('#searchQuery').val(); // 검색어 가져오기
+
+        $.ajax({
+            type: 'GET',
+            url: '/boardNormal/search', // 정렬할 때 사용하는 URL
+            data: {
+                query: query,
+                sort: sortBy
+            },
+            success: function (data) {
+                // 검색 결과 부분을 업데이트합니다.
+                $('#articlesContainer').html(data);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+</script>
 </body>
 </html>

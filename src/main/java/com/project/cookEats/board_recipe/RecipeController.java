@@ -30,7 +30,9 @@ public class RecipeController {
     private final FileUpLoadService fileUpLoadService;
 
     @GetMapping("/home")
-    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String searchType, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
+    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
+
+        Page<RecipeDB> resultPage = recipeService.findAll(page,search, sortType);
 
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -53,14 +55,17 @@ public class RecipeController {
                 board.setFormattedSysDate(null);
             }
         }
-
-
+      
         // 모델에 데이터 추가
         model.addAttribute("list", resultPage.getContent());
+        //model.addAttribute("list", recipeService.findAll(pageable,search,searchType,sortType).getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+      
+        //혜정 코드
+        model.addAttribute("search", search);
 
         return "boardRecipe/home"; // home.html로 반환
     }
@@ -83,13 +88,13 @@ public class RecipeController {
             //혜정 코드
             // 조회수 증가 및 사용자 정보 추가
             recipeService.viewCount(id);
-            if (auth != null) {
-                model.addAttribute("member", memberService.findMember(auth));
-            }
 
+            if(auth != null){model.addAttribute("member", memberService.findMember(auth));}
             model.addAttribute("comments", recipeService.commentList(id));
+          
             return "boardRecipe/recipeDetail";
-        } else {
+          
+        }else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
@@ -138,6 +143,7 @@ public class RecipeController {
         recipe.setMember(memberService.findMember(auth));
 
         recipeService.saveRecipe(recipe);
+
         return "redirect:/boardRecipe/home";
     }
 
@@ -172,7 +178,6 @@ public class RecipeController {
         return "redirect:/boardRecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
 
     }
-
 
 
 }
