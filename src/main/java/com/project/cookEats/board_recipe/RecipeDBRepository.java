@@ -11,20 +11,6 @@ import java.util.Optional;
 
 public interface RecipeDBRepository extends JpaRepository<RecipeDB, Long> {
 
-    @Query("SELECT r FROM RecipeDB r WHERE r.RCP_PARTS_DTLS LIKE %:ingredientName%")
-    Page<RecipeDB> findByIngredientName(@Param("ingredientName") String ingredientName, Pageable pageable);
-
-    // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
-    @Query("SELECT r FROM RecipeDB r WHERE r.RCP_NM LIKE %:keyword% ORDER BY r.CCOUNT DESC")
-    List<RecipeDB> findByKeywordOrderByCountDesc(@Param("keyword") String keyword);
-
-    // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
-    @Query("SELECT r FROM RecipeDB r WHERE r.RCP_NM LIKE %:keyword% ORDER BY r.LLIKE DESC")
-    List<RecipeDB> findByTitleContainingOrderByLikesDesc(@Param("keyword") String keyword);
-
-    // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
-    @Query("SELECT r FROM RecipeDB r WHERE r.RCP_NM LIKE %:keyword% ORDER BY r.SYSDATE DESC")
-    List<RecipeDB> findByTitleContainingOrderBySysDateDesc(@Param("keyword") String keyword);
 
     // 총 레시피 수를 반환
     long count();
