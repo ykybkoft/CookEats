@@ -30,7 +30,7 @@ public class RecipeController {
     private final FileUpLoadService fileUpLoadService;
 
     @GetMapping("/home")
-    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
+    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String searchType, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
 
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -53,7 +53,7 @@ public class RecipeController {
                 board.setFormattedSysDate(null);
             }
         }
-      
+
         // 모델에 데이터 추가
         model.addAttribute("list", resultPage.getContent());
         //model.addAttribute("list", recipeService.findAll(pageable,search,searchType,sortType).getContent());
@@ -61,7 +61,7 @@ public class RecipeController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-      
+
         //혜정 코드
         model.addAttribute("search", search);
 
@@ -91,13 +91,14 @@ public class RecipeController {
             //혜정 코드
             // 조회수 증가 및 사용자 정보 추가
             recipeService.viewCount(id);
-
-            if(auth != null){model.addAttribute("member", memberService.findMember(auth));}
+            if (auth != null) {
+                model.addAttribute("member", memberService.findMember(auth));
+            }
             model.addAttribute("comments", recipeService.commentList(id));
-          
+
             return "boardRecipe/recipeDetail";
 
-        }else {
+        } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
@@ -118,7 +119,7 @@ public class RecipeController {
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
-        return "boardrecipe/write.html";
+        return "boardRecipe/write.html";
     }
 
     //혜정코드
@@ -150,6 +151,26 @@ public class RecipeController {
         return "redirect:/boardRecipe/home";
     }
 
+    // 게시글 삭제
+    @PostMapping("/delete/{id}")
+    public String deleteRecipe(@PathVariable Long id, Authentication auth) {
+        try {
+            // 현재 로그인한 사용자 정보 가져오기
+            Member loggedInMember = memberService.findMember(auth);
+
+            // 게시글 삭제
+            recipeService.deleteRecipe(id, loggedInMember);
+
+            // 성공 메시지
+            return "redirect:/boardRecipe/home?type=delete&result=success";
+        } catch (SecurityException e) {
+            // 삭제 권한이 없는 경우
+            return "redirect:/boardRecipe/home?type=delete&result=error";
+        } catch (Exception e) {
+            // 기타 오류 발생
+            return "redirect:/boardRecipe/home?type=delete&result=error";
+        }
+    }
 
     //혜정코드
     @PostMapping("/commentWrite")
@@ -181,6 +202,7 @@ public class RecipeController {
         return "redirect:/boardRecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
 
     }
+
 
 
 }

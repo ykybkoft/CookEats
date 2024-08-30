@@ -4,6 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 작성</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #4CAF4F;
+            text-align: center;
+        }
+        .step {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF4F;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .cancel-button {
+            background-color: #f44336;
+        }
+        .cancel-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
     <script>
         let stepIndex = 1;
 
@@ -11,7 +53,7 @@
             stepIndex++;
             const container = document.getElementById('stepsContainer');
             const newStepHtml = `
-                <div class="step">
+                <div class="step" id="step${stepIndex}">
                     <label for="manual${stepIndex}">조리순서${stepIndex}:</label>
                     <input type="text" id="manual${stepIndex}" name="manual[]" /><br>
                     <label for="manualImage${stepIndex}">조리순서${stepIndex}의 사진:</label>
@@ -19,19 +61,36 @@
                 </div>`;
             container.insertAdjacentHTML('beforeend', newStepHtml);
         }
+
+        function deleteStep() {
+            if (stepIndex > 1) {
+                const stepToRemove = document.getElementById(`step${stepIndex}`);
+                stepToRemove.remove();
+                stepIndex--;
+            } else {
+                alert("최소 1개의 조리순서는 유지해야 합니다.");
+            }
+        }
+
+        function cancelPost() {
+            const userConfirmed = confirm("정말로 게시글 작성을 취소하시겠습니까?");
+            if (userConfirmed) {
+                window.location.href = "/boardRecipe/home"; // 레시피 게시판 목록 URL로 변경해주세요.
+            }
+        }
     </script>
 </head>
 <body>
 
-<h1>게시판</h1>
+<h1>게시글 작성</h1>
 <form action="/boardRecipe/write" method="POST" enctype="multipart/form-data">
     <label for="title">제목:</label>
     <input type="text" id="title" name="RCP_NM" required><br>
-    <label for="content">내용:</label>
+    <label for="content">재료:</label>
     <textarea id="content" name="RCP_PARTS_DTLS" required></textarea><br>
 
     <div id="stepsContainer">
-        <div class="step">
+        <div class="step" id="step1">
             <label for="manual1">조리순서1:</label>
             <input type="text" id="manual1" name="manual[]" /><br>
             <label for="manualImage1">조리순서1의 사진:</label>
@@ -39,8 +98,10 @@
         </div>
     </div>
 
-    <button type="button" onclick="addStep()">+ 추가</button><br>
+    <button type="button" onclick="addStep()">+ 추가</button>
+    <button type="button" onclick="deleteStep()">- 제거</button><br>
     <button type="submit">작성하기</button>
+    <button type="button" class="cancel-button" onclick="cancelPost()">취소</button>
 </form>
 
 </body>

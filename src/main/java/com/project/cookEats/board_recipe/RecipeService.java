@@ -1,16 +1,20 @@
 package com.project.cookEats.board_recipe;
 
-
+import com.project.cookEats.member.Member;
 import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.MemberRepository;
+import com.project.cookEats.common_module.file.FileUpLoadService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +26,9 @@ public class RecipeService {
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
     private final RecipeDBSubInfoRepository recipeDBSubInfoRepository;
+    private final FileUpLoadService fileUpLoadService;
 
-     // 모든 게시글을 반환, Paging
+    // 모든 게시글을 반환, Paging
     //지훈 코드 -> 혜정 수정
     public Page<RecipeDB> findAll(int page,String search,String sortType) {
 
@@ -67,7 +72,7 @@ public class RecipeService {
 //            default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
 //        };
 //    }
-  
+
     public RecipeDB getRecipeById(Long id) {
         return recipeDBRepository.findById(id).orElse(null);
     }
@@ -75,8 +80,23 @@ public class RecipeService {
     public void saveRecipe(RecipeDB recipe) {
         recipeDBRepository.save(recipe);
     }
-    public void deleteRecipe(Long id) {
-        recipeDBRepository.deleteById(id);
+
+    @Transactional
+    public void deleteRecipe(Long id, Member loggedInMember) {
+        RecipeDB recipe = recipeDBRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+
+        if (!recipe.getMember().equals(loggedInMember)) {
+            throw new SecurityException("You are not authorized to delete this recipe");
+        }
+
+        // Delete associated files (if any)
+        for (String fileUrl : recipe.getManualImages()) {
+            fileUpLoadService.deleteFile(fileUrl);
+        }
+
+        // Delete the recipe
+        recipeDBRepository.delete(recipe);
     }
 
     //혜정 코드, 좋아요 증가
@@ -108,13 +128,13 @@ public class RecipeService {
         recipeCommentRepository.save(comment);
         return 1;
     }
-  
+
     //혜정 코드, 댓글 목록 조회
     public List<RecipeComment> commentList(Long id) {
 
         return recipeCommentRepository.findAllByRecipeDB(recipeDBRepository.findById(id).get());
     }
-  
+
     //혜정 코드, 댓글 좋아요 증가
     public RecipeComment upCommentLike(Long id) {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
@@ -122,13 +142,13 @@ public class RecipeService {
         recipeCommentRepository.save(comment);
         return comment;
     }
-  
-     //혜정 코드, 댓글 삭제
+
+    //혜정 코드, 댓글 삭제
     public int commentDelete(Long id) {
         recipeCommentRepository.deleteById(id);
         return 1;
     }
-  
+
     //혜정 코드, 댓글 내용 업데이트
     public void updateComment(Long id, String content) {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
