@@ -40,7 +40,7 @@
                     <caption>
                         <span class="blind">게시글 목록</span>
                     <div style='width:80px; float: right;'>
-                        <input type='button' class='btn' onclick="location.href='/boardShare/write'" value='글쓰기'>
+                        <input type='button' class='btn' id='write-button' value='글쓰기'>
                     </div>
                     </caption>
                     <colgroup>
@@ -60,7 +60,10 @@
                     </thead>
                     <tbody class="content" th:each="i : ${home}">
                     <tr>
-                        <td th:text="${i.title}" th:onclick="location.href='/boardShare/view/' + [[${i.id}]]"></td>
+                        <td th:text="${i.title}"
+                            th:attr="data-id=${i.id}"
+                            class="title"
+                            onclick="upCountAndMove(this)"></td>
                         <td th:text="${i.member.getNick()}"></td>
                         <td th:text="${i.sysDate}"></td>
                         <td th:text="${i.vCount}"></td>
@@ -68,23 +71,67 @@
                     </tbody>
                 </table>
             </div>
-            <!--페이지 버튼-->
+
+            <!-- 페이지 버튼 -->
             <div class="article_pagination">
-                <button class="article_page_bt">1</button>
-                <button class="article_page_bt">2</button>
-                <button class="article_page_bt">3</button>
-                <button class="article_page_bt">4</button>
-                <button class="article_page_bt">5</button>
-                <button class="article_page_bt">6</button>
-                <button class="article_page_bt">7</button>
-                <button class="article_page_bt">8</button>
-                <button class="article_page_bt">9</button>
-                <button class="article_page_bt">10</button>
-                <button class="article_page_bt">></button>
+
+                <!-- 이전 페이지 버튼 -->
+                <!--disabled는 현재 페이지가 0일 때 버튼 비활성화-->
+                <button class="article_page_bt"
+                        th:disabled="${currentPage == 0}"
+                        th:onclick="|location.href='/boardShare/home?page=${currentPage - 1}'|">&lt;</button>
+                        <!--onclick시 현재 페이지에 1을 뺀 페이지로 이동-->
+
+                <!-- 페이지 번호 버튼들 -->
+                <!--thymeleaf numbers 유틸리티 메서드로 버튼 생성-->
+                <!--classappend는 현재 버튼 강조 style 추가하는 코드-->
+                <!--test = 현재 페이지에 1을 더함-->
+                <span th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <button class="article_page_bt"
+                        th:text="${page + 1}"
+                        th:classappend="${page == currentPage} ? 'active'"
+                        th:onclick="|location.href='/boardShare/home?page=${page}'|">
+                    </button>
+                </span>
+
+                <!-- 다음 페이지 버튼 -->
+                <!-- 마직막 페이지는 현재 페이지에 1을 더했음으로 -1을 해야 맞음-->
+                <button class="article_page_bt"
+                        th:disabled="${currentPage == totalPages - 1}"
+                        th:onclick="|location.href='/boardShare/home?page=${currentPage + 1}'|">&gt;</button>
             </div>
         </div>
     </div>
 </div>
+<script>
 
+    document.getElementById('write-button').addEventListener('click', function() {
+        // 주석구문 타임리프에서 처리 후 null이 아니라면 이 위치에 true가 삽입 됨
+        const auth = /*[[${auth != null}]]*/ false;
+
+        if (!auth) {
+            alert('로그인이 필요합니다.');
+            window.location.href = '/member/login';
+        } else {
+            window.location.href = '/boardShare/write';
+        }
+    });
+
+
+    function upCountAndMove(contentsId) {
+        const id = contentsId.getAttribute('data-id');
+        fetch(`/boardShare/updateCount/${id}`, {
+            method: 'POST'
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = `/boardShare/view/${id}`;
+            } else {
+                console.error('조회수 업데이트 실패');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>

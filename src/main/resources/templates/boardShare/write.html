@@ -18,11 +18,11 @@
 
     <div class="layoutContent">
         <div class="panelCenter">
-            <div class="writeWrap">
+            <div id="write-contents" class="writeWrap">
                 <div class="write_header_area">
                     <strong class="write_header_title">글쓰기</strong>
                 </div>
-                <form action="/boardShare/write" method="post">
+                <form id="write-form" action="/boardShare/write" method="post" onsubmit="return writeContents(event)">
                     <div class="nick_area">
                         <div style="display : flex;">
                             닉네임 :
@@ -30,10 +30,10 @@
                         </div>
                     </div>
                     <div class="write_title_area">
-                        <input class="write_input" type="text" name="title" minlength="1" placeholder="제목을 입력해주세요">
+                        <input id="write-title" class="write_input" type="text" name="title" minlength="1" placeholder="제목을 입력해주세요">
                     </div>
                     <div class="write_editor_area">
-                        <textarea rows="5" cols="50" name="content" minlength="1" placeholder="재료를 공유해보세요"></textarea>
+                        <textarea id="write-textarea" rows="5" cols="50" name="content" minlength="1" placeholder="내용을 입력해주세요"></textarea>
                     </div>
                     <div class="write_bt">
                         <button type="submit">등록</button>
@@ -43,4 +43,21 @@
         </div>
     </div>
 </body>
+
+<script>
+    function writeContents(event) {
+        const writeTitle = document.getElementById('write-title');
+        const writeTextarea = document.getElementById('write-textarea');
+
+        // 제목과 내용이 둘 중 하나라도 비어있는지 검사
+        if(writeTitle.value.trim() === '' || writeTextarea.value.trim() === '') {
+            alert('게시글 제목과 내용을 입력해 주세요.');
+            event.preventDefault();
+            return false;
+        } else {
+            alert('게시글이 작성되었습니다.');
+            return true;
+        }
+    }
+</script>
 </html>
