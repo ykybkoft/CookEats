@@ -30,7 +30,7 @@ public class RecipeController {
     private final FileUpLoadService fileUpLoadService;
 
     @GetMapping("/home")
-    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
+    public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String searchType, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
 
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -91,13 +91,14 @@ public class RecipeController {
             //혜정 코드
             // 조회수 증가 및 사용자 정보 추가
             recipeService.viewCount(id);
-
-            if(auth != null){model.addAttribute("member", memberService.findMember(auth));}
+            if (auth != null) {
+                model.addAttribute("member", memberService.findMember(auth));
+            }
             model.addAttribute("comments", recipeService.commentList(id));
 
             return "boardRecipe/recipeDetail";
 
-        }else {
+        } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
@@ -118,7 +119,7 @@ public class RecipeController {
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
-        return "boardrecipe/write.html";
+        return "boardRecipe/write.html";
     }
 
     //혜정코드
