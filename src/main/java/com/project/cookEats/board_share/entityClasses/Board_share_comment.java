@@ -46,7 +46,5 @@ public class Board_share_comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_share_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Board_share board_share;
-
+    private Board_share boardShare;
 }
-

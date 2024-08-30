@@ -1,16 +1,22 @@
 package com.project.cookEats.board_share.service;
 
 import com.project.cookEats.board_share.entityClasses.Board_share;
+import com.project.cookEats.board_share.entityClasses.Board_share_comment;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
+import com.project.cookEats.board_share.repositories.CommentRepository;
 import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.Member;
 import com.project.cookEats.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor // 의존성 주입 어노테이션 @autowired
@@ -19,6 +25,7 @@ public class Borad_shareService {
     // 저장할 리포지토리
     private final Board_shareRepository br;
     private final MemberRepository mr;
+    private final CommentRepository cr;
 
 
     // 게시판 상세페이지 정보
@@ -31,9 +38,76 @@ public class Borad_shareService {
 
     // member ID get
     public Member findMember(Authentication auth) {
-        CustomUser user = (CustomUser) auth.getPrincipal();
+            CustomUser user = (CustomUser) auth.getPrincipal();
 
-        return mr.findById(user.getId()).get();
+            return mr.findById(user.getId()).get();
+    }
+
+    // 조회수 업데이트 메서드
+    public void updateCount(Long id){
+        Board_share count = br.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        count.setVCount(count.getVCount() + 1);
+        br.save(count);
+    }
+
+    // pageNavigation 및 게시글 목록 표시 메서드
+    public void pageNavigation(Pageable pageable, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Member member = null;
+
+        if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)){
+            member = findMember(auth);
+        }
+
+        Page<Board_share> result = br.findAll(pageable);
+
+        // 페이지네이션 범위 설정
+        int startPage = Math.max(0, result.getNumber() - 2);
+        int endPage = Math.min(result.getTotalPages() - 1, result.getNumber() + 2);
+
+        // 페이지네이션 결과를 모델에 추가
+        model.addAttribute("home", result.getContent());  // 페이지의 내용을 전달
+        model.addAttribute("currentPage", result.getNumber());  // 현재 페이지 번호 (0부터 시작)
+        model.addAttribute("totalPages", result.getTotalPages());  // 전체 페이지 수
+        model.addAttribute("totalItems", result.getTotalElements());  // 전체 게시글 수
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // 글쓰기 alrter 처리위해 데이터 반환
+        model.addAttribute("auth", member);
+    }
+
+    // 상세페이지 게시글 및 댓글 정보
+    public Model getContents(Long id, Model model) {
+        // ↓ 로직은 로그인 되야 수정삭제를 구현하기에 로그인 되지 않으면 사용자 데이터를 th:if에서 찾을 수 없게 되어 html에서 오류가 발생했다.
+        // 자바스크립트에서 수정삭제 버튼 on/off 기능 구현을 위해 세션유저 정보 제공
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // 아래조건문 검사에서 false라면 그대로 null로 유지
+        Member member = null;
+
+        // 사용자가 null이 아니라면 그리고 사용자가 로그인 되었는지 확인한다. 그리고 만약, 로그인이 되지 않았다면(true) 로그인 한 것으로(false)로 변환시킨다.
+        if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {   // 사용자 객체가 클래스 string(로그인 되지 않는 사용자 타입)타입이 맞다면 ! true를 false로 반전
+            // 위 조건이 모두 true 일경우 아래 member 객체에 현재 사용자 정보를 담음
+            member = findMember(auth);
+        }
+
+        // // 파라미터 id와 같은 게시글을 boardShareRepository에서 찾음
+        Board_share contents = br.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // 파라미터 id를 참조하고 있는 모든 댓글을 찾음
+        List<Board_share_comment> comment = cr.findAllByBoardShare(contents);
+
+        model.addAttribute("contents", contents);
+        model.addAttribute("comments", comment);
+        // member가 null일 경우가 존재함. 그럼으로 html에서 수정삭제에서 사용자 null 데이터가 추가 되었기에 로그인이 null어도 오류가 나지 않음
+        // 예) auth.ge
+        model.addAttribute("auth", member);
+
+        return model;
     }
 
     public void savePost(Board_share data) {

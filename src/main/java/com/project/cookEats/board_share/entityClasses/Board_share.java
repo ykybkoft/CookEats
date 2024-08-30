@@ -72,7 +72,7 @@ public class Board_share {
     // 보드 쉐어는 많은 코멘트를 가질 수 있다. 즉, 1:n 양방향 관계 설정
     // 회원탈퇴시 게시글 댓글 연계 삭제 위한 컬럼
     @JsonManagedReference
-    @OneToMany(mappedBy = "board_share", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "boardShare", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board_share_comment> board_comment;
 
 }

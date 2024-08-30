@@ -30,7 +30,7 @@ public class HomeService {
         model.addAttribute("share",bsr.findTotalSearch(search));
         return model;
     }
-  
+
     //혜정 코드 
     public RecipeDB recipeRecommend(String ingredient) {
         Optional<RecipeDB> recipe = rdbr.findRecommandRecipe(ingredient);
