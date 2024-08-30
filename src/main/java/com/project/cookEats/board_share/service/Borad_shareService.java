@@ -52,15 +52,6 @@ public class Borad_shareService {
         br.save(count);
     }
 
-    // 좋아요 업데이트 메서드
-    public void upLike(Long id){
-        Board_share_comment like = cr.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-
-        like.setCmtLike(like.getCmtLike() + 1);
-        cr.save(like);
-    }
-
     // pageNavigation 및 게시글 목록 표시 메서드
     public void pageNavigation(Pageable pageable, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

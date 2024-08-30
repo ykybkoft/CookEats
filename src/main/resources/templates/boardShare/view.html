@@ -218,14 +218,12 @@
             },
             credentials: 'include' // 인증된 세션을 보내기 위해
         })
-        .then(response => response.json())
+        .then(response => response.text())  // 서버응답을 텍스트로 받음 = JSON 형식으로 서버에서 요청이 안 들어옴
         .then(data => {
             // 요청이 성공적으로 처리된 후 페이지 새로 고침
+            console.log('Reloading the page');
             location.reload();
         })
-        .catch(error => {
-            console.error('좋아요 요청 중 오류 발생:', error);
-        });
     }
 
 </script>

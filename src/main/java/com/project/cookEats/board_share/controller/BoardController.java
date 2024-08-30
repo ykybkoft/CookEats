@@ -65,7 +65,7 @@ public class BoardController {
     @ResponseBody
     public ResponseEntity<String> upLike(@PathVariable Long id) {
 
-        bs.upLike(id);
+        cs.upLike(id);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
