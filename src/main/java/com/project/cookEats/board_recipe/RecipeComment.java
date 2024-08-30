@@ -1,7 +1,6 @@
 package com.project.cookEats.board_recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -40,8 +39,8 @@ public class RecipeComment {
     @JoinColumn(name = "recipedb_id") // 컬럼 이름은 RecipeDB의 ID와 일치해야 합니다.
     private RecipeDB recipeDB;
 
-    @Column(name ="CONTENTS", nullable = false)
-    private String contents;
+    @Column(nullable = false)
+    private String comment_contents;
 
     @Column(name = "LLIKE")
     @ColumnDefault("0")

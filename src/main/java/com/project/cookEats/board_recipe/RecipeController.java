@@ -3,7 +3,6 @@ package com.project.cookEats.board_recipe;
 import com.project.cookEats.common_module.file.FileUpLoadService;
 import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.Member;
-import com.project.cookEats.member.MemberRepository;
 import com.project.cookEats.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +26,7 @@ import java.util.List;
 public class RecipeController {
 
     private final RecipeService recipeService;
-    private final RecipeDBRepository recipeDBRepository;
     private final MemberService memberService;
-    private final RecipeCommentRepository recipeCommentRepository;
-    private final MemberRepository memberRepository;
     private final FileUpLoadService fileUpLoadService;
 
     @GetMapping("/home")
@@ -39,7 +34,7 @@ public class RecipeController {
 
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search, searchType , sortType);
+        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search , sortType);
 
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
@@ -75,29 +70,29 @@ public class RecipeController {
     public String getRecipeDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         RecipeDB recipe = recipeService.getRecipeById(id);
 
-
         if (recipe != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedDate = recipe.getSYSDATE() != null ? recipe.getSYSDATE().format(formatter) : "";
             model.addAttribute("recipe", recipe);
             model.addAttribute("formattedDate", formattedDate);
 
+            // 이미지 URL 리스트를 뷰에 전달
+            List<String> manualImages = recipe.getManualImages();  // S3 URL 리스트
+            model.addAttribute("manualImages", manualImages);
 
             //혜정 코드
+            // 조회수 증가 및 사용자 정보 추가
             recipeService.viewCount(id);
-            if(auth != null){model.addAttribute("member", memberService.findMember(auth));};
+            if (auth != null) {
+                model.addAttribute("member", memberService.findMember(auth));
+            }
+
             model.addAttribute("comments", recipeService.commentList(id));
-
-
             return "boardRecipe/recipeDetail";
-
-    }else {
+        } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
-
-
-
     }
 
 
@@ -124,32 +119,25 @@ public class RecipeController {
     public String writePro(@ModelAttribute RecipeDB recipe,
                            Authentication auth,
                            @RequestParam("manual[]") String[] manuals,
-                           @RequestParam("manualImage[]") MultipartFile[] manualImages) throws IOException {
+                           @RequestParam("manualImage[]") MultipartFile[] manualImages) throws Exception {
         CustomUser user = (CustomUser) auth.getPrincipal();
 
         List<String> manualList = new ArrayList<>();
         List<String> manualImageList = new ArrayList<>();
-        String manual = "";
 
         for (int i = 0; i < manuals.length; i++) {
-            // 각각의 조리순서를 처리
             manualList.add(manuals[i]);
-
-            // 파일 저장
-            String imagePath = fileUpLoadService.saveFile(manualImages[i]);
+            // Set the board type to "recipe"
+            String boardType = "recipe";  // Adjust this value as necessary for different board types
+            String imagePath = fileUpLoadService.saveFile(manualImages[i], boardType);
             manualImageList.add(imagePath);
-
-            // 필요한 경우 조리 순서와 이미지를 결합
-            manual += manuals[i] + "%<";
         }
 
-        // RecipeDB 객체에 수동으로 값 설정
         recipe.setManuals(manualList);
         recipe.setManualImages(manualImageList);
-        recipe.setMANUAL(manual);
-        recipe.setMember(memberRepository.findById(user.getId()).get());
+        recipe.setMember(memberService.findMember(auth));
 
-        recipeDBRepository.save(recipe);
+        recipeService.saveRecipe(recipe);
         return "redirect:/boardRecipe/home";
     }
 
@@ -159,14 +147,14 @@ public class RecipeController {
     String commentWrite(@ModelAttribute RecipeComment comment){
 
         int result = recipeService.saveComment(comment);
-        return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
+        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
     }
 
     //혜정 코드
     @GetMapping("/commentLike/{id}")
     String commentLike(@PathVariable Long id){
         RecipeComment comment = recipeService.upCommentLike(id);
-        return "redirect:/boardrecipe/recipe/"+comment.getRecipeDB().getId();
+        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
     }
 
     //혜정 코드
@@ -181,7 +169,7 @@ public class RecipeController {
     String commentDelete(@PathVariable Long id, @RequestParam Long recipeID){
 
         int result = recipeService.commentDelete(id);
-        return "redirect:/boardrecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
+        return "redirect:/boardRecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
 
     }
 

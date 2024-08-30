@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +12,17 @@ import java.util.List;
 public class FileUploadController {
 
     @Autowired
-    private FileUpLoadService fileUploadService;
+    private FileUpLoadService fileUpLoadService;
 
     @PostMapping("/upload")
-    public List<String> uploadFiles(@RequestParam("manualImage[]") MultipartFile[] files) {
+    public List<String> uploadFiles(@RequestParam("manualImage[]") MultipartFile[] files,
+                                    @RequestParam("boardType") String boardType) {
         List<String> uploadedFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             try {
-                String fileName = fileUploadService.saveFile(file);
-                uploadedFiles.add(fileName);
-            } catch (IOException e) {
+                String fileUrl = fileUpLoadService.saveFile(file, boardType);
+                uploadedFiles.add(fileUrl);
+            } catch (Exception e) {
                 e.printStackTrace();
                 uploadedFiles.add("Failed to upload " + file.getOriginalFilename());
             }
