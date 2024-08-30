@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface Board_shareRepository extends JpaRepository<Board_share, Long> {
-    Page<Board_share> findPageBy(Pageable page);
+
     List<Board_share> findAllByMember(Member member);
 }
