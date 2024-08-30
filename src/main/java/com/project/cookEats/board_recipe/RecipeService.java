@@ -23,13 +23,33 @@ public class RecipeService {
     private final RecipeCommentRepository recipeCommentRepository;
     private final RecipeDBSubInfoRepository recipeDBSubInfoRepository;
 
-    // 모든 게시글을 반환, Paging
-    public Page<RecipeDB> findAll(Pageable pageable, String search, String sortType) {
-        return recipeDBRepository.findAll(pageable);
-    }
+     // 모든 게시글을 반환, Paging
+    //지훈 코드 -> 혜정 수정
+    public Page<RecipeDB> findAll(int page,String search,String sortType) {
 
-    public Page<RecipeDB> findByIngredientName(String ingredientName, Pageable pageable) {
-        return recipeDBRepository.findByIngredientName(ingredientName, pageable);
+
+        int pageSize = 15; // 한 페이지에 표시할 레시피 수
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "LLIKE"));
+
+
+        if(sortType!= null){
+            pageable = PageRequest.of(page-1, pageSize, Sort.by(Sort.Direction.DESC, sortType));
+            if(search == null || search.equals("")){
+
+                return recipeDBRepository.findAll(pageable);
+            }else{
+                return recipeDBRepository.findAllSearch(search,pageable);
+            }
+        }else{
+            if(search== null || search.equals("")){
+                return recipeDBRepository.findAll(pageable);
+            }else{
+                return recipeDBRepository.findAllSearch(search,pageable);
+            }
+
+        }
+
+
     }
 
     public long getTotalItems() {
