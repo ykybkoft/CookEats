@@ -8,144 +8,173 @@
     <div th:replace="~{/header.html :: navbar}"></div>
     <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
     <style>
-         body {
-             font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #17A96D;
-            text-align: center;
-        }
+        body {
+            font-family: 'Arial', sans-serif;
+           line-height: 1.6;
+           color: #333;
+           max-width: 800px;
+           margin: 0 auto;
+           padding: 20px;
+           background-color: #f4f4f4;
+       }
+       .container {
+           max-width: 800px;
+           margin: 0 auto;
+           background-color: #fff;
+           padding: 20px;
+           border-radius: 5px;
+           box-shadow: 0 0 10px rgba(0,0,0,0.1);
+       }
+       h1 {
+           color: #4CAF4F;
+           text-align: center;
+       }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #17A96D;
-            color: white;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .pagination a {
-            color: #17A96D;
-            padding: 8px 16px;
-            text-decoration: none;
-            transition: background-color .3s;
-            border: 1px solid #ddd;
-            margin: 0 4px;
-        }
-        .pagination a.current {
-            background-color: #17A96D;
-            color: white;
-            border: 1px solid #17A96D;
-        }
-        .footer {
-            text-align: right;
-            margin-top: 20px;
-        }
-        .footer a {
-            background-color: #17A96D;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
+       table {
+           width: 100%;
+           border-collapse: collapse;
+       }
+       th, td {
+           padding: 12px;
+           text-align: left;
+           border-bottom: 1px solid #ddd;
+       }
+       th {
+           background-color: #4CAF4F;
+           color: white;
+       }
+       tr:hover {
+           background-color: #f5f5f5;
+       }
+       .pagination {
+           text-align: center;
+           margin-top: 20px;
+       }
+       .pagination a {
+           color: #4CAF4F;
+           padding: 8px 16px;
+           text-decoration: none;
+           transition: background-color .3s;
+           border: 1px solid #ddd;
+           margin: 0 4px;
+       }
+       .pagination a.current {
+           background-color: #4CAF4F;
+           color: white;
+           border: 1px solid #4CAF4F;
+       }
+       .footer {
+           text-align: right;
+           margin-top: 20px;
+       }
+       .footer a {
+           background-color: #4CAF4F;
+           color: white;
+           padding: 10px 20px;
+           text-decoration: none;
+           border-radius: 5px;
+       }
 
-        .form-bar {
-            display: flex;
-            margin: 0 auto;
-            box-shadow:0 1px 6px 0 rgba(32, 33, 36, .28);
-            height: 45px;
-            border-radius: 30px;
-            border: 1px solid white;
-            text-indent: 15px;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            width: 500px;}
+       .form-bar {
+           display: flex;
+           margin: 0 auto;
+           box-shadow:0 1px 6px 0 rgba(32, 33, 36, .28);
+           height: 45px;
+           border-radius: 30px;
+           border: 1px solid white;
+           text-indent: 15px;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 20px;
+           width: 500px;}
 
-        .search {
-            border: none;
+       .search {
+           border: none;
 
-        }
-        .search:focus {
-            outline: none;
-            border: none;
-        }
-        .search-bar {
-            display: flex;
-            justify-content: center;
+       }
+       .search:focus {
+           outline: none;
+           border: none;
+       }
+       .search-bar {
+           display: flex;
+           justify-content: center;
 
-        }
+       }
 
-        .search-type-container {
-        position: relative;
-        display: inline-block;
-        }
+       .search-type-container {
+       position: relative;
+       display: inline-block;
+       }
 
-    .search-type {
-        margin-top: 5px;
-        margin-left : 15px;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-color: #17A96D;
-        color: white;
-        padding: 10px 15px 10px 15px;  /* 오른쪽 패딩을 약간 늘렸습니다 */
-        font-size: 16px;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        outline: none;
-        transition: background-color 0.3s;
-    }
+   .search-type {
+       margin-top: 5px;
+       margin-left : 15px;
+       appearance: none;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       background-color: #4CAF4F;
+       color: white;
+       padding: 10px 15px 10px 15px;  /* 오른쪽 패딩을 약간 늘렸습니다 */
+       font-size: 16px;
+       border: none;
+       border-radius: 25px;
+       cursor: pointer;
+       outline: none;
+       transition: background-color 0.3s;
+   }
 
-    .search-type:hover {
-        background-color: #27ae60;
-    }
+   .search-type:hover {
+       background-color: #27ae60;
+   }
 
-    .search-type-container::after {
+   .search-type-container::after {
 
-        font-size: 12px;
-        color: white;
-        position: absolute;
-        top: 50%;
-        text-align: center;
-        transform: translateY(-50%);
-        pointer-events: none;
-        line-height: 1;  /* 추가: 라인 높이를 1로 설정 */
+       font-size: 12px;
+       color: white;
+       position: absolute;
+       top: 50%;
+       text-align: center;
+       transform: translateY(-50%);
+       pointer-events: none;
+       line-height: 1;  /* 추가: 라인 높이를 1로 설정 */
 
-    }
+   }
 
     /* 옵션 스타일링 */
-    .search-type option {
-        background-color: white;
-        color: #333;
-    }
+   .search-type option {
+       background-color: white;
+       color: #333;
+   }
+   .sort-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .sort-container button {
+            background-color: #4CAF4F;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .sort-container button:hover {
+            background-color: #138a59;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .sort-container button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
 
     </style>
@@ -155,15 +184,16 @@
     <h1>레시피 게시판</h1>
 
     <!-- 검색 폼 -->
+
     <form action="#" th:action="@{/boardRecipe/home}" method="get" class="search-bar">
-        <div class="search-type-container">
+        <!-- <div class="search-type-container">
             <select name="searchType" class="search-type">
-                <option value="contents">내용</option>
+                <option value="RCP_PARTS_DTLS">내용</option>
                 <option value="nick">작성자</option>
             </select>
-        </div>
+        </div> -->
 
-    <!-- 혜정 코드 (검색바)-->
+        <!-- 혜정 코드 (검색바)-->
         <div class="form-bar">
             <div>
                 <i class="fas fa-search"></i>
@@ -173,10 +203,16 @@
 
 
     </form>
-    <div class="sort-container">
-        <button></button>
-        <button></button>
-        <button></button>
+
+    <div th:if="${#strings.isEmpty(search)}" class="sort-container">
+        <button th:onclick="location.href='/boardRecipe/home?sortType=LLIKE'">추천순</button>
+        <button th:onclick="location.href='/boardRecipe/home?sortType=id'">최신순</button>
+        <button th:onclick="location.href='/boardRecipe/home?sortType=CCOUNT'">조회순</button>
+    </div>
+    <div th:if="${not #strings.isEmpty(search)}" class="sort-container">
+        <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=LLIKE)}'|">추천순</button>
+        <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=id)}'|">최신순</button>
+        <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=CCOUNT)}'|">조회순</button>
     </div>
 
     <!-- 레시피 리스트 -->

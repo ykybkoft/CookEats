@@ -24,13 +24,8 @@ public class RecipeService {
         return recipeDBRepository.findAll(pageable);
     }
 
-    public Page<RecipeDB> findByIngredientName(String ingredientName, Pageable pageable) {
-        return recipeDBRepository.findByIngredientName(ingredientName, pageable);
-    }
-
     public long getTotalItems() {
         return recipeDBRepository.count();
-
     }
 
 //    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {

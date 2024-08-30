@@ -14,32 +14,33 @@
 
 <div class="container">
     <div class="menu">
-    <div class="menu_btn">
-        <a href="#">
-            <i class="fas fa-bars fa-lg"></i>
-        </a>
-    </div>
-    <div class="fullscreen_menu">
-        <div class="close_btn">
+        <div class="menu_btn">
             <a href="#">
-                <i class="fa-solid fa-x"></i>
+                <i class="fas fa-bars fa-lg"></i>
             </a>
         </div>
-        <ul class="menu_wrap">
-            <li><a href="/boardRecipe/home">레시피</a></li>
-            <li><a href="/boardShare/home">장터 게시판</a></li>
-            <li><a href="/boardNormal/home">자유 게시판</a></li>
-            <li sec:authorize="isAuthenticated()"><a href="/member/myPage">마이페이지</a></li>
-        </ul>
-    </div>
-    <div class="top">
-        <ul class="member_menu">
-        <li sec:authorize="isAnonymous()"><a href="/member/login">login</a></li>
-        <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
-        </ul>
-    </div>
+        <div class="fullscreen_menu">
+            <div class="close_btn">
+                <a href="#">
+                    <i class="fa-solid fa-x"></i>
+                </a>
+            </div>
+            <ul class="menu_wrap">
+                <li><a href="/recommend">레시피 추천</a></li>
+                <li><a href="/boardRecipe/home">레시피</a></li>
+                <li><a href="/boardShare/home">장터 게시판</a></li>
+                <li><a href="/boardNormal/home">자유 게시판</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/member/myPage">마이페이지</a></li>
+            </ul>
+        </div>
+        <div class="top">
+            <ul class="member_menu">
+                <li sec:authorize="isAnonymous()"><a href="/member/login">login</a></li>
+                <li sec:authorize="isAnonymous()"><a href="/member/join">Join</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/member/logout">Logout</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="/member/myPage">myPage</a></li>
+            </ul>
+        </div>
     </div>
     <header>
         <div class="header">
@@ -105,39 +106,39 @@
 
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        const param = new URLSearchParams(window.location.search);
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const param = new URLSearchParams(window.location.search);
 
-        var type ='';
+    var type ='';
 
-        if(param.get('result')=='success'){
-            if(param.get('type')=='delete'){
-                type='회원 탈퇴가';
-                alert(type+' 완료되었습니다.');
-            }else if (param.get('type')=='join'){
-                type='회원 가입이';
-                alert(type+' 완료되었습니다.');
-            }
-
+    if(param.get('result')=='success'){
+        if(param.get('type')=='delete'){
+            type='회원 탈퇴가';
+            alert(type+' 완료되었습니다.');
+        }else if (param.get('type')=='join'){
+            type='회원 가입이';
+            alert(type+' 완료되었습니다.');
         }
 
+    }
 
-        $(document).ready(function(){
-            $('.menu_btn>a').on('click', function(){
-                $('.fullscreen_menu').fadeIn();
-                $('.recommend-btn').css('opacity', '0'); // 추천 버튼 숨기기
-            });
 
-            $('.close_btn>a').on('click', function(){
-                $('.fullscreen_menu').fadeOut();
-                $('.recommend-btn').css('opacity', '1'); // 추천 버튼 다시 보이기
-            });
+    $(document).ready(function(){
+        $('.menu_btn>a').on('click', function(){
+            $('.fullscreen_menu').fadeIn();
+            $('.recommend-btn').css('opacity', '0'); // 추천 버튼 숨기기
         });
 
+        $('.close_btn>a').on('click', function(){
+            $('.fullscreen_menu').fadeOut();
+            $('.recommend-btn').css('opacity', '1'); // 추천 버튼 다시 보이기
+        });
+    });
 
 
 
-    </script>
+
+</script>
 </body>
 </html>
