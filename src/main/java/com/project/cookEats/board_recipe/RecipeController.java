@@ -32,8 +32,6 @@ public class RecipeController {
     @GetMapping("/home")
     public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
 
-        Page<RecipeDB> resultPage = recipeService.findAll(page,search, sortType);
-
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         Page<RecipeDB> resultPage = recipeService.findAll(pageable, search , sortType);
