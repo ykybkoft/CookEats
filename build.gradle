@@ -44,6 +44,8 @@ dependencies {
 	/*live reload*/
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
+	implementation("com.amazonaws:aws-java-sdk:1.12.770")
 }
 
 compileJava {
