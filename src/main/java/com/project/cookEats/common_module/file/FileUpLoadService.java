@@ -2,6 +2,7 @@ package com.project.cookEats.common_module.file;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,20 @@ public class FileUpLoadService {
         amazonS3.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), null));
 
         return amazonS3.getUrl(bucketName, keyName).toString(); // Return file URL
+    }
+
+    public void deleteFile(String fileUrl) {
+        String fileKey = extractFileKey(fileUrl);
+
+        // Create a DeleteObjectRequest
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, fileKey);
+
+        // Delete the object from S3
+        amazonS3.deleteObject(deleteObjectRequest);
+    }
+
+    private String extractFileKey(String fileUrl) {
+        // Extract the file key from the file URL
+        return fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
     }
 }

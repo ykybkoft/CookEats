@@ -1,13 +1,18 @@
 package com.project.cookEats.board_recipe;
 
-
+import com.project.cookEats.member.Member;
 import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.MemberRepository;
+import com.project.cookEats.common_module.file.FileUpLoadService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -17,6 +22,7 @@ public class RecipeService {
     private final RecipeDBRepository recipeDBRepository;
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
+    private final FileUpLoadService fileUpLoadService;
 
     // 모든 게시글을 반환, Paging
     public Page<RecipeDB> findAll(Pageable pageable, String search, String sortType) {
@@ -45,8 +51,23 @@ public class RecipeService {
     public void saveRecipe(RecipeDB recipe) {
         recipeDBRepository.save(recipe);
     }
-    public void deleteRecipe(Long id) {
-        recipeDBRepository.deleteById(id);
+
+    @Transactional
+    public void deleteRecipe(Long id, Member loggedInMember) {
+        RecipeDB recipe = recipeDBRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+
+        if (!recipe.getMember().equals(loggedInMember)) {
+            throw new SecurityException("You are not authorized to delete this recipe");
+        }
+
+        // Delete associated files (if any)
+        for (String fileUrl : recipe.getManualImages()) {
+            fileUpLoadService.deleteFile(fileUrl);
+        }
+
+        // Delete the recipe
+        recipeDBRepository.delete(recipe);
     }
 
     //혜정 코드, 좋아요 증가

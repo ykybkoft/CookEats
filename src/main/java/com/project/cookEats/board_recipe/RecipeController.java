@@ -145,6 +145,26 @@ public class RecipeController {
         return "redirect:/boardRecipe/home";
     }
 
+    // 게시글 삭제
+    @PostMapping("/delete/{id}")
+    public String deleteRecipe(@PathVariable Long id, Authentication auth) {
+        try {
+            // 현재 로그인한 사용자 정보 가져오기
+            Member loggedInMember = memberService.findMember(auth);
+
+            // 게시글 삭제
+            recipeService.deleteRecipe(id, loggedInMember);
+
+            // 성공 메시지
+            return "redirect:/boardRecipe/home?type=delete&result=success";
+        } catch (SecurityException e) {
+            // 삭제 권한이 없는 경우
+            return "redirect:/boardRecipe/home?type=delete&result=error";
+        } catch (Exception e) {
+            // 기타 오류 발생
+            return "redirect:/boardRecipe/home?type=delete&result=error";
+        }
+    }
 
     //혜정코드
     @PostMapping("/commentWrite")
