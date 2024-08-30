@@ -7,6 +7,7 @@ import com.project.cookEats.board_share.repositories.CommentRepository;
 import com.project.cookEats.board_share.service.Borad_shareService;
 import com.project.cookEats.board_share.service.CommentService;
 import com.project.cookEats.member.Member;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

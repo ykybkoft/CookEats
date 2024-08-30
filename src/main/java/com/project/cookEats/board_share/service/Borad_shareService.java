@@ -27,6 +27,15 @@ public class Borad_shareService {
     private final MemberRepository mr;
     private final CommentRepository cr;
 
+
+    // 게시판 상세페이지 정보
+    public Object getContents(Long id) {
+        if (id.equals(null)) {
+            return "없는 게시글 입니다";
+        }
+        return br.findById(id).get();
+    }
+
     // member ID get
     public Member findMember(Authentication auth) {
             CustomUser user = (CustomUser) auth.getPrincipal();
