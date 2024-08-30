@@ -34,7 +34,7 @@ public class RecipeController {
 
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search , sortType);
+        Page<RecipeDB> resultPage = recipeService.findAll(page, search , sortType);
 
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
@@ -72,6 +72,11 @@ public class RecipeController {
     @GetMapping("/recipe/{id}")
     public String getRecipeDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         RecipeDB recipe = recipeService.getRecipeById(id);
+
+
+        if(recipe.getMember() == null){
+            model = recipeService.getNutrition(model, id);
+        }
 
         if (recipe != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -113,7 +118,7 @@ public class RecipeController {
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
-        return "boardRecipe/write.html";
+        return "boardrecipe/write.html";
     }
 
     //혜정코드

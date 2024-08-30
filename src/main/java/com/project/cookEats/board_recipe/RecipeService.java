@@ -8,12 +8,18 @@ import com.project.cookEats.common_module.file.FileUpLoadService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +28,41 @@ public class RecipeService {
     private final RecipeDBRepository recipeDBRepository;
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
+    private final RecipeDBSubInfoRepository recipeDBSubInfoRepository;
     private final FileUpLoadService fileUpLoadService;
 
-    // 모든 게시글을 반환, Paging
-    public Page<RecipeDB> findAll(Pageable pageable, String search, String sortType) {
-        return recipeDBRepository.findAll(pageable);
+     // 모든 게시글을 반환, Paging
+    //지훈 코드 -> 혜정 수정
+    public Page<RecipeDB> findAll(int page,String search,String sortType) {
+
+
+        int pageSize = 15; // 한 페이지에 표시할 레시피 수
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "LLIKE"));
+
+
+        if(sortType!= null){
+            pageable = PageRequest.of(page-1, pageSize, Sort.by(Sort.Direction.DESC, sortType));
+            if(search == null || search.equals("")){
+
+                return recipeDBRepository.findAll(pageable);
+            }else{
+                return recipeDBRepository.findAllSearch(search,pageable);
+            }
+        }else{
+            if(search== null || search.equals("")){
+                return recipeDBRepository.findAll(pageable);
+            }else{
+                return recipeDBRepository.findAllSearch(search,pageable);
+            }
+
+        }
+
+
     }
 
     public long getTotalItems() {
         return recipeDBRepository.count();
+
     }
 //    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
 //        return switch (sortBy) {
@@ -76,6 +108,7 @@ public class RecipeService {
         recipe.setLLIKE(recipe.getLLIKE()+1);
         recipeDBRepository.save(recipe);
     }
+
 
     //레시피 저장
     public int write(RecipeDB recipe, Authentication auth) {
@@ -124,6 +157,19 @@ public class RecipeService {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
         comment.setComment_contents(content);
         recipeCommentRepository.save(comment);  // 변경된 내용 저장
+    }
+
+    //혜정 코드
+    public Model getNutrition(Model model, Long id) {
+        Optional<RecipeDBSubInfo> recipeInfo = recipeDBSubInfoRepository.findById(id);
+        if(recipeInfo.isEmpty()){
+            return model;
+        }
+        model.addAttribute("car", recipeInfo.get().getINFO_CAR());
+        model.addAttribute("fat", recipeInfo.get().getINFO_FAT());
+        model.addAttribute("pro", recipeInfo.get().getINFO_PRO());
+
+        return model;
     }
 
 }

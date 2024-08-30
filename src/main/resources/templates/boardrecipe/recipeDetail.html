@@ -1,171 +1,326 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>레시피 상세페이지</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}">
-    <script src="https://use.fontawesome.com/releases/v6.6.0/js/all.js"></script>
-    <div th:replace="~{header.html :: navbar}"></div>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF4F;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --border-radius: 12px;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+        .main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .recipe-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .recipe-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .recipe-info div {
+            margin: 0 15px 10px;
+        }
+        .recipe-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+        .recipe-image {
+            flex: 1;
+            margin-right: 40px;
+        }
+        .recipe-image img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .nutrition-chart {
+            flex: 1;
+        }
+        .ingredients, .instructions {
+            margin-top: 40px;
+        }
+        .ingredients h2, .instructions h2 {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .ingredients p {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .instructions ol {
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 20px;
+        }
+        .instructions img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 79, 0.4);
+        }
+        .comments {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .comments h2 {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+        .comment-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .comment {
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .comment-actions {
+            margin-top: 10px;
+        }
+        .comment-actions a {
+            color: var(--primary-color);
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .comment-actions a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .recipe-content {
+                flex-direction: column;
+            }
+            .recipe-image, .nutrition-chart {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-
 <main class="main">
-    <section class="contents">
-        <div th:if="${recipe != null}">
-            <h1 th:text="${recipe.RCP_NM}">레시피 이름</h1>
-            <p><strong>작성자:</strong>
-                <span th:text="${recipe.member != null ? recipe.member.username : 'CookEats 제공'}"></span>
-            </p>
-            <p><strong>날짜:</strong>
-                <span th:text="${formattedDate}">날짜</span>
-            </p>
-            <p><strong>조회수:</strong>
-                <span th:text="${recipe.CCOUNT}">조회수</span>
-            </p>
-            <p><strong>추천:</strong>
-                <span th:text="${recipe.LLIKE}">추천수</span>
-            </p>
-
-            <div>
-                <ul>
-                    <li th:each="manual : ${recipe.manuals}" th:text="${manual}"></li>
-                </ul>
-            </div>
-            <!-- 이미지 리스트를 반복하여 출력 -->
-            <div th:each="image : ${recipe.manualImages}">
-                <img th:src="${image}" alt="레시피 이미지" style="max-width: 100%; height: auto; margin-bottom: 10px;">
-            </div>
-
-            <a th:href="@{ '/boardRecipe/boardLike/' + ${recipe.id} }" sec:authorize="isAuthenticated()">
-                <i class="fa-regular fa-thumbs-up fa-lg"></i>
-            </a>
-
-            <a href="/boardRecipe/home">
-                <button type="button">목록</button>
-            </a>
+    <article class="recipe-card" th:if="${recipe != null}">
+        <h1 th:text="${recipe.RCP_NM}">레시피 이름</h1>
+        <div class="recipe-info">
+            <div><i class="fas fa-user"></i> <span th:text="${recipe.member != null ? recipe.member.username : 'CookEats 제공'}"></span></div>
+            <div><i class="far fa-calendar-alt"></i> <span th:text="${formattedDate}">날짜</span></div>
+            <div><i class="fas fa-eye"></i> <span th:text="${recipe.CCOUNT}">조회수</span></div>
+            <div><i class="fas fa-heart"></i> <span th:text="${recipe.LLIKE}">추천수</span></div>
         </div>
-        <div th:if="${recipe == null}">
-            <p>게시글을 찾을 수 없습니다.</p>
-            <a href="/boardRecipe/home">
-                <button type="button">목록</button>
-            </a>
-        </div>
-    </section>
 
-    <!--혜정 코드 -->
+        <div class="recipe-content">
+            <div class="recipe-image">
+                <img th:src="@{${recipe.ATT_FILE_NO_MK}}" alt="Recipe Image" />
+            </div>
+            <div class="nutrition-chart">
+                <canvas id="nutritionChart"></canvas>
+            </div>
+        </div>
+
+        <section class="ingredients">
+            <h2>재료</h2>
+            <p th:text="${recipe.RCP_PARTS_DTLS}"></p>
+        </section>
+
+        <section class="instructions">
+            <h2>조리 방법</h2>
+            <ol>
+                <li th:each="manual, iterStat : ${recipe.manuals}">
+                    <p th:text="${manual}"></p>
+                    <img th:if="${iterStat.index < recipe.manualImages.size()}" th:src="@{${recipe.manualImages[iterStat.index]}}" alt="Step Image" />
+                </li>
+            </ol>
+        </section>
+
+        <div class="recipe-actions">
+            <a th:href="@{'/boardRecipe/boardLike/' + ${recipe.id}}" class="button" sec:authorize="isAuthenticated()">
+                <i class="fa-regular fa-thumbs-up"></i> 추천
+            </a>
+            <a href="/boardRecipe/home" class="button">목록</a>
+        </div>
+    </article>
+
     <section class="comments">
-        <h3>댓글</h3>
-        <div>
-        <form th:if="${member != null}" class="comment-write" method="post" action="/boardRecipe/commentWrite">
-            <input name="comment_contents" placeholder="댓글 작성">
+        <h2>댓글</h2>
+        <form th:if="${member != null}" class="comment-form" method="post" action="/boardRecipe/commentWrite">
+            <textarea name="comment_contents" placeholder="댓글을 작성해주세요" rows="4"></textarea>
             <input type="hidden" name="recipeDB" th:value="${recipe.id}">
             <input type="hidden" name="member" th:value="${member.id}">
-            <button>등록</button>
+            <button type="submit" class="button">등록</button>
         </form>
-        </div>
 
-        <table>
-            <th:block th:each="comment : ${comments}">
-            <tr>
-                <td th:text="${comment.member.nick}"></td>
-                <td th:text="${#temporals.format(comment.sys_date, 'yyyy-MM-dd HH:mm')}"></td>
-                <td>
-                    <a th:if="${member != null}" th:href="@{ '/boardRecipe/commentLike/' + ${comment.id} }">
-                        <i class="fa-regular fa-thumbs-up fa-lg"></i>
-                        <input type="hidden" name="recipeDB" th:value="${comment.recipeDB.id}">
+        <ul class="comment-list">
+            <li th:each="comment : ${comments}" class="comment">
+                <div class="comment-header">
+                    <span><i class="fas fa-user-circle"></i> <span th:text="${comment.member.nick}"></span></span>
+                    <span><i class="far fa-clock"></i> <span th:text="${#temporals.format(comment.sys_date, 'yyyy-MM-dd HH:mm')}"></span></span>
+                </div>
+                <p th:id="'comment-content-' + ${comment.id}" th:text="${comment.comment_contents}"></p>
+                <div class="comment-actions">
+                    <a th:if="${member != null}" th:href="@{'/boardRecipe/commentLike/' + ${comment.id}}">
+                        <i class="fa-regular fa-thumbs-up"></i>
+                        <span th:text="${comment.LLIKE}"></span>
                     </a>
-                    <p th:text="${comment.LLIKE}"></p>
-                </td>
-
-                <td th:if="${member != null and #authentication.principal.id == comment.member.id}">
-                    <a href="#" th:onclick="'showEditForm(' + ${comment.id} + ');'">✏️</a>
-                    <a th:href="@{ '/boardRecipe/commentDelete/' + ${comment.id}(recipeID=${comment.recipeDB.id})}">🗑️</a>
-                </td>
-            </tr>
-                <tr>
-                    <td th:id="'comment-content-' + ${comment.id}" th:text="${comment.comment_contents}"></td>
-                </tr>
-
-                <tr th:id="'edit-form-' + ${comment.id}" style="display: none;">
-                    <td colspan="4">
-                        <form th:onsubmit="'return submitEditForm(' + ${comment.id} + ');'">
-                            <textarea th:id="'edit-content-' + ${comment.id}" rows="4" cols="50" th:text="${comment.comment_contents}"></textarea>
-                            <input type="hidden" th:id="'recipe-id-' + ${comment.id}" th:value="${comment.recipeDB.id}" />
-                            <button type="submit">수정하기</button>
-                            <button type="button" th:onclick="'cancelEdit(' + ${comment.id} + ');'">취소</button>
-                        </form>
-                    </td>
-                </tr>
-
-
-            </th:block>
-
-
-
-
-
-
-
-
-
-
-        </table>
-
-
-
-
-
-
+                    <a th:if="${member != null and #authentication.principal.id == comment.member.id}" href="#" th:onclick="'showEditForm(' + ${comment.id} + ');'">수정</a>
+                    <a th:if="${member != null and #authentication.principal.id == comment.member.id}" th:href="@{'/boardRecipe/commentDelete/' + ${comment.id}(recipeID=${comment.recipeDB.id})}">삭제</a>
+                </div>
+                <div th:id="'edit-form-' + ${comment.id}" style="display: none;">
+                    <textarea th:id="'edit-content-' + ${comment.id}" rows="4" th:text="${comment.comment_contents}"></textarea>
+                    <input type="hidden" th:id="'recipe-id-' + ${comment.id}" th:value="${comment.recipeDB.id}" />
+                    <button class="button" th:onclick="'submitEditForm(' + ${comment.id} + ');'">수정하기</button>
+                    <button class="button" th:onclick="'cancelEdit(' + ${comment.id} + ');'">취소</button>
+                </div>
+            </li>
+        </ul>
     </section>
-
 </main>
-<!-- 혜정 코드 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script defer>
-        const param = new URLSearchParams(window.location.search);
 
-        var type ='';
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        var carValue = /*[[${car}]]*/ 0;
+        var proValue = /*[[${pro}]]*/ 0;
+        var fatValue = /*[[${fat}]]*/ 0;
 
-        if(param.get('result')=='success'){
-            if(param.get('type')=='commentDelete'){
-                type='댓글 삭제가';
-                alert(type+' 완료되었습니다.');
+        var ctx = document.getElementById('nutritionChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['탄수화물(g)', '단백질(g)', '지방(g)'],
+                datasets: [{
+                    data: [carValue, proValue, fatValue],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    borderColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: {
+                        display: true,
+                        text: '영양 성분 구성',
+                        color: '#4CAF4F',
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        }
+                    }
+                }
             }
-
-        }
-
-       // 댓글 수정 폼을 보여주는 함수
+        });
+        /*]]>*/
+    </script>
+<script>
         function showEditForm(commentId) {
-            console.log("showEditForm called with commentId:", commentId);
-            document.getElementById('edit-form-' + commentId).style.display = 'table-row';
+            document.getElementById('edit-form-' + commentId).style.display = 'block';
         }
 
-        // 댓글 수정 폼을 취소하는 함수
         function cancelEdit(commentId) {
             document.getElementById('edit-form-' + commentId).style.display = 'none';
         }
 
-        // 댓글 수정 내용을 서버로 전송하는 함수
         function submitEditForm(commentId) {
             const content = document.getElementById('edit-content-' + commentId).value;
             const recipeID = document.getElementById('recipe-id-' + commentId).value;
 
-            fetch(`/boardrecipe/commentModify/${commentId}`, {
+            fetch(`/boardRecipe/commentModify/${commentId}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `content=${encodeURIComponent(content)}&recipeID=${recipeID}`,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `content=${encodeURIComponent(content)}&recipeID=${recipeID}`
             })
             .then(response => {
                 if (response.ok) {
-                    // 수정된 내용을 페이지에 반영
                     document.getElementById('comment-content-' + commentId).textContent = content;
                     cancelEdit(commentId);
-                    alert('댓글 수정이 완료되었습니다. ');
+                    alert('댓글이 수정되었습니다.');
                 } else {
                     alert('댓글 수정에 실패했습니다.');
                 }
@@ -175,16 +330,8 @@
                 alert('댓글 수정 중 오류가 발생했습니다.');
             });
 
-            return false; // 폼 제출을 막음
+            return false;
         }
-
-
-
-
-
-
     </script>
-
-
 </body>
 </html>
