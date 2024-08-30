@@ -48,7 +48,15 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    String login(){
+    public String loginForm( HttpServletRequest request) {
+
+
+        String prevPage = request.getHeader("Referer");
+
+        if(prevPage != null && !prevPage.contains("/login")) {
+            request.getSession().setAttribute("prevPage", prevPage);
+        }
+
         return "member/login.html";
     }
 

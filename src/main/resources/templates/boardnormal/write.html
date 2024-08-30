@@ -6,27 +6,90 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>게시글 작성</title>
+    <div th:replace="~{header.html :: navbar}"></div>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4CAF50;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #nickname {
+            font-weight: bold;
+
+        }
+    </style>
 </head>
 <body>
 
-<h1>자유게시판</h1>
-<form action="/boardNormal/write" method="POST">
-    <label for="nickname">닉네임:</label><br>
-    <!-- username 변수를 p 태그의 내용으로 출력 -->
-    <p id="nickname" th:text="${username}">닉네임</p><br><br>
 
-    <label for="title">제목:</label><br>
-    <input type="text" id="title" name="title" required><br><br>
+<div class="container">
+    <h1>자유게시판</h1>
+    <form action="/boardNormal/write" method="POST">
+        <label for="nickname">닉네임:</label>
+        <p id="nickname" th:text="${username}">닉네임</p>
 
-    <label for="content">내용:</label><br>
-    <textarea id="content" name="content" rows="5" cols="33" required></textarea><br><br>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required>
 
-    <button type="submit">작성하기</button>
-</form>
+        <label for="content">내용:</label>
+        <textarea id="content" name="content" rows="5" required></textarea>
 
-<ul class="boardhome">
-    <li><a href="/boardNormal/home">목록</a></li>
-</ul>
+        <div class="button-container">
+            <button type="submit" class="button">작성하기</button>
+            <a href="/boardNormal/home" class="button">목록</a>
+        </div>
+    </form>
+</div>
+
+
 
 </body>
 </html>

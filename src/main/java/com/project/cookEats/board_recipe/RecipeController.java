@@ -73,6 +73,11 @@ public class RecipeController {
     public String getRecipeDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         RecipeDB recipe = recipeService.getRecipeById(id);
 
+
+        if(recipe.getMember() == null){
+            model = recipeService.getNutrition(model, id);
+        }
+
         if (recipe != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedDate = recipe.getSYSDATE() != null ? recipe.getSYSDATE().format(formatter) : "";
@@ -91,7 +96,7 @@ public class RecipeController {
             model.addAttribute("comments", recipeService.commentList(id));
           
             return "boardRecipe/recipeDetail";
-          
+
         }else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
@@ -113,7 +118,7 @@ public class RecipeController {
     String write(Authentication auth, Model model){
         Member result = memberService.findMember(auth);
         model.addAttribute("user",result);
-        return "boardRecipe/write.html";
+        return "boardrecipe/write.html";
     }
 
     //혜정코드

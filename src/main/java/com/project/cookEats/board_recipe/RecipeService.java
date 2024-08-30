@@ -8,7 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +21,7 @@ public class RecipeService {
     private final RecipeDBRepository recipeDBRepository;
     private final MemberRepository memberRepository;
     private final RecipeCommentRepository recipeCommentRepository;
+    private final RecipeDBSubInfoRepository recipeDBSubInfoRepository;
 
     // 모든 게시글을 반환, Paging
     public Page<RecipeDB> findAll(Pageable pageable, String search, String sortType) {
@@ -60,6 +65,7 @@ public class RecipeService {
         recipe.setLLIKE(recipe.getLLIKE()+1);
         recipeDBRepository.save(recipe);
     }
+
 
     //레시피 저장
     public int write(RecipeDB recipe, Authentication auth) {
@@ -108,6 +114,19 @@ public class RecipeService {
         RecipeComment comment = recipeCommentRepository.findById(id).get();
         comment.setComment_contents(content);
         recipeCommentRepository.save(comment);  // 변경된 내용 저장
+    }
+
+    //혜정 코드
+    public Model getNutrition(Model model, Long id) {
+        Optional<RecipeDBSubInfo> recipeInfo = recipeDBSubInfoRepository.findById(id);
+        if(recipeInfo.isEmpty()){
+            return model;
+        }
+        model.addAttribute("car", recipeInfo.get().getINFO_CAR());
+        model.addAttribute("fat", recipeInfo.get().getINFO_FAT());
+        model.addAttribute("pro", recipeInfo.get().getINFO_PRO());
+
+        return model;
     }
 
 }
