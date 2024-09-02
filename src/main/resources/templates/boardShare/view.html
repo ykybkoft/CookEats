@@ -30,11 +30,11 @@
         <div style="display: flex; background-color: rgb(116, 217, 251); justify-content: left">
             <div style="padding-right: 30px">
                 <strong>조회수 :</strong>
-                <p style="display: inline" th:text="${contents.vCount}"></p>
+                <p style="display: inline" th:text="${contents.vcount}"></p>
             </div>
             <div style="padding-right: 30px">
                 <strong>날짜 :</strong>
-                <p style="display: inline" th:text="${contents.sysDate}"></p>
+                <p style="display: inline" th:text="${contents.sysdate}"></p>
             </div>
         </div>
         <!-- 로그인된 사용자인 경우에만 수정 및 삭제 버튼 표시 -->
@@ -57,7 +57,7 @@
     <div class="contents_like" style="background-color: rgb(116, 217, 251); display: flex; justify-content: center; align-items: center;" sec:authorize="isAuthenticated()">
         <button type="button" onclick="contentsLike(event)" th:attr="data-id=${contents.id}">
             <span class="blind">좋아요</span>
-            <span th:text="${contents.cntLike}">좋아요 수</span>
+            <span th:text="${contents.cntlike}">좋아요 수</span>
         </button>
     </div>
 </div>
@@ -108,7 +108,7 @@
 
         <div class="comment_info" style="display: flex; justify-content: space-between">
             <div class="comment_time" style="display: flex;">
-                <span th:text="${comment.sysDate}" style="padding-right: 10px">댓글 작성 시간</span>
+                <span th:text="${comment.sysdate}" style="padding-right: 10px">댓글 작성 시간</span>
                 <!-- 로그인된 사용자이고, 댓글 작성자와 일치할 경우 수정/삭제 버튼 표시 -->
                 <div th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})" style="display: flex; gap: 5px">
                     <button class="edit-button" type="button" th:attr="data-comment-id=${comment.id}">수정</button>
@@ -118,7 +118,7 @@
             <div class="comment_like" style="float: right" sec:authorize="isAuthenticated()">
                 <button type="button" onclick="upLike(event)" th:attr="data-id=${comment.id}">
                     <span class="blind">좋아요</span>
-                    <span th:text="${comment.cmtLike}">좋아요 수</span>
+                    <span th:text="${comment.cmtlike}">좋아요 수</span>
                 </button>
             </div>
         </div>

@@ -47,6 +47,8 @@ public class BoardController {
         // 아무 정렬 버튼을 누르지 않아 전송되는 데이터가 없을 시 기본 페이징 버튼을 클릭해도 값을 넣어주기 위함.
         if (sortType == null || sortType.equals("")) {
             sortType = "id";
+
+            System.out.println("controller sortType : " + sortType);
         }
 
         // 검색값, 정렬값를 model에 추가

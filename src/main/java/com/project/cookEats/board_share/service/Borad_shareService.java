@@ -49,7 +49,7 @@ public class Borad_shareService {
         Board_share like = br.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        like.setCntLike(like.getCntLike() + 1);
+        like.setCntlike(like.getCntlike() + 1);
         br.save(like);
     }
 
@@ -58,7 +58,7 @@ public class Borad_shareService {
         Board_share count = br.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        count.setVCount(count.getVCount() + 1);
+        count.setVcount(count.getVcount() + 1);
         br.save(count);
     }
 
@@ -77,20 +77,27 @@ public class Borad_shareService {
             // 검색과 정렬 기능
             // 검색 값이 없거나 공백과 같이 둘 중 하나일 경우
             if (search == null || search.equals("")){
+                System.out.println("yes sortType, no search value : " + sortType + ", " + search);
+
                 return br.findAll(pageable);
             }
             else {
                 // 검색 값이 있다면
                 // 리포지토리 SQL LIKE 문 메서드 실행
+                System.out.println("yes sortType, yes search value : " + sortType + ", " + search);
                 return br.findAllSearch(search, pageable);  // 결과적으로 검색결과는 기본정렬 값인 like 순으로 정렬 됨.
             }
         }
         // 정렬기준이 없다면
         else {
             if (search == null || search.equals("")){
+                System.out.println("no sortType, no search value : " + sortType + ", " + search);
+
                 return br.findAll(pageable);
             }
             else {
+                System.out.println("no sortType, yes search value : " + sortType + ", " + search);
+
                 return br.findAllSearch(search, pageable);
             }
         }
@@ -165,7 +172,7 @@ public class Borad_shareService {
             LocalDate date = LocalDate.now();
 
             // 입력된 게시글 정보와 날짜정보를 DB에 저장
-            data.setSysDate(date);
+            data.setSysdate(date);
             br.save(data);
         }
         else {
