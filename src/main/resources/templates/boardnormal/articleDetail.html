@@ -86,8 +86,10 @@
 </head>
 <body>
 
+<!-- 메인 컨텐츠 영역 -->
 <main class="main">
     <section class="contents">
+        <!-- 게시글이 존재하는 경우 표시 -->
         <div th:if="${article != null}">
             <h1 th:text="${article.title}"></h1>
             <div class="article-info">
@@ -99,23 +101,53 @@
             <div class="article-content" th:text="${article.content}"></div>
         </div>
 
+        <!-- 게시글 수정 폼 -->
+        <div id="edit-form" class="edit-form" th:if="${currentUsername == article.member.username}">
+            <form id="edit-form-content" th:action="@{/boardNormal/articles/{id}/edit(id=${article.id})}" method="post">
+                <div class="form-group">
+                    <label for="edit-title">제목</label>
+                    <input type="text" id="edit-title" name="title" th:value="${article.title}" required />
+                </div>
+                <div class="form-group">
+                    <label for="edit-content">내용</label>
+                    <textarea id="edit-content" name="content" rows="6" required th:text="${article.content}"></textarea>
+                </div>
+                <div class="form-actions">
+                    <a href="javascript:void(0);" onclick="submitEditForm()" class="button">저장</a>
+                    <a href="javascript:void(0);" onclick="toggleEditForm()" class="button cancel-button">취소</a>
+                </div>
+            </form>
+        </div>
+
+        <br>
+
+        <!-- 게시글에 대한 액션 버튼들 -->
         <div class="article-actions">
+            <!-- 좋아요 버튼 -->
             <a th:href="@{'/boardNormal/articles/' + ${article.id} + '/like'}" class="button" sec:authorize="isAuthenticated()">
                 <i class="fa-regular fa-thumbs-up"></i> 좋아요
             </a>
-            <a th:if="${currentUsername == article.member.username}" sec:authorize="isAuthenticated()" th:href="@{/boardNormal/update/{id}(id=${article.id})}" class="button">수정</a>
-            <a th:if="${currentUsername == article.member.username}" sec:authorize="isAuthenticated()" th:href="@{/boardNormal/delete/{id}(id=${article.id})}" class="button" onsubmit="return confirm('정말로 삭제하시겠습니까?');" >삭제</a>
 
+            <!-- 수정 버튼: 작성자만 볼 수 있음 -->
+            <a th:if="${currentUsername == article.member.username}" sec:authorize="isAuthenticated()" href="javascript:void(0);" class="button" onclick="toggleEditForm()">수정</a>
+
+            <!-- 삭제 버튼: 작성자만 볼 수 있음 -->
+            <a th:if="${currentUsername == article.member.username}" sec:authorize="isAuthenticated()" th:href="@{/boardNormal/delete/{id}(id=${article.id})}" class="button" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
+
+            <!-- 목록으로 돌아가기 버튼 -->
             <a href="/boardNormal/home" class="button">목록</a>
         </div>
 
+        <!-- 게시글이 존재하지 않는 경우 표시 -->
         <div th:if="${article == null}">
             <p>게시글을 찾을 수 없습니다.</p>
             <a href="/boardNormal/home" class="button">목록</a>
         </div>
     </section>
 
+    <!-- 댓글 작성 및 댓글 리스트 영역 -->
     <footer class="footer">
+        <!-- 댓글 작성 폼 -->
         <div class="comment-form">
             <h2>댓글 작성</h2>
             <form th:action="@{/boardNormal/articles/{id}/comment(id=${article.id})}" method="post">
@@ -124,28 +156,35 @@
             </form>
         </div>
 
+        <!-- 댓글 목록 -->
         <div class="comments-container">
             <h2>댓글</h2>
             <div th:each="comment : ${comments}" class="comment-card">
                 <div class="comment-content">
+                    <!-- 댓글 작성자 정보 -->
                     <div class="comment-author" th:text="${comment.member != null ? comment.member.username : '작성자 정보 없음'}"></div>
+                    <!-- 댓글 내용 -->
                     <div class="comment-text" th:text="${comment.contents}"></div>
                 </div>
 
+                <!-- 댓글 수정/삭제 액션: 댓글 작성자만 가능 -->
                 <div th:if="${#authentication.name == comment.member.username}">
                     <div class="comment-actions">
-                        <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} +')'" class="icon-button">✏️</button>
+                        <!-- 수정 버튼 -->
+                        <a href="javascript:void(0);" th:onclick="'toggleCommentEditForm(' + ${comment.id} +')'" class="icon-button">✏️</a>
+                        <!-- 삭제 버튼 -->
                         <form th:action="@{/boardNormal/comments/{id}/delete(id=${comment.id})}" method="post" style="display:inline;">
                             <input type="hidden" name="boardId" th:value="${article.id}" />
                             <button type="submit" class="icon-button">🗑️</button>
                         </form>
                     </div>
+                    <!-- 수정 폼 -->
                     <div th:id="'edit-form-' + ${comment.id}" class="edit-form">
                         <form th:action="@{/boardNormal/comments/{id}/edit(id=${comment.id})}" method="post">
                             <textarea name="contents" rows="4" th:text="${comment.contents}" required></textarea>
                             <input type="hidden" name="boardId" th:value="${article.id}" />
                             <button type="submit" class="button">수정</button>
-                            <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="button">취소</button>
+                            <a href="javascript:void(0);" th:onclick="'toggleCommentEditForm(' + ${comment.id} + ')'" class="button">취소</a>
                         </form>
                     </div>
                 </div>
@@ -154,9 +193,11 @@
     </footer>
 </main>
 
+<!-- JavaScript 코드 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
+        // 좋아요 버튼 클릭 이벤트
         $("#likeButton").click(function() {
             var articleId = $(this).data("id");
             $.ajax({
@@ -174,7 +215,8 @@
             });
         });
 
-        window.toggleEditForm = function(commentId) {
+        // 댓글 수정 폼 토글 기능
+        window.toggleCommentEditForm = function(commentId) {
             var form = document.getElementById('edit-form-' + commentId);
             if (form) {
                 form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
@@ -183,6 +225,29 @@
             }
         }
     });
+
+    // 게시글 수정 폼 토글 기능
+    function toggleEditForm() {
+        var form = document.getElementById('edit-form');
+        if (form) {
+            form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+        } else {
+            console.error('No form found with ID: edit-form');
+        }
+    }
+
+    // 폼 제출 함수
+    function submitEditForm() {
+        // 폼 데이터를 가져오기
+        var form = document.getElementById('edit-form-content');
+        if (form) {
+            // 폼 제출
+            form.submit();
+        } else {
+            console.error('No form found with ID: edit-form-content');
+        }
+    }
 </script>
+
 </body>
 </html>
