@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>자유게시글 상세 페이지</title>
+    <div th:replace="~{header.html :: navbar}"></div>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
     <style>
         body {
@@ -84,7 +85,6 @@
     </style>
 </head>
 <body>
-<div th:replace="~{header.html :: navbar}"></div>
 
 <main class="main">
     <section class="contents">
@@ -97,17 +97,16 @@
                 <p><strong>추천수:</strong> <span id="likeCount" th:text="${article.likes}"></span></p>
             </div>
             <div class="article-content" th:text="${article.content}"></div>
+        </div>
+
+        <div class="article-actions">
+            <a th:href="@{'/boardNormal/articles/' + ${article.id} + '/like'}" class="button" sec:authorize="isAuthenticated()">
+                <i class="fa-regular fa-thumbs-up"></i> 좋아요
+            </a>
+            <a th:if="${currentUsername == article.member.username}" sec:authorize="isAuthenticated()" th:href="@{/boardNormal/update/{id}(id=${article.id})}" class="button">수정</a>
+            <a th:if="${currentUsername == article.member.username}" sec:authorize="isAuthenticated()" th:href="@{/boardNormal/delete/{id}(id=${article.id})}" class="button" onsubmit="return confirm('정말로 삭제하시겠습니까?');" >삭제</a>
 
             <a href="/boardNormal/home" class="button">목록</a>
-
-            <form th:action="@{/boardNormal/articles/{id}/like(id=${article.id})}" method="post" style="display:inline;">
-                <button type="submit" id="likeButton" class="button" data-id="${article.id}">좋아요</button>
-            </form>
-
-            <a sec:authorize="isAuthenticated()" th:href="@{/boardNormal/update/{id}(id=${article.id})}" class="button">수정</a>
-            <form sec:authorize="isAuthenticated()" th:action="@{/boardNormal/delete/{id}(id=${article.id})}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');" style="display:inline;">
-                <button type="submit">삭제</button>
-            </form>
         </div>
 
         <div th:if="${article == null}">
@@ -133,22 +132,22 @@
                     <div class="comment-text" th:text="${comment.contents}"></div>
                 </div>
 
-                <div class="comment-actions">
-
-                    <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} +')'" class="icon-button">✏️</button>
-                    <form th:action="@{/boardNormal/comments/{id}/delete(id=${comment.id})}" method="post" style="display:inline;">
-                    <input type="hidden" name="boardId" th:value="${article.id}" />
-                    <button type="submit" class="icon-button">🗑️</button>
-                </form>
-                </div>
-
-                <div th:id="'edit-form-' + ${comment.id}" class="edit-form">
-                    <form th:action="@{/boardNormal/comments/{id}/edit(id=${comment.id})}" method="post">
-                        <textarea name="contents" rows="4" th:text="${comment.contents}" required></textarea>
-                        <input type="hidden" name="boardId" th:value="${article.id}" />
-                        <button type="submit" class="button">수정</button>
-                        <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="button">취소</button>
-                    </form>
+                <div th:if="${#authentication.name == comment.member.username}">
+                    <div class="comment-actions">
+                        <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} +')'" class="icon-button">✏️</button>
+                        <form th:action="@{/boardNormal/comments/{id}/delete(id=${comment.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="boardId" th:value="${article.id}" />
+                            <button type="submit" class="icon-button">🗑️</button>
+                        </form>
+                    </div>
+                    <div th:id="'edit-form-' + ${comment.id}" class="edit-form">
+                        <form th:action="@{/boardNormal/comments/{id}/edit(id=${comment.id})}" method="post">
+                            <textarea name="contents" rows="4" th:text="${comment.contents}" required></textarea>
+                            <input type="hidden" name="boardId" th:value="${article.id}" />
+                            <button type="submit" class="button">수정</button>
+                            <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="button">취소</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
