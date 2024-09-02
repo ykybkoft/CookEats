@@ -86,6 +86,10 @@ public class BoardNormalController {
             List<BoardNormalComment> comments = commentService.getCommentsByArticleId(id);
             model.addAttribute("comments", comments);
 
+            // 현재 사용자 이름 추가
+            String currentUsername = us.getCurrentUsername();
+            model.addAttribute("currentUsername", currentUsername);
+
             model.addAttribute("article", article);
             model.addAttribute("formattedDate", formattedDate);
             return "boardNormal/articleDetail"; // articleDetail.html
@@ -94,6 +98,7 @@ public class BoardNormalController {
             return "error"; // error.html
         }
     }
+
 
     // 글쓰기 폼
     @GetMapping("/write")
@@ -147,19 +152,19 @@ public class BoardNormalController {
             bs.save(article);
             return "redirect:/boardNormal/articles/" + id;
         } else {
-            return "error"; // error.html
+            return "error";
         }
     }
 
     // 게시글 삭제
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteArticle(@PathVariable("id") Long id) {
         bs.deleteById(id);
         return "redirect:/boardNormal/home";
     }
 
     // 좋아요 증가 처리
-    @PostMapping("/articles/{id}/like")
+    @GetMapping("/articles/{id}/like")
     public String likeArticle(@PathVariable("id") Long id) {
         try {
             boolean result = bs.incrementLikes(id); // 좋아요 수 증가
@@ -225,16 +230,19 @@ public class BoardNormalController {
     @PostMapping("/comments/{id}/edit")
     public String updateComment(@PathVariable("id") Long id, @RequestParam String contents) {
         BoardNormalComment comment = commentService.getCommentById(id);
+        Member currentMember = us.getCurrentMember();
 
-        if (comment != null) {
+        // 현재 사용자와 댓글 작성자가 일치하는지 확인
+        if (comment != null && comment.getMember().getId().equals(currentMember.getId())) {
             comment.setContents(contents);
             commentService.updateComment(comment);
 
             Long boardId = comment.getBoardNormal().getId(); // 댓글이 속한 게시글 ID를 가져옴
             return "redirect:/boardNormal/articles/" + boardId; // 수정된 댓글이 포함된 게시글 상세 페이지로 리다이렉트
         } else {
-            return "error"; // 댓글을 찾을 수 없을 때 에러 페이지 반환
+            return "error"; // 댓글을 수정할 권한이 없을 때 에러 페이지 반환
         }
     }
 
 }
+
