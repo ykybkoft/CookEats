@@ -45,6 +45,8 @@ public class BoardController {
         bs.pagination(resultPage, model);
 
         model.addAttribute("search", search);
+        model.addAttribute("sortType", sortType);
+
 
         return "boardShare/home.html";
     }

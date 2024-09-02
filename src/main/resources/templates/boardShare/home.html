@@ -82,10 +82,11 @@
                     <tbody class="content" th:each="i : ${home}">
                     <tr>
                         <td th:text="${i.id}"></td>
-                        <td th:text="${i.title}"
+                        <td><a th:text="${i.title}"
                             th:attr="data-id=${i.id}"
+                            th:href="@{/boardShare/view/{id}(id=${i.id})}"
                             class="title"
-                            onclick="upCountAndMove(this)"></td>
+                            onclick="upCountAndMove(this)"></a></td>
                         <td th:text="${i.member.getNick()}"></td>
                         <td th:text="${i.sysDate}"></td>
                         <td th:text="${i.cntLike}"></td>
@@ -95,33 +96,25 @@
                 </table>
             </div>
 
-            <!-- 페이지 버튼 -->
-            <div class="article_pagination">
-                <!-- 이전 페이지 버튼 -->
-                <!--disabled는 현재 페이지가 0일 때 버튼 비활성화-->
-                <button class="article_page_bt"
-                        th:disabled="${currentPage == 0}"
-                        th:onclick="|location.href='/boardShare/home?page=${currentPage - 1}'|">&lt;</button>
-                        <!--onclick시 현재 페이지에 1을 뺀 페이지로 이동-->
+            <!-- 페이징 네비게이션 -->
+            <div class="pagination">
+                <a th:if="${startPage > 10}"
+                   th:href="@{/boardShare/home(page=${startPage - 1}, search=${search}, sortType=${sortType})}">&lt;&lt;</a>
 
-                <!-- 페이지 번호 버튼들 -->
-                <!--thymeleaf numbers 유틸리티 메서드로 버튼 생성-->
-                <!--classappend는 현재 버튼 강조 style 추가하는 코드-->
-                <!--test = 현재 페이지에 1을 더함-->
-                <span th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <button class="article_page_bt"
-                        th:text="${page + 1}"
-                        th:classappend="${page == currentPage} ? 'active'"
-                        th:onclick="|location.href='/boardShare/home?page=${page}'|">
-                    </button>
-                </span>
+                <a th:if="${currentPage > 1}"
+                   th:href="@{/boardShare/home(page=${currentPage - 1}, search=${search}, sortType=${sortType})}">&lt;</a>
+            
+                <a th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                   th:classappend="${currentPage == i} ? 'current' : ''"
+                   th:href="@{/boardShare/home(page=${i}, search=${search}, sortType=${sortType})}" th:text="${i + 1}">1</a>
 
-                <!-- 다음 페이지 버튼 -->
-                <!-- 마직막 페이지는 현재 페이지에 1을 더했음으로 -1을 해야 맞음-->
-                <button class="article_page_bt"
-                        th:disabled="${currentPage == totalPages - 1}"
-                        th:onclick="|location.href='/boardShare/home?page=${currentPage + 1}'|">&gt;</button>
+                <a th:if="${currentPage < totalPages}"
+                   th:href="@{/boardShare/home(page=${currentPage + 1}, search=${search}, sortType=${sortType})}">&gt;</a>
+
+                <a th:if="${endPage < totalPages}"
+                   th:href="@{/boardShare/home(page=${endPage + 1}, search=${search}, sortType=${sortType})}">&gt;&gt;</a>
             </div>
+
         </div>
     </div>
 </div>
@@ -145,14 +138,6 @@
         fetch(`/boardShare/updateCount/${id}`, {
             method: 'POST'
         })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = `/boardShare/view/${id}`;
-            } else {
-                console.error('조회수 업데이트 실패');
-            }
-        })
-        .catch(error => console.error('Error:', error));
     }
 </script>
 </body>
