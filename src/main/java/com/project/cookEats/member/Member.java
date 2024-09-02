@@ -41,6 +41,9 @@ public class Member {
     @Column(nullable = false)
     private Date birth;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     // 회원탈퇴시 정보삭제를 위한 코드
     // 멤버가 사라지면 연관된 게시물과 코멘트를 삭제 해야됨으로 멤버에서 1:n 관계를 설정함
     // 멤버는 많은 보드 쉐어 게시물을 가질 수 있다. 즉, 1:n 양방향 관계 설정
