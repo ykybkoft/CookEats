@@ -98,6 +98,7 @@
 
             <!-- 페이징 네비게이션 -->
             <div class="pagination">
+
                 <a th:if="${startPage > 10}"
                    th:href="@{/boardShare/home(page=${startPage - 1}, search=${search}, sortType=${sortType})}">&lt;&lt;</a>
 
