@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +66,7 @@ public class BoardNormalController {
 
     // 게시글 상세 페이지
     @GetMapping("/articles/{id}")
-    public String getArticleDetail(@PathVariable("id") Long id, Model model) {
+    public String getArticleDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         BoardNormal article = bs.getArticleById(id);
         if (article != null) {
             // 조회수 증가
@@ -84,12 +85,16 @@ public class BoardNormalController {
 
             model.addAttribute("article", article);
             model.addAttribute("formattedDate", formattedDate);
+
+            //혜정 코드
+            if(auth != null){model.addAttribute("member", ms.findMember(auth));}
             return "boardNormal/articleDetail"; // articleDetail.html
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error"; // error.html
         }
     }
+
 
     // 글쓰기 폼
     @GetMapping("/write")
@@ -146,7 +151,7 @@ public class BoardNormalController {
             bs.save(article);
             return "redirect:/boardNormal/articles/" + id; // 수정 후 게시글 상세 페이지로 리다이렉트
         } else {
-            return "error"; // 에러 페이지로 리다이렉트
+            return "error";
         }
     }
 
@@ -202,10 +207,10 @@ public class BoardNormalController {
     }
 
     // 댓글 삭제 처리
-    @PostMapping("/comments/{id}/delete")
-    public String deleteComment(@PathVariable("id") Long id, @RequestParam Long boardId) {
+    @GetMapping("/comments/delete/{id}")
+    public String deleteComment(@PathVariable("id") Long id, @RequestParam Long articleID) {
         commentService.deleteComment(id);
-        return "redirect:/boardNormal/articles/" + boardId; // 게시글 ID로 리다이렉트
+        return "redirect:/boardNormal/articles/" + articleID; // 게시글 ID로 리다이렉트
     }
 
     // 댓글 수정 폼 페이지
@@ -241,3 +246,4 @@ public class BoardNormalController {
         }
     }
 }
+

@@ -9,7 +9,9 @@ import com.project.cookEats.member.Member;
 import com.project.cookEats.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,12 @@ public class Borad_shareService {
     private final MemberRepository mr;
     private final CommentRepository cr;
 
+    // member ID get
+    public Member findMember(Authentication auth) {
+            CustomUser user = (CustomUser) auth.getPrincipal();
+
+            return mr.findById(user.getId()).get();
+    }
 
     // 게시판 상세페이지 정보
     public Object getContents(Long id) {
@@ -36,11 +44,13 @@ public class Borad_shareService {
         return br.findById(id).get();
     }
 
-    // member ID get
-    public Member findMember(Authentication auth) {
-            CustomUser user = (CustomUser) auth.getPrincipal();
+    // 게시글 좋아요 메서드
+    public void contentsLike(Long id){
+        Board_share like = br.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-            return mr.findById(user.getId()).get();
+        like.setCntLike(like.getCntLike() + 1);
+        br.save(like);
     }
 
     // 조회수 업데이트 메서드
@@ -52,37 +62,69 @@ public class Borad_shareService {
         br.save(count);
     }
 
-    // pageNavigation 및 게시글 목록 표시 메서드
-    public void pageNavigation(Pageable pageable, Model model) {
+    // 게시글 검색, 목록, 정렬 기능
+    public Page<Board_share> pageFunction(int page, String search, String sortType){
+
+        // 목록에 표시할 게시글 수
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+
+        // url의 쿼리파라미터로 전송되는 정렬 기준이 있을 경우
+        if (sortType != null){
+            // 항상 like 값으로 고정되어있으나, 유저가 sortType을 요청할 경우 변경되게 한다.
+            pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, sortType));
+
+            // 검색과 정렬 기능
+            // 검색 값이 없거나 공백과 같이 둘 중 하나일 경우
+            if (search == null || search.equals("")){
+                return br.findAll(pageable);
+            }
+            else {
+                // 검색 값이 있다면
+                // 리포지토리 SQL LIKE 문 메서드 실행
+                return br.findAllSearch(search, pageable);  // 결과적으로 검색결과는 기본정렬 값인 like 순으로 정렬 됨.
+            }
+        }
+        // 정렬기준이 없다면
+        else {
+            if (search == null || search.equals("")){
+                return br.findAll(pageable);
+            }
+            else {
+                return br.findAllSearch(search, pageable);
+            }
+        }
+    }
+
+    // 게시글 페이징 기능
+    public void pagination(Page<Board_share> resultPage, Model model) {
+        // home 자바스크립트 글쓰기 예외에 필요
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Member member = null;
 
-        if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)){
+        if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
             member = findMember(auth);
         }
+        // 총 페이지 수 계산
+        int totalPages = resultPage.getTotalPages();
 
-        Page<Board_share> result = br.findAll(pageable);
+        // 페이지 블록 계산
+        int startPage = Math.max(0, resultPage.getNumber() - 2);
+        int endPage = Math.min(resultPage.getTotalPages() - 1, resultPage.getNumber() + 2);
 
-        // 페이지네이션 범위 설정
-        int startPage = Math.max(0, result.getNumber() - 2);
-        int endPage = Math.min(result.getTotalPages() - 1, result.getNumber() + 2);
-
-        // 페이지네이션 결과를 모델에 추가
-        model.addAttribute("home", result.getContent());  // 페이지의 내용을 전달
-        model.addAttribute("currentPage", result.getNumber());  // 현재 페이지 번호 (0부터 시작)
-        model.addAttribute("totalPages", result.getTotalPages());  // 전체 페이지 수
-        model.addAttribute("totalItems", result.getTotalElements());  // 전체 게시글 수
-
+        // 모델에 데이터 추가
+        model.addAttribute("home", resultPage);
+        model.addAttribute("currentPage", resultPage.getNumber());
+        model.addAttribute("totalPages", resultPage.getTotalPages());
+        model.addAttribute("totalItems", resultPage.getTotalElements());
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-
-        // 글쓰기 alrter 처리위해 데이터 반환
         model.addAttribute("auth", member);
     }
 
     // 상세페이지 게시글 및 댓글 정보
     public Model getContents(Long id, Model model) {
-        // ↓ 로직은 로그인 되야 수정삭제를 구현하기에 로그인 되지 않으면 사용자 데이터를 th:if에서 찾을 수 없게 되어 html에서 오류가 발생했다.
+        // ↓ 로직은 로그인 되야 수정삭제를 구현하기에 로그인 되지 않으면 사용자 데이터를 th:if에서 찾을 수 없게 되어 String 타입 파싱 오류가 발생했다.
         // 자바스크립트에서 수정삭제 버튼 on/off 기능 구현을 위해 세션유저 정보 제공
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // 아래조건문 검사에서 false라면 그대로 null로 유지
