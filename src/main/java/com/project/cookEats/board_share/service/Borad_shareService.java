@@ -105,6 +105,7 @@ public class Borad_shareService {
         if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
             member = findMember(auth);
         }
+
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
 
