@@ -133,52 +133,40 @@
    line-height: 1;  /* 추가: 라인 높이를 1로 설정 */
 }
 
-/* 옵션 스타일링 */
-.options {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
+.sort-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
 
-.dropbtn {
-    background-color: white;
-    color: #374151;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: 1px solid #d1d5db;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        .sort-container button {
+            background-color: #4CAF4F;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 5px;
-}
+        .sort-container button:hover {
+            background-color: #138a59;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
 
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
+        .sort-container button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
-.dropdown-content a:hover {
-    background-color: #f1f5f9;
-}
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
+
+
 </style>
 <head>
     <meta charset="UTF-8">
@@ -209,14 +197,19 @@
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 
 <!-- 정렬 옵션 -->
-<div class="dropdown">
+<!--<div class="dropdown">
     <button class="dropbtn">옵션</button>
     <div class="dropdown-content">
         <a href="#" onclick="sortArticles('sysDate')">최신순</a>
         <a href="#" onclick="sortArticles('likes')">추천순</a>
         <a href="#" onclick="sortArticles('views')">조회순</a>
     </div>
-</div>
+</div>-->
+    <div  class="sort-container">
+        <button onclick="sortArticles('likes')">추천순</button>
+        <button onclick="sortArticles('sysDate')">최신순</button>
+        <button onclick="sortArticles('views')">조회순</button>
+    </div>
 
 <!-- 검색 결과 리스트 -->
 <section class="article-list" id="articleList">
@@ -243,23 +236,23 @@
             <table>
                 <thead>
                 <tr>
-                    <th>순서</th>
+
                     <th>제목</th>
                     <th>작성자</th>
                     <th>날짜</th>
-                    <th>조회수</th>
                     <th>좋아요</th>
+                    <th>조회수</th>
+
                 </tr>
                 </thead>
 
                 <tbody>
                 <tr class="content" th:each="i : ${page.content}">
-                    <td th:text="${i.id}"></td>
                     <td><a th:href="@{/boardNormal/articles/{id}(id=${i.id})}" th:text="${i.title}"></a></td>
                     <td th:text="${i.member != null ? i.member.username : '작성자 정보 없음'}"></td>
                     <td th:text="${i.formattedSysDate}"></td>
-                    <td th:text="${i.views}"></td>
                     <td th:text="${i.likes}"></td>
+                    <td th:text="${i.views}"></td>
                 </tr>
                 </tbody>
             </table>

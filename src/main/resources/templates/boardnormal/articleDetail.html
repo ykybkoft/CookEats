@@ -6,119 +6,179 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>자유게시글 상세 페이지</title>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
+
+           font-family: 'Arial', sans-serif;
+           line-height: 1.6;
+           color: #333;
+           max-width: 800px;
+           margin: 0 auto;
+           padding: 20px;
+           background-color: #f4f4f4;
         }
         .main {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0px auto;
+            padding: 0px auto;
+        }
+        :root {
+            --primary-color: #4CAF4F;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --border-radius: 12px;
+        }
+
+        .content-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 40px;
         }
         h1 {
-            color: #4CAF50;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
         }
         .article-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .article-info div {
+            margin: 0 15px 10px;
+        }
+        .article-contents p {
             background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        .article-content {
-            background-color: #fff;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
+
         .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
             display: inline-block;
-            margin-right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
         }
         .button:hover {
             background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 79, 0.4);
         }
-        .icon-button {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            margin-right: 10px;
+
+        .comments {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .comment-form textarea, .edit-form textarea {
+        .comments h2 {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .comment-form form textarea {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
+            resize: vertical;
+            font-family: inherit;
             margin-bottom: 10px;
         }
-        .comment-card {
+        .comment-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .comment {
             background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
         }
         .comment-actions {
             margin-top: 10px;
         }
-        .edit-form {
-            display: none;
-            margin-top: 10px;
+        .comment-actions a {
+            color: var(--primary-color);
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 0.9em;
         }
+        .comment-actions a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
 <div th:replace="~{header.html :: navbar}"></div>
 
 <main class="main">
-    <section class="contents">
-        <div th:if="${article != null}">
-            <h1 th:text="${article.title}"></h1>
-            <div class="article-info">
-                <p><strong>작성자:</strong> <span th:text="${article.member != null ? article.member.username : '작성자 정보 없음'}"></span></p>
-                <p><strong>날짜:</strong> <span th:text="${formattedDate}"></span></p>
-                <p><strong>조회수:</strong> <span th:text="${article.views}"></span></p>
-                <p><strong>추천수:</strong> <span id="likeCount" th:text="${article.likes}"></span></p>
-            </div>
-            <div class="article-content" th:text="${article.content}"></div>
 
-            <a href="/boardNormal/home" class="button">목록</a>
-
-            <form th:action="@{/boardNormal/articles/{id}/like(id=${article.id})}" method="post" style="display:inline;">
-                <button type="submit" id="likeButton" class="button" data-id="${article.id}">좋아요</button>
-            </form>
-
-            <a sec:authorize="isAuthenticated()" th:href="@{/boardNormal/update/{id}(id=${article.id})}" class="button">수정</a>
-            <form sec:authorize="isAuthenticated()" th:action="@{/boardNormal/delete/{id}(id=${article.id})}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');" style="display:inline;">
-                <button type="submit">삭제</button>
-            </form>
+    <article class="content-card" th:if="${article != null}">
+        <h1 th:text="${article.title}"></h1>
+        <div class="article-info">
+            <div><i class="fas fa-user"></i> <span th:text="${article.member != null ? article.member.username : '작성자 정보 없음'}"></span></div>
+            <div><i class="far fa-calendar-alt"></i><span th:text="${formattedDate}"></span></div>
+            <div><i class="fas fa-eye"></i><span th:text="${article.views}"></span></div>
+            <div><i class="fas fa-heart"></i><span th:text="${article.likes}"></span></div>
         </div>
 
+        <section class="article-contents">
+            <p th:text="${article.content}"></p>
+        </section>
+
+        <div class="article-actions">
+            <a th:href="@{'/boardNormal/articles/' + ${article.id} + '/like'}" class="button" sec:authorize="isAuthenticated()">
+                <i class="fa-regular fa-thumbs-up"></i> 좋아요
+            </a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/boardNormal/update/{id}(id=${article.id})}" class="button">수정</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/boardNormal/delete/{id}(id=${article.id})}" class="button" onsubmit="return confirm('정말로 삭제하시겠습니까?');" >삭제</a>
+
+            <a href="/boardNormal/home" class="button">목록</a>
+        </div>
+
+    </article>
+
+    <section class="contents">
         <div th:if="${article == null}">
             <p>게시글을 찾을 수 없습니다.</p>
             <a href="/boardNormal/home" class="button">목록</a>
         </div>
     </section>
 
-    <footer class="footer">
+    <section class="comments">
+        <h2>댓글 작성</h2>
         <div class="comment-form">
-            <h2>댓글 작성</h2>
             <form th:action="@{/boardNormal/articles/{id}/comment(id=${article.id})}" method="post">
                 <textarea name="contents" placeholder="댓글을 입력하세요" required></textarea>
                 <button type="submit" class="button">댓글 추가</button>
@@ -127,22 +187,23 @@
 
         <div class="comments-container">
             <h2>댓글</h2>
-            <div th:each="comment : ${comments}" class="comment-card">
-                <div class="comment-content">
-                    <div class="comment-author" th:text="${comment.member != null ? comment.member.username : '작성자 정보 없음'}"></div>
-                    <div class="comment-text" th:text="${comment.contents}"></div>
+            <div th:each="comment : ${comments}" class="comment">
+                <div class="comment-header">
+                    <span><i class="fas fa-user-circle"></i> <span th:text="${comment.member.nick}"></span></span>
+                    <span><i class="far fa-clock"></i> <span th:text="${#dates.format(comment.sys_date, 'yyyy-MM-dd HH:mm:ss')}"></span></span>
                 </div>
+                <p th:id="'comment-content-' + ${comment.id}" th:text="${comment.contents}"></p>
 
                 <div class="comment-actions">
-
-                    <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} +')'" class="icon-button">✏️</button>
-                    <form th:action="@{/boardNormal/comments/{id}/delete(id=${comment.id})}" method="post" style="display:inline;">
-                    <input type="hidden" name="boardId" th:value="${article.id}" />
-                    <button type="submit" class="icon-button">🗑️</button>
-                </form>
+                    <a th:if="${member != null}" >
+                        <i class="fa-regular fa-thumbs-up"></i>
+                        <span th:text="${comment.comment_like}"></span>
+                    </a>
+                    <a th:if="${member != null and #authentication.principal.id == comment.member.id}" href="#" th:onclick="'toggleEditForm(' + ${comment.id} +')'">수정</a>
+                    <a th:if="${member != null and #authentication.principal.id == comment.member.id}" th:href="@{'/boardNormal/comments/delete/' + ${comment.id}(articleID=${article.id})}">삭제</a>
                 </div>
 
-                <div th:id="'edit-form-' + ${comment.id}" class="edit-form">
+                <div th:id="'edit-form-' + ${comment.id}" style="display: none;">
                     <form th:action="@{/boardNormal/comments/{id}/edit(id=${comment.id})}" method="post">
                         <textarea name="contents" rows="4" th:text="${comment.contents}" required></textarea>
                         <input type="hidden" name="boardId" th:value="${article.id}" />
@@ -152,7 +213,7 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
 </main>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

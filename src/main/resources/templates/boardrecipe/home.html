@@ -178,32 +178,6 @@
         }
 
 
-
-        .sort-container button {
-            background-color: #4CAF4F;
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            margin: 0 5px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .sort-container button:hover {
-            background-color: #138a59;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .sort-container button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-
     </style>
 </head>
 <body>
@@ -225,7 +199,7 @@
         <div class="form-bar">
             <div>
                 <i class="fas fa-search"></i>
-                <input class="search" type="text" name="search" placeholder="검색어를 입력해주세요.">
+                <input class="search" type="text" th:value="${search}" name="search" placeholder="검색어를 입력해주세요.">
             </div>
         </div>
 
@@ -248,7 +222,6 @@
     <table>
         <thead>
         <tr>
-            <th>순서</th>
             <th>제목</th>
             <th>작성자</th>
             <th>날짜</th>
@@ -258,7 +231,6 @@
         </thead>
         <tbody>
         <tr th:each="recipe, iterStat : ${list}">
-            <td th:text="${recipe.id}"></td>
             <td><a th:href="@{/boardRecipe/recipe/{id}(id=${recipe.id})}" th:text="${recipe.RCP_NM}"></a></td>
             <td th:text="${recipe.member != null ? recipe.member.username : 'CookEats'}"></td>
             <td th:text="${recipe.formattedSysDate}"></td>
@@ -270,11 +242,11 @@
 
     <!-- 페이징 네비게이션 -->
     <div class="pagination">
-        <a href="#" th:if="${startPage > 10}" th:href="@{/boardRecipe/home(page=${startPage - 1})}">&lt;&lt;</a>
-        <a href="#" th:if="${currentPage > 1}" th:href="@{/boardRecipe/home(page=${currentPage - 1})}">&lt;</a>
-        <a href="#" th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${currentPage == i} ? 'current' : ''" th:href="@{/boardRecipe/home(page=${i})}" th:text="${i}">1</a>
-        <a href="#" th:if="${currentPage < totalPages}" th:href="@{/boardRecipe/home(page=${currentPage + 1})}">&gt;</a>
-        <a href="#" th:if="${endPage < totalPages}" th:href="@{/boardRecipe/home(page=${endPage + 1})}">&gt;&gt;</a>
+        <a href="#" th:if="${startPage > 10}" th:href="@{/boardRecipe/home(page=${startPage - 1}, search=${search}, sortType=${sortType})}">&lt;&lt;</a>
+        <a href="#" th:if="${currentPage > 1}" th:href="@{/boardRecipe/home(page=${currentPage - 1}, search=${search}, sortType=${sortType})}">&lt;</a>
+        <a href="#" th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${currentPage == i} ? 'current' : ''" th:href="@{/boardRecipe/home(page=${i}, search=${search}, sortType=${sortType})}" th:text="${i}">1</a>
+        <a href="#" th:if="${currentPage < totalPages}" th:href="@{/boardRecipe/home(page=${currentPage + 1}, search=${search}, sortType=${sortType})}">&gt;</a>
+        <a href="#" th:if="${endPage < totalPages}" th:href="@{/boardRecipe/home(page=${endPage + 1}, search=${search}, sortType=${sortType})}">&gt;&gt;</a>
     </div>
 
     <!-- 글쓰기 버튼 -->

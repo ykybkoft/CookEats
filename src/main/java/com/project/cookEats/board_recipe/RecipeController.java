@@ -34,7 +34,10 @@ public class RecipeController {
 
         int pageSize = 15; // 한 페이지에 표시할 레시피 수
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<RecipeDB> resultPage = recipeService.findAll(pageable, search , sortType);
+        if(sortType==null ||sortType.equals("")){
+            sortType="LLIKE";
+        }
+        Page<RecipeDB> resultPage = recipeService.findAll(page, search , sortType);
 
         // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
@@ -64,6 +67,7 @@ public class RecipeController {
       
         //혜정 코드
         model.addAttribute("search", search);
+        model.addAttribute("sortType", sortType);
 
         return "boardRecipe/home"; // home.html로 반환
     }
