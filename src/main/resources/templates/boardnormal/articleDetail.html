@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>자유게시글 상세 페이지</title>
+    <div th:replace="~{header.html :: navbar}"></div>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -140,9 +141,9 @@
     </style>
 </head>
 <body>
-<div th:replace="~{header.html :: navbar}"></div>
 
 <main class="main">
+
 
     <article class="content-card" th:if="${article != null}">
         <h1 th:text="${article.title}"></h1>
@@ -163,6 +164,7 @@
             </a>
             <a sec:authorize="isAuthenticated()" th:href="@{/boardNormal/update/{id}(id=${article.id})}" class="button">수정</a>
             <a sec:authorize="isAuthenticated()" th:href="@{/boardNormal/delete/{id}(id=${article.id})}" class="button" onsubmit="return confirm('정말로 삭제하시겠습니까?');" >삭제</a>
+
 
             <a href="/boardNormal/home" class="button">목록</a>
         </div>
@@ -194,6 +196,7 @@
                 </div>
                 <p th:id="'comment-content-' + ${comment.id}" th:text="${comment.contents}"></p>
 
+
                 <div class="comment-actions">
                     <a th:if="${member != null}" >
                         <i class="fa-regular fa-thumbs-up"></i>
@@ -210,6 +213,7 @@
                         <button type="submit" class="button">수정</button>
                         <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="button">취소</button>
                     </form>
+
                 </div>
             </div>
         </div>

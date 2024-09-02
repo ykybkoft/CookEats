@@ -185,7 +185,6 @@
     <h1>레시피 게시판</h1>
 
     <!-- 검색 폼 -->
-
     <form action="#" th:action="@{/boardRecipe/home}" method="get" class="search-bar">
         <!-- <div class="search-type-container">
             <select name="searchType" class="search-type">
@@ -193,7 +192,6 @@
                 <option value="nick">작성자</option>
             </select>
         </div> -->
-
 
         <!-- 혜정 코드 (검색바)-->
         <div class="form-bar">
@@ -215,7 +213,6 @@
         <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=LLIKE)}'|">추천순</button>
         <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=id)}'|">최신순</button>
         <button th:onclick="|location.href='@{/boardRecipe/home(search=${search}, sortType=CCOUNT)}'|">조회순</button>
-
     </div>
 
     <!-- 레시피 리스트 -->

@@ -47,8 +47,18 @@
         </div>
     </div>
     <hr>
+    <div>
+
+    </div>
     <div class="detail_text" style="justify-content: center; background-color: rgb(116, 251, 157)">
         <p th:text="${contents.content}">글 내용</p>
+
+    </div>
+    <div class="contents_like" style="background-color: rgb(116, 217, 251); display: flex; justify-content: center; align-items: center;" sec:authorize="isAuthenticated()">
+        <button type="button" onclick="contentsLike(event)" th:attr="data-id=${contents.id}">
+            <span class="blind">좋아요</span>
+            <span th:text="${contents.cntLike}">좋아요 수</span>
+        </button>
     </div>
 </div>
 
@@ -204,8 +214,28 @@
             return true;
         }
     }
+    // 게시글 좋아요 기능
+    function contentsLike(event) {
+        const button = event.target.closest('button');
+        const contentsId = button.getAttribute('data-id');
 
-    // 좋아요 기능
+        // 서버로 요청 보내기
+        fetch(`/boardShare/contentsLike/${contentsId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include' // 인증된 세션을 보내기 위해
+        })
+        .then(response => response.text())  // 서버응답을 텍스트로 받음 = JSON 형식으로 서버에서 요청이 안 들어옴
+        .then(data => {
+            // 요청이 성공적으로 처리된 후 페이지 새로 고침
+            console.log('Reloading the page');
+            location.reload();
+        })
+    }
+
+    // 댓글 좋아요 기능
     function upLike(event) {
         const button = event.target.closest('button');
         const commentId = button.getAttribute('data-id');
