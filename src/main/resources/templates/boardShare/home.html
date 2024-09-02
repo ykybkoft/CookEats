@@ -103,7 +103,7 @@
 
                 <a th:if="${currentPage > 1}"
                    th:href="@{/boardShare/home(page=${currentPage - 1}, search=${search}, sortType=${sortType})}">&lt;</a>
-
+            
                 <a th:each="i : ${#numbers.sequence(startPage, endPage)}"
                    th:classappend="${currentPage == i} ? 'current' : ''"
                    th:href="@{/boardShare/home(page=${i}, search=${search}, sortType=${sortType})}" th:text="${i + 1}">1</a>

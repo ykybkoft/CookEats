@@ -47,6 +47,7 @@ public class BoardController {
         model.addAttribute("search", search);
         model.addAttribute("sortType", sortType);
 
+
         return "boardShare/home.html";
     }
 
