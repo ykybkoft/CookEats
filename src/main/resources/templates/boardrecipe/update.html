@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레시피 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .step {
+            margin-bottom: 20px;
+        }
+        .step img {
+            max-width: 100px;
+            display: block;
+            margin: 10px 0;
+        }
+        .image-preview {
+            margin: 10px 0;
+        }
+        .image-preview img {
+            max-width: 100px;
+            display: block;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>레시피 수정</h1>
+<form action="/boardRecipe/update" method="POST" enctype="multipart/form-data">
+
+    <input type="hidden" name="id" th:value="${recipeDto.id}"/>
+
+    <label for="name">레시피 이름:</label>
+    <input type="text" id="name" name="RCP_NM" th:value="${recipeDto.RCP_NM}" required/>
+
+    <label for="description">레시피 설명:</label>
+    <textarea id="description" name="RCP_PARTS_DTLS" required th:text="${recipeDto.RCP_PARTS_DTLS}"></textarea>
+
+    <div id="stepsContainer">
+        <h3>조리순서</h3>
+        <div th:each="manual, iterStat : ${recipeDto.manuals}" th:id="'step' + ${iterStat.index + 1}" class="step">
+            <label th:for="'manual' + ${iterStat.index + 1}">조리순서 <span th:text="${iterStat.index + 1}">1</span>:</label>
+            <input type="text" th:id="'manual' + ${iterStat.index + 1}" name="manuals[]" th:value="${manual}" required/>
+
+            <label th:for="'manualImage' + ${iterStat.index + 1}">조리순서 <span th:text="${iterStat.index + 1}">1</span>의 사진:</label>
+            <input type="file" th:id="'manualImage' + ${iterStat.index + 1}" name="manualImages[]" onchange="previewImage(this, ${iterStat.index})"/>
+
+            <!-- 이미지 파일이 있을 경우 미리보기 및 URL 표시 -->
+            <div class="image-preview" th:if="${manualImages[iterStat.index] != null}">
+                <img th:src="${manualImages[iterStat.index]}" alt="조리순서 이미지"/>
+                <span th:text="${manualImages[iterStat.index]}"></span>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit">수정하기</button>
+</form>
+
+<script>
+    function previewImage(input, index) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                let imgElement = document.querySelector(`#imagePreviewContainer${index}`);
+                if (!imgElement) {
+                    imgElement = document.createElement('img');
+                    imgElement.id = `imagePreviewContainer${index}`;
+                    imgElement.style.maxWidth = '100px';
+                    imgElement.style.margin = '10px 0';
+                    input.parentElement.appendChild(imgElement);
+                }
+                imgElement.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+</body>
+</html>
