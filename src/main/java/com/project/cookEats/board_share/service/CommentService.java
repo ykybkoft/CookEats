@@ -48,7 +48,7 @@ public class CommentService {
             data.setMember(member);         // 이하 동문
 
             LocalDate now = LocalDate.now();    // 댓글 작성 시간 추가
-            data.setSysDate(now);
+            data.setSysdate(now);
 
             // 5. 이제 data에는 html에서 입력한 댓글과 4.의 데이터를 저장하면 끝난다.
             cr.save(data);
@@ -92,7 +92,7 @@ public class CommentService {
         Board_share_comment like = cr.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        like.setCmtLike(like.getCmtLike() + 1);
+        like.setCmtlike(like.getCmtlike() + 1);
         cr.save(like);
     }
 

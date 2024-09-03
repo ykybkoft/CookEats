@@ -30,11 +30,11 @@
         <div style="display: flex; background-color: rgb(116, 217, 251); justify-content: left">
             <div style="padding-right: 30px">
                 <strong>조회수 :</strong>
-                <p style="display: inline" th:text="${contents.vCount}"></p>
+                <p style="display: inline" th:text="${contents.vcount}"></p>
             </div>
             <div style="padding-right: 30px">
                 <strong>날짜 :</strong>
-                <p style="display: inline" th:text="${contents.sysDate}"></p>
+                <p style="display: inline" th:text="${contents.sysdate}"></p>
             </div>
         </div>
         <!-- 로그인된 사용자인 경우에만 수정 및 삭제 버튼 표시 -->
@@ -57,7 +57,7 @@
     <div class="contents_like" style="background-color: rgb(116, 217, 251); display: flex; justify-content: center; align-items: center;" sec:authorize="isAuthenticated()">
         <button type="button" onclick="contentsLike(event)" th:attr="data-id=${contents.id}">
             <span class="blind">좋아요</span>
-            <span th:text="${contents.cntLike}">좋아요 수</span>
+            <span th:text="${contents.cntlike}">좋아요 수</span>
         </button>
     </div>
 </div>
@@ -97,7 +97,8 @@
         </div>
 
         <!-- 수정 폼 영역 버튼 클릭시 view -->
-        <div id="edit-form" th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})">
+        <div id="edit-form" style="display: none"
+             th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})">
             <!-- JavaScript fetch로 post요청을 하여 method="post" 생략 가능하나 그냥 넣음-->
             <form th:action="@{/boardShare/editComment/{id}(id=${comment.id})}" method="post" onsubmit="return saveEdit(event)">
                 <textarea id="edit-textarea" th:utext="${comment.comment}" name="comment" rows="3" cols="50">댓글 수정 영역</textarea>
@@ -108,9 +109,11 @@
 
         <div class="comment_info" style="display: flex; justify-content: space-between">
             <div class="comment_time" style="display: flex;">
-                <span th:text="${comment.sysDate}" style="padding-right: 10px">댓글 작성 시간</span>
+                <span th:text="${comment.sysdate}" style="padding-right: 10px">댓글 작성 시간</span>
                 <!-- 로그인된 사용자이고, 댓글 작성자와 일치할 경우 수정/삭제 버튼 표시 -->
-                <div th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})" style="display: flex; gap: 5px">
+                <div id="comment_edit_delete"
+                     th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})"
+                     style="display: flex; gap: 5px">
                     <button class="edit-button" type="button" th:attr="data-comment-id=${comment.id}">수정</button>
                     <button class="delete-button" type="button" th:attr="data-id=${comment.id}">삭제</button>
                 </div>
@@ -118,7 +121,7 @@
             <div class="comment_like" style="float: right" sec:authorize="isAuthenticated()">
                 <button type="button" onclick="upLike(event)" th:attr="data-id=${comment.id}">
                     <span class="blind">좋아요</span>
-                    <span th:text="${comment.cmtLike}">좋아요 수</span>
+                    <span th:text="${comment.cmtlike}">좋아요 수</span>
                 </button>
             </div>
         </div>
@@ -126,7 +129,21 @@
 </div>
 
 <!-- JavaScript -->
-<script>
+<script th:inlin="javascript">
+    // 최초 로드 시 페이지 새로 고침(조회수 업데이트)
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Check if the page has been refreshed before
+        if (!sessionStorage.getItem('pageRefreshed')) {
+            // Set a flag in sessionStorage to indicate that the page has been refreshed
+            sessionStorage.setItem('pageRefreshed', 'true');
+            // Reload the page
+            location.reload();
+        } else {
+            // If page has been refreshed before, clear the flag
+            sessionStorage.removeItem('pageRefreshed');
+        }
+    });
+
     // 게시글 삭제 안내 메세지
     function confirmDelete(event) {
         const message = '게시글을 삭제하시겠습니까?';
@@ -152,22 +169,28 @@
         }
     }
 
- // 댓글 수정 폼 토글 및 삭제 기능 구현
-    document.addEventListener('click', function(event) {
+    // 댓글 수정 폼 토글 및 삭제 기능 구현
+    document.getElementById('comment_edit_delete').addEventListener('click', function(event) {
+        // 현재 로그인된 유저 및 댓글 정보 불러옴
+        const auth = /*[[${auth}]]*/ null; // 로그인된 사용자 ID (변수명은 적절히 변경하세요)
+        const commentMemberId = /*[[${comment.memberId}]]*/ null; // 댓글 작성자 ID (변수명은 적절히 변경하세요)
+
         // 댓글 수정 버튼 클릭 시
         if (event.target.classList.contains('edit-button')) {
-            const commentId = event.target.getAttribute('data-comment-id');
-            const commentView = event.target.closest('.comment_view');
-            const commentText = commentView.querySelector('.comment-text');
-            const editForm = commentView.querySelector('.edit-form');
+            if (auth === commentMemberId) {
+                const commentText = commentView.querySelector('.comment-text');
+                const editForm = commentView.querySelector('.edit-form');
 
-            // 수정 폼을 토글합니다.
-            if (editForm.style.display === 'none') {
-                editForm.style.display = 'block';  // 수정 폼 보이기
-                commentText.style.display = 'none';  // 댓글 텍스트 숨기기
+                // 수정 폼을 토글합니다.
+                if (editForm.style.display === 'none') {
+                    editForm.style.display = 'block';  // 수정 폼 보이기
+                    commentText.style.display = 'none';  // 댓글 텍스트 숨기기
+                } else {
+                    editForm.style.display = 'none';  // 수정 폼 숨기기
+                    commentText.style.display = 'block';  // 댓글 텍스트 보이기
+                }
             } else {
-                editForm.style.display = 'none';  // 수정 폼 숨기기
-                commentText.style.display = 'block';  // 댓글 텍스트 보이기
+                alert('댓글 수정 권한이 없습니다.');
             }
         }
 
@@ -177,11 +200,12 @@
             const message = '정말로 삭제하시겠습니까?';
 
             if (confirm(message)) {
-                deleteComment(commentId);
+                deleteComment(commentId);   // ▼ 아래 메서드
             }
         }
     });
 
+    // 댓글 삭제 요청 기능
     function deleteComment(commentId) {
         fetch(`/boardShare/deleteComment/?id=${commentId}`, {
             method: 'DELETE'
@@ -214,6 +238,7 @@
             return true;
         }
     }
+
     // 게시글 좋아요 기능
     function contentsLike(event) {
         const button = event.target.closest('button');
@@ -253,9 +278,8 @@
             // 요청이 성공적으로 처리된 후 페이지 새로 고침
             console.log('Reloading the page');
             location.reload();
-        })
-    }
-
+    });
+}
 </script>
 </body>
 </html>
