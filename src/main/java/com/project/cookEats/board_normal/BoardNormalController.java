@@ -207,10 +207,10 @@ public class BoardNormalController {
     }
 
     // 댓글 삭제 처리
-    @GetMapping("/comments/delete/{id}")
-    public String deleteComment(@PathVariable("id") Long id, @RequestParam Long articleID) {
+    @PostMapping("/comments/{id}/delete")
+    public String deleteComment(@PathVariable("id") Long id, @RequestParam Long boardId) {
         commentService.deleteComment(id);
-        return "redirect:/boardNormal/articles/" + articleID; // 게시글 ID로 리다이렉트
+        return "redirect:/boardNormal/articles/" + boardId; // 게시글 ID로 리다이렉트
     }
 
     // 댓글 수정 폼 페이지
