@@ -183,14 +183,14 @@ public class RecipeController {
     String commentWrite(@ModelAttribute RecipeComment comment){
 
         int result = recipeService.saveComment(comment);
-        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
+        return "redirect:/boardRecipe/recipe/" + comment.getRecipeDB().getId();
     }
 
     //혜정 코드
     @GetMapping("/commentLike/{id}")
     String commentLike(@PathVariable Long id){
         RecipeComment comment = recipeService.upCommentLike(id);
-        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
+        return "redirect:/boardRecipe/recipe/" + comment.getRecipeDB().getId();
     }
 
     //혜정 코드
@@ -205,7 +205,7 @@ public class RecipeController {
     String commentDelete(@PathVariable Long id, @RequestParam Long recipeID){
 
         int result = recipeService.commentDelete(id);
-        return "redirect:/boardRecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
+        return "redirect:/boardRecipe/recipe/" + recipeID + "?type=commentDelete&result=success";
 
     }
 
