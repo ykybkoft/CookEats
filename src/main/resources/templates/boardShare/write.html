@@ -1,63 +1,475 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>글쓰기</title>
-
-    <!--navbar inculude-->
-    <div th:replace="~{header.html :: navbar}"></div>
-
-    <!--Link css-->
-
+    <!-- Link css -->
+    <!-- Kakao Maps API -->
+    <script
+            type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=50e02639a2a6ba4682805de42deab089&libraries=services"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      .map_wrap,
+      .map_wrap * {
+        margin: 0;
+        padding: 0;
+        font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+        font-size: 12px;
+      }
+      .map_wrap a,
+      .map_wrap a:hover,
+      .map_wrap a:active {
+        color: #000;
+        text-decoration: none;
+      }
+      .map_wrap {
+        position: relative;
+        width: 100%;
+        height: 500px;
+      }
+      #menu_wrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        margin: 10px 0 30px 10px;
+        padding: 5px;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.7);
+        z-index: 1;
+        font-size: 12px;
+        border-radius: 10px;
+      }
+      .bg_white {
+        background: #fff;
+      }
+      #menu_wrap hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 2px solid #5f5f5f;
+        margin: 3px 0;
+      }
+      #menu_wrap .option {
+        text-align: center;
+      }
+      #menu_wrap .option p {
+        margin: 10px 0;
+      }
+      #menu_wrap .option button {
+        margin-left: 5px;
+      }
+      #placesList li {
+        list-style: none;
+      }
+      #placesList .item {
+        position: relative;
+        border-bottom: 1px solid #888;
+        overflow: hidden;
+        cursor: pointer;
+        min-height: 65px;
+      }
+      #placesList .item span {
+        display: block;
+        margin-top: 4px;
+      }
+      #placesList .item h5,
+      #placesList .item .info {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      #placesList .item .info {
+        padding: 10px 0 10px 55px;
+      }
+      #placesList .info .gray {
+        color: #8a8a8a;
+      }
+      #placesList .info .jibun {
+        padding-left: 26px;
+        background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+          no-repeat;
+      }
+      #placesList .info .tel {
+        color: #009900;
+      }
+      #placesList .item .markerbg {
+        float: left;
+        position: absolute;
+        width: 36px;
+        height: 37px;
+        margin: 10px 0 0 10px;
+        background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+          no-repeat;
+      }
+      #placesList .item .marker_1 {
+        background-position: 0 -10px;
+      }
+      #placesList .item .marker_2 {
+        background-position: 0 -56px;
+      }
+      #placesList .item .marker_3 {
+        background-position: 0 -102px;
+      }
+      #placesList .item .marker_4 {
+        background-position: 0 -148px;
+      }
+      #placesList .item .marker_5 {
+        background-position: 0 -194px;
+      }
+      #placesList .item .marker_6 {
+        background-position: 0 -240px;
+      }
+      #placesList .item .marker_7 {
+        background-position: 0 -286px;
+      }
+      #placesList .item .marker_8 {
+        background-position: 0 -332px;
+      }
+      #placesList .item .marker_9 {
+        background-position: 0 -378px;
+      }
+      #placesList .item .marker_10 {
+        background-position: 0 -423px;
+      }
+      #placesList .item .marker_11 {
+        background-position: 0 -470px;
+      }
+      #placesList .item .marker_12 {
+        background-position: 0 -516px;
+      }
+      #placesList .item .marker_13 {
+        background-position: 0 -562px;
+      }
+      #placesList .item .marker_14 {
+        background-position: 0 -608px;
+      }
+      #placesList .item .marker_15 {
+        background-position: 0 -654px;
+      }
+      #pagination {
+        margin: 10px auto;
+        text-align: center;
+      }
+      #pagination a {
+        display: inline-block;
+        margin-right: 10px;
+      }
+      #pagination .on {
+        font-weight: bold;
+        cursor: default;
+        color: #777;
+      }
+    </style>
 </head>
 <body>
+<div th:replace="~{header.html :: navbar}"></div>
 
-    <div class="layoutContent">
-        <div class="panelCenter">
-            <div id="write-contents" class="writeWrap">
-                <div class="write_header_area">
-                    <strong class="write_header_title">글쓰기</strong>
-                </div>
-                <form id="write-form" action="/boardShare/write" method="post" onsubmit="return writeContents(event)">
-                    <div class="nick_area">
-                        <div style="display : flex;">
-                            닉네임 :
-                            <div class="nick_show" th:text="${nick}"></div>
-                        </div>
-                    </div>
-                    <div class="write_title_area">
-                        <input id="write-title" class="write_input" type="text" name="title" minlength="1" placeholder="제목을 입력해주세요">
-                    </div>
-                    <div class="write_editor_area">
-                        <textarea id="write-textarea" rows="5" cols="50" name="content" minlength="1" placeholder="내용을 입력해주세요"></textarea>
-                    </div>
-                    <div class="write_bt">
-                        <button type="submit">등록</button>
-                    </div>
-                </form>
+<div class="layoutContent">
+    <div class="panelCenter">
+        <div id="write-contents" class="writeWrap">
+            <div class="write_header_area">
+                <strong class="write_header_title">글쓰기</strong>
             </div>
+            <form
+                    id="write-form"
+                    action="/boardShare/write"
+                    method="post"
+                    onsubmit="return writeContents(event)"
+            >
+                <div class="nick_area">
+                    <div style="display: flex">
+                        닉네임 :
+                        <div class="nick_show" th:text="${nick}"></div>
+                    </div>
+                </div>
+                <div class="write_title_area">
+                    <input
+                            id="write-title"
+                            class="write_input"
+                            type="text"
+                            name="title"
+                            minlength="1"
+                            placeholder="제목을 입력해주세요"
+                    />
+                </div>
+                <div class="write_editor_area">
+              <textarea
+                      id="write-textarea"
+                      rows="5"
+                      cols="50"
+                      name="content"
+                      minlength="1"
+                      placeholder="내용을 입력해주세요"
+              ></textarea>
+                </div>
+
+                <!-- Hidden inputs to store latitude and longitude -->
+                <input type="hidden" id="selected-lat" name="latitude" />
+                <input type="hidden" id="selected-lng" name="longitude" />
+                <input type="hidden" id="selected-place" name="place" />
+                <div>거래 장소</div>
+                <div id="msg"></div>
+                <!-- Map Container -->
+                <div class="map_wrap">
+                    <div
+                            id="map"
+                            style="
+                  width: 100%;
+                  height: 100%;
+                  position: relative;
+                  overflow: hidden;
+                "
+                    ></div>
+                    <div id="menu_wrap" class="bg_white">
+                        <div class="option">
+                            <div>
+                                키워드:
+                                <input
+                                        type="text"
+                                        placeholder="장소 검색"
+                                        value="서울 시청"
+                                        id="keyword"
+                                        size="15"
+                                />
+                                <button
+                                        type="button"
+                                        onclick="searchPlaces(); return false;"
+                                >
+                                    검색하기
+                                </button>
+                            </div>
+                        </div>
+                        <hr />
+                        <ul id="placesList"></ul>
+                        <div id="pagination"></div>
+                    </div>
+                </div>
+                <div class="write_bt">
+                    <button type="submit">등록</button>
+                </div>
+            </form>
         </div>
     </div>
-</body>
+</div>
 
 <script>
-    function writeContents(event) {
-        const writeTitle = document.getElementById('write-title');
-        const writeTextarea = document.getElementById('write-textarea');
+      function writeContents(event) {
+        const writeTitle = document.getElementById("write-title");
+        const writeTextarea = document.getElementById("write-textarea");
 
         // 제목과 내용이 둘 중 하나라도 비어있는지 검사
-        if(writeTitle.value.trim() === '' || writeTextarea.value.trim() === '') {
-            alert('게시글 제목과 내용을 입력해 주세요.');
-            event.preventDefault();
-            return false;
+        if (
+          writeTitle.value.trim() === "" ||
+          writeTextarea.value.trim() === ""
+        ) {
+          alert("게시글 제목과 내용을 입력해 주세요.");
+          event.preventDefault();
+          return false;
         } else {
-            alert('게시글이 작성되었습니다.');
-            return true;
+          alert("게시글이 작성되었습니다.");
+          return true;
         }
-    }
-</script>
+      }
+
+      // 혜정 코드
+      var markers = [];
+      var mapContainer = document.getElementById("map"),
+        mapOption = {
+          center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+          level: 3, // 지도의 확대 레벨
+        };
+      var map = new kakao.maps.Map(mapContainer, mapOption);
+      var ps = new kakao.maps.services.Places();
+      var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+      searchPlaces();
+
+      function searchPlaces() {
+        var keyword = document.getElementById("keyword").value;
+        if (!keyword.replace(/^\s+|\s+$/g, "")) {
+          alert("키워드를 입력해주세요!");
+          return false;
+        }
+        ps.keywordSearch(keyword, placesSearchCB);
+      }
+
+      function placesSearchCB(data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+          displayPlaces(data);
+          displayPagination(pagination);
+        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+          alert("검색 결과가 존재하지 않습니다.");
+          return;
+        } else if (status === kakao.maps.services.Status.ERROR) {
+          alert("검색 결과 중 오류가 발생했습니다.");
+          return;
+        }
+      }
+
+      function displayPlaces(places) {
+        var listEl = document.getElementById("placesList"),
+          menuEl = document.getElementById("menu_wrap"),
+          fragment = document.createDocumentFragment(),
+          bounds = new kakao.maps.LatLngBounds();
+        removeAllChildNods(listEl);
+        removeMarker();
+
+        for (var i = 0; i < places.length; i++) {
+          var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+            marker = addMarker(placePosition, i),
+            itemEl = getListItem(i, places[i]);
+
+          bounds.extend(placePosition);
+
+          (function (marker, title, lat, lng) {
+            kakao.maps.event.addListener(marker, "mouseover", function () {
+              displayInfowindow(marker, title);
+            });
+
+            kakao.maps.event.addListener(marker, "mouseout", function () {
+              infowindow.close();
+            });
+
+            kakao.maps.event.addListener(marker, "click", function () {
+              document.getElementById("msg").innerHTML += title;
+              document.getElementById("selected-lat").value = lat;
+              document.getElementById("selected-lng").value = lng;
+              document.getElementById("selected-place").value = title;
+              document.getElementById("msg").innerHTML = title;
+            });
+
+            itemEl.onmouseover = function () {
+              displayInfowindow(marker, title);
+            };
+
+            itemEl.onmouseout = function () {
+              infowindow.close();
+            };
+
+            itemEl.onclick = function () {
+              document.getElementById("selected-lat").value = lat;
+              document.getElementById("selected-lng").value = lng;
+              document.getElementById("selected-place").value = title;
+              document.getElementById("msg").innerHTML = title;
+            };
+          })(marker, places[i].place_name, places[i].y, places[i].x);
+
+          fragment.appendChild(itemEl);
+        }
+
+        listEl.appendChild(fragment);
+        menuEl.scrollTop = 0;
+        map.setBounds(bounds);
+      }
+
+      function getListItem(index, places) {
+        var el = document.createElement("li"),
+          itemStr =
+            '<span class="markerbg marker_' +
+            (index + 1) +
+            '"></span>' +
+            '<div class="info">' +
+            "   <h5>" +
+            places.place_name +
+            "</h5>";
+
+        if (places.road_address_name) {
+          itemStr +=
+            "    <span>" +
+            places.road_address_name +
+            "</span>" +
+            '   <span class="jibun gray">' +
+            places.address_name +
+            "</span>";
+        } else {
+          itemStr += "    <span>" + places.address_name + "</span>";
+        }
+
+        itemStr += '  <span class="tel">' + places.phone + "</span>" + "</div>";
+
+        el.innerHTML = itemStr;
+        el.className = "item";
+        return el;
+      }
+
+      function addMarker(position, idx, title) {
+        var imageSrc =
+            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png",
+          imageSize = new kakao.maps.Size(36, 37),
+          imgOptions = {
+            spriteSize: new kakao.maps.Size(36, 691),
+            spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10),
+            offset: new kakao.maps.Point(13, 37),
+          },
+          markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imgOptions
+          ),
+          marker = new kakao.maps.Marker({
+            position: position,
+            image: markerImage,
+          });
+
+        marker.setMap(map);
+        markers.push(marker);
+        return marker;
+      }
+
+      function removeMarker() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+        markers = [];
+      }
+
+      function displayPagination(pagination) {
+        var paginationEl = document.getElementById("pagination"),
+          fragment = document.createDocumentFragment();
+
+        while (paginationEl.hasChildNodes()) {
+          paginationEl.removeChild(paginationEl.lastChild);
+        }
+
+        for (var i = 1; i <= pagination.last; i++) {
+          var el = document.createElement("a");
+          el.href = "#";
+          el.innerHTML = i;
+
+          if (i === pagination.current) {
+            el.className = "on";
+          } else {
+            el.onclick = (function (i) {
+              return function () {
+                pagination.gotoPage(i);
+              };
+            })(i);
+          }
+
+          fragment.appendChild(el);
+        }
+        paginationEl.appendChild(fragment);
+      }
+
+      function displayInfowindow(marker, title) {
+        var content = '<div style="padding:5px;z-index:1;">' + title + "</div>";
+        infowindow.setContent(content);
+        infowindow.open(map, marker);
+      }
+
+      function removeAllChildNods(el) {
+        while (el.hasChildNodes()) {
+          el.removeChild(el.lastChild);
+        }
+      }
+    </script>
+</body>
 </html>

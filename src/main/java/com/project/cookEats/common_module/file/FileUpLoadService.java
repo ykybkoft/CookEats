@@ -1,8 +1,8 @@
 package com.project.cookEats.common_module.file;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +23,7 @@ public class FileUpLoadService {
     private String bucketName;
 
     private final AmazonS3 amazonS3;
+    private static final Logger logger = Logger.getLogger(FileUpLoadService.class.getName());
 
     public String saveFile(MultipartFile file, String boardType) throws IOException {
         if (file.isEmpty()) {
@@ -47,8 +50,12 @@ public class FileUpLoadService {
         String uniqueFileName = baseName + "_" + UUID.randomUUID() + extension;
         String keyName = boardType + "/" + uniqueFileName;
 
-        amazonS3.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), null));
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
 
+        amazonS3.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), metadata));
+
+        logger.info("File uploaded successfully: " + keyName);
         return amazonS3.getUrl(bucketName, keyName).toString();
     }
 
@@ -58,21 +65,21 @@ public class FileUpLoadService {
         try {
             if (amazonS3.doesObjectExist(bucketName, fileKey)) {
                 amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileKey));
+                logger.info("File deleted successfully: " + fileKey);
             } else {
                 throw new RuntimeException("File not found: " + fileKey);
             }
-        } catch (AmazonServiceException e) {
+        } catch (Exception e) {
+            logger.severe("Error occurred while deleting the file from S3: " + e.getMessage());
             throw new RuntimeException("Error occurred while deleting the file from S3", e);
         }
     }
 
     private String extractFileKey(String fileUrl) {
         try {
-            java.net.URI uri = new java.net.URI(fileUrl);
+            URI uri = new URI(fileUrl);
             String path = uri.getPath();
-
-            // 경로에서 첫 번째 '/'를 기준으로 키 추출
-            return path.substring(1); // '/'를 제거하여 실제 키만 반환
+            return path.startsWith("/") ? path.substring(1) : path; // '/'를 제거하여 실제 키만 반환
         } catch (URISyntaxException e) {
             throw new RuntimeException("Invalid file URL: " + fileUrl, e);
         }

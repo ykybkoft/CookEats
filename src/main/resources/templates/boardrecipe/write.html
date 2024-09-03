@@ -3,50 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 작성</title>
+
+    <title>레시피 작성</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #f9f9f9;
         }
         h1 {
-            color: #4CAF4F;
+            color: #4CAF50;
             text-align: center;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
         }
-        .step {
-            margin-bottom: 20px;
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+        }
+        input[type="file"] {
+            margin-top: 5px;
         }
         button {
-            background-color: #4CAF4F;
+            background-color: #4CAF50;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 16px;
-            margin-right: 10px;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
         }
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .cancel-button {
-            background-color: #f44336;
-        }
-        .cancel-button:hover {
-            background-color: #d32f2f;
+        .step {
+            background-color: #f0f8f0;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
         }
     </style>
-    <script>
+</head>
+<body>
+<h1>레시피 작성</h1>
+<form action="/boardRecipe/write" method="POST" enctype="multipart/form-data">
+    <label for="title">레시피 이름:</label>
+    <input type="text" id="title" name="RCP_NM" required>
+
+    <label for="content">재료:</label>
+    <textarea id="content" name="RCP_PARTS_DTLS" required></textarea>
+
+    <div id="stepsContainer">
+        <div class="step">
+            <label for="manual1">조리순서 1:</label>
+            <input type="text" id="manual1" name="manual[]" required>
+            <label for="manualImage1">조리순서 1의 사진:</label>
+            <input type="file" id="manualImage1" name="manualImage[]" required>
+        </div>
+    </div>
+
+    <button type="button" onclick="addStep()">+ 추가</button>
+    <button type="button" onclick="deleteStep()">- 제거</button><br>
+    <button type="submit">작성하기</button>
+    <button type="button" class="cancel-button" onclick="cancelPost()">취소</button>
+</form>
+
+<script>
         let stepIndex = 1;
 
         function addStep() {
@@ -79,30 +124,5 @@
             }
         }
     </script>
-</head>
-<body>
-
-<h1>게시글 작성</h1>
-<form action="/boardRecipe/write" method="POST" enctype="multipart/form-data">
-    <label for="title">제목:</label>
-    <input type="text" id="title" name="RCP_NM" required><br>
-    <label for="content">재료:</label>
-    <textarea id="content" name="RCP_PARTS_DTLS" required></textarea><br>
-
-    <div id="stepsContainer">
-        <div class="step" id="step1">
-            <label for="manual1">조리순서1:</label>
-            <input type="text" id="manual1" name="manual[]" required/><br>
-            <label for="manualImage1">조리순서1의 사진:</label>
-            <input type="file" id="manualImage1" name="manualImage[]" required/><br>
-        </div>
-    </div>
-
-    <button type="button" onclick="addStep()">+ 추가</button>
-    <button type="button" onclick="deleteStep()">- 제거</button><br>
-    <button type="submit">작성하기</button>
-    <button type="button" class="cancel-button" onclick="cancelPost()">취소</button>
-</form>
-
 </body>
 </html>

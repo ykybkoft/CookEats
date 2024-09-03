@@ -157,6 +157,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             padding: 40px;
             margin-bottom: 40px;
+
         }
     </style>
 </head>
@@ -270,6 +271,7 @@
                     <!-- 댓글 수정 폼: 기본적으로 숨김 처리 -->
                     <div th:id="'edit-form-' + ${comment.id}" class="edit-form" style="display: none;">
                         <!-- 댓글 수정 내용 입력 영역 -->
+
                         <form th:action="@{/boardNormal/comments/{id}/edit(id=${comment.id})}" method="post">
                             <textarea name="contents" rows="4" th:text="${comment.contents}" required></textarea>
                             <!-- 댓글을 포함하는 게시글 ID, 댓글 수정 폼과 함께 전송 -->
