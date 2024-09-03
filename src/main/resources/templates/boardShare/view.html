@@ -7,7 +7,10 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
+    <script
+            type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=50e02639a2a6ba4682805de42deab089&libraries=services"
+    ></script>
     <title>글쓰기</title>
 
     <!--navbar inculude-->
@@ -224,7 +227,7 @@
               th:attr="data-id=${comment.id}"
             >
               <span class="blind">좋아요</span>
-              <span th:text="${comment.cmtlike}">좋아요 수</span>
+              <span th:text="${comment.cntlike}">좋아요 수</span>
             </button>
           </div>
         </div>
@@ -232,7 +235,7 @@
     </div>
 
     <!-- JavaScript -->
-    <script>
+    <script th:inline="javascript">
           // 최초 로드 시 페이지 새로 고침(조회수 업데이트)
           document.addEventListener('DOMContentLoaded', (event) => {
 
@@ -392,7 +395,7 @@
               /*<![CDATA[*/
       var lng = [[${contents.longitude}]];
       var lat = [[${contents.latitude}]];
-      var place = [[${contents.place}]]; // 장소 이름
+      var place = '[[${contents.place}]]'; // 장소 이름
 
       var mapContainer = document.getElementById('map'), // 지도를 표시할 div
       mapOption = {
