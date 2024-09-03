@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 작성</title>
+    <title>레시피 작성</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,7 +75,7 @@
         function cancelPost() {
             const userConfirmed = confirm("정말로 게시글 작성을 취소하시겠습니까?");
             if (userConfirmed) {
-                window.location.href = "/boardRecipe/home"; // 레시피 게시판 목록 URL로 변경해주세요.
+                window.location.href = "/boardRecipe/home";
             }
         }
     </script>
@@ -100,8 +100,8 @@
 
     <button type="button" onclick="addStep()">+ 추가</button>
     <button type="button" onclick="deleteStep()">- 제거</button><br>
-    <button type="submit">작성하기</button>
     <button type="button" class="cancel-button" onclick="cancelPost()">취소</button>
+    <button type="submit">작성하기</button>
 </form>
 
 </body>

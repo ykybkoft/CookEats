@@ -13,12 +13,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,21 +39,16 @@ public class RecipeController {
     @GetMapping("/home")
     public String home(@RequestParam(value = "page", defaultValue = "1") int page, Model model, @RequestParam(required = false) String searchType, @RequestParam(required = false) String search, @RequestParam(required = false) String sortType) {
 
-        int pageSize = 15; // 한 페이지에 표시할 레시피 수
+        int pageSize = 15;
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         Page<RecipeDB> resultPage = recipeService.findAll(page, search , sortType);
 
-        // 총 페이지 수 계산
         int totalPages = resultPage.getTotalPages();
-
-        // 페이지 블록의 시작과 끝을 계산
         int startPage = (page - 1) / 10 * 10 + 1;
         int endPage = Math.min(startPage + 9, totalPages);
 
-        // 날짜 형식 설정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         for (RecipeDB board : resultPage) {
-
             if (board.getSYSDATE() != null) {
                 board.setFormattedSysDate(board.getSYSDATE().format(formatter));
             } else {
@@ -54,27 +56,21 @@ public class RecipeController {
             }
         }
 
-        // 모델에 데이터 추가
         model.addAttribute("list", resultPage.getContent());
-        //model.addAttribute("list", recipeService.findAll(pageable,search,searchType,sortType).getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-
-        //혜정 코드
         model.addAttribute("search", search);
 
-        return "boardRecipe/home"; // home.html로 반환
+        return "boardRecipe/home";
     }
 
-    // 상세 레시피
     @GetMapping("/recipe/{id}")
     public String getRecipeDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         RecipeDB recipe = recipeService.getRecipeById(id);
 
-
-        if(recipe.getMember() == null){
+        if (recipe.getMember() == null) {
             model = recipeService.getNutrition(model, id);
         }
 
@@ -84,12 +80,9 @@ public class RecipeController {
             model.addAttribute("recipe", recipe);
             model.addAttribute("formattedDate", formattedDate);
 
-            // 이미지 URL 리스트를 뷰에 전달
-            List<String> manualImages = recipe.getManualImages();  // S3 URL 리스트
+            List<String> manualImages = recipe.getManualImages();
             model.addAttribute("manualImages", manualImages);
 
-            //혜정 코드
-            // 조회수 증가 및 사용자 정보 추가
             recipeService.viewCount(id);
             if (auth != null) {
                 model.addAttribute("member", memberService.findMember(auth));
@@ -97,32 +90,58 @@ public class RecipeController {
             model.addAttribute("comments", recipeService.commentList(id));
 
             return "boardRecipe/recipeDetail";
-
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error";
         }
     }
 
+    @PostMapping("/update")
+    public String updateRecipe(@ModelAttribute RecipeDto recipeDto,
+                               @RequestParam(value = "manualImages", required = false) MultipartFile[] manualImages,
+                               RedirectAttributes redirectAttributes) throws IOException {
+        recipeService.updateRecipe(recipeDto, manualImages);
 
-    //혜정 코드
-    @GetMapping("/boardLike/{id}")
-    String like(@PathVariable Long id){
-        recipeService.upLike(id);
-        return "redirect:/boardRecipe/recipe/"+id;
+        redirectAttributes.addFlashAttribute("message", "레시피가 성공적으로 수정되었습니다.");
+        return "redirect:/boardRecipe/recipe/" + recipeDto.getId();
     }
 
+    @GetMapping("/update/{id}")
+    public String updateRecipe(@PathVariable Long id, Model model) {
+        RecipeDB recipe = recipeService.getRecipeById(id);
+        if (recipe == null) {
+            throw new ResourceAccessException("Recipe not found");
+        }
 
-    //혜정코드
+        List<String> imageFileNames = recipe.getManualImages().stream()
+                .map(url -> {
+                    try {
+                        URL urlObj = new URL(url);
+                        String path = urlObj.getPath();
+                        return path.substring(path.lastIndexOf('/') + 1);
+                    } catch (MalformedURLException e) {
+                        return "Invalid URL";
+                    }
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("recipeDto", recipe);
+        model.addAttribute("manualImages", imageFileNames);
+        return "boardRecipe/update";
+    }
+
+    @GetMapping("/boardLike/{id}")
+    public String like(@PathVariable Long id) {
+        recipeService.upLike(id);
+        return "redirect:/boardRecipe/recipe/" + id;
+    }
 
     @GetMapping("/write")
-    String write(Authentication auth, Model model){
+    public String write(Authentication auth, Model model) {
         Member result = memberService.findMember(auth);
-        model.addAttribute("user",result);
-        return "boardRecipe/write.html";
+        model.addAttribute("user", result);
+        return "boardRecipe/write";
     }
-
-    //혜정코드
 
     @PostMapping("/write")
     public String writePro(@ModelAttribute RecipeDB recipe,
@@ -136,8 +155,7 @@ public class RecipeController {
 
         for (int i = 0; i < manuals.length; i++) {
             manualList.add(manuals[i]);
-            // Set the board type to "recipe"
-            String boardType = "recipe";  // Adjust this value as necessary for different board types
+            String boardType = "recipe";
             String imagePath = fileUpLoadService.saveFile(manualImages[i], boardType);
             manualImageList.add(imagePath);
         }
@@ -151,58 +169,40 @@ public class RecipeController {
         return "redirect:/boardRecipe/home";
     }
 
-    // 게시글 삭제
     @PostMapping("/delete/{id}")
     public String deleteRecipe(@PathVariable Long id, Authentication auth) {
         try {
-            // 현재 로그인한 사용자 정보 가져오기
             Member loggedInMember = memberService.findMember(auth);
-
-            // 게시글 삭제
             recipeService.deleteRecipe(id, loggedInMember);
-
-            // 성공 메시지
             return "redirect:/boardRecipe/home?type=delete&result=success";
         } catch (SecurityException e) {
-            // 삭제 권한이 없는 경우
             return "redirect:/boardRecipe/home?type=delete&result=error";
         } catch (Exception e) {
-            // 기타 오류 발생
             return "redirect:/boardRecipe/home?type=delete&result=error";
         }
     }
 
-    //혜정코드
     @PostMapping("/commentWrite")
-    String commentWrite(@ModelAttribute RecipeComment comment){
-
-        int result = recipeService.saveComment(comment);
-        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
+    public String commentWrite(@ModelAttribute RecipeComment comment) {
+        recipeService.saveComment(comment);
+        return "redirect:/boardRecipe/recipe/" + comment.getRecipeDB().getId();
     }
 
-    //혜정 코드
     @GetMapping("/commentLike/{id}")
-    String commentLike(@PathVariable Long id){
+    public String commentLike(@PathVariable Long id) {
         RecipeComment comment = recipeService.upCommentLike(id);
-        return "redirect:/boardRecipe/recipe/"+comment.getRecipeDB().getId();
+        return "redirect:/boardRecipe/recipe/" + comment.getRecipeDB().getId();
     }
 
-    //혜정 코드
     @PostMapping("/commentModify/{commentId}")
     public ResponseEntity<String> modifyComment(@PathVariable Long commentId, @RequestParam String content) {
         recipeService.updateComment(commentId, content);
         return ResponseEntity.ok("댓글 수정 성공");
     }
 
-    //혜정 코드
     @GetMapping("/commentDelete/{id}")
-    String commentDelete(@PathVariable Long id, @RequestParam Long recipeID){
-
-        int result = recipeService.commentDelete(id);
-        return "redirect:/boardRecipe/recipe/"+recipeID+"?type=commentDelete&result=success";
-
+    public String commentDelete(@PathVariable Long id, @RequestParam Long recipeID) {
+        recipeService.commentDelete(id);
+        return "redirect:/boardRecipe/recipe/" + recipeID + "?type=commentDelete&result=success";
     }
-
-
-
 }

@@ -27,7 +27,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorize) ->
                 authorize.requestMatchers("/member/myPage","/board_share/edit","/board_share/b_write","/boardRecipe/write","/boardRecipe/update"
-                ).hasAuthority("normal")
+                ).hasAuthority("USER")
         );
 
         http.authorizeHttpRequests((authorize) ->
