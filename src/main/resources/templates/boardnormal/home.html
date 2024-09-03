@@ -1,17 +1,6 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>게시판</title>
-
-    <div th:replace="~{/header.html :: navbar}"></div>
-    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
-    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
-    <style>
+<style>
     body {
         font-family: 'Arial', sans-serif;
        line-height: 1.6;
@@ -175,146 +164,169 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+
+
+
 </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>게시판</title>
+    <div th:replace="~{/header.html :: navbar}"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 
 </head>
 <body>
 <div class="container">
     <h1>자유 게시판</h1>
-<!-- 검색 -->
-<div class="section">
-    <form action="/boardNormal/search" method="get">
-        <div class="form-bar">
-            <div>
-                <i class="fas fa-search"></i>
-                <input class="search" type="text" name="keyword" placeholder="검색어를 입력해주세요." >
+    <!-- 검색 -->
+    <div class="section">
+        <form action="/boardNormal/home" method="get">
+            <div class="form-bar">
+                <div>
+                    <i class="fas fa-search"></i>
+                    <input class="search" type="text" name="keyword" placeholder="검색어를 입력해주세요." >
+                </div>
             </div>
-        </div>
-    </form>
-</div>
-
-
-
-<!-- 정렬 옵션 -->
-<!--<div class="dropdown">
-    <button class="dropbtn">옵션</button>
-    <div class="dropdown-content">
-        <a href="#" onclick="sortArticles('sysDate')">최신순</a>
-        <a href="#" onclick="sortArticles('likes')">추천순</a>
-        <a href="#" onclick="sortArticles('views')">조회순</a>
+        </form>
     </div>
-</div>-->
+
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+
+    <!-- 정렬 옵션 -->
     <div  class="sort-container">
         <button onclick="sortArticles('likes')">추천순</button>
         <button onclick="sortArticles('sysDate')">최신순</button>
         <button onclick="sortArticles('views')">조회순</button>
     </div>
 
-<!-- 검색 결과 리스트 -->
-<section class="article-list" id="articleList">
-    <div id="articlesContainer">
-        <!-- 검색 결과는 여기서 동적으로 로드됩니다. -->
-        <div th:if="${articles != null}">
-            <div th:each="article : ${articles}">
-                <div class="article-card">
-                    <h3 th:text="${article.title}"></h3>
-                    <p th:text="${article.content}"></p>
-                    <p><strong>최신수:</strong> <span th:text="${article.sysDate}"></span></p>
-                    <p><strong>추천수:</strong> <span th:text="${article.likes}"></span></p>
-                    <p><strong>조회수:</strong> <span th:text="${article.views}"></span></p>
-                    <a th:href="@{/boardNormal/articles/{id}(id=${article.id})}">더보기</a>
+    <!-- 검색 결과 리스트 -->
+    <section class="article-list" id="articleList">
+        <div id="articlesContainer">
+            <div th:if="${articles != null}">
+                <div th:each="article : ${articles}">
+                    <div class="article-card">
+                        <h3 th:text="${article.title}"></h3>
+                        <p th:text="${article.content}"></p>
+                        <p><strong>최신수:</strong> <span th:text="${article.formattedSysDate}"></span></p>
+                        <p><strong>추천수:</strong> <span th:text="${article.likes}"></span></p>
+                        <p><strong>조회수:</strong> <span th:text="${article.views}"></span></p>
+                        <a th:href="@{/boardNormal/articles/{id}(id=${article.id})}">더보기</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<main class="main">
-    <section class="contents">
-        <div>
-            <table>
-                <thead>
-                <tr>
-
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>날짜</th>
-                    <th>좋아요</th>
-                    <th>조회수</th>
-
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr class="content" th:each="i : ${page.content}">
-                    <td><a th:href="@{/boardNormal/articles/{id}(id=${i.id})}" th:text="${i.title}"></a></td>
-                    <td th:text="${i.member != null ? i.member.username : '작성자 정보 없음'}"></td>
-                    <td th:text="${i.formattedSysDate}"></td>
-                    <td th:text="${i.likes}"></td>
-                    <td th:text="${i.views}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
     </section>
-</main>
 
-<footer>
-    <section>
-        <!-- 글쓰기 버튼 -->
-        <div>
-            <ul class="footer">
-                <!-- 로그인된 사용자에게만 글쓰기 버튼이 보임 -->
-                <li th:if="${#authentication.principal != null}">
-                    <a href="/boardNormal/write" class="write-btn">글쓰기</a>
-                </li>
-                <li th:if="${#authentication.principal == null}">
-                    <a href="/member/login">로그인 후 글쓰기가 가능합니다.</a>
-                </li>
-            </ul>
-        </div>
+    <main class="main">
+        <section class="contents">
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>날짜</th>
+                        <th>좋아요</th>
+                        <th>조회수</th>
+                    </tr>
+                    </thead>
 
-        <!-- 페이징 -->
-        <div class="pagination">
-            <!-- 이전 페이지 링크 -->
-            <a th:if="${page.hasPrevious()}" th:href="@{/boardNormal/home(page=${page.number - 1})}" i data-lucide="chevron-left">이전</a>
-            <!-- 페이지 번호 링크 -->
-            <a th:each="i : ${#numbers.sequence(
+                    <tbody>
+                    <tr class="content" th:each="i : ${page.content}">
+                        <td><a th:href="@{/boardNormal/articles/{id}(id=${i.id})}" th:text="${i.title}"></a></td>
+                        <td th:text="${i.member != null ? i.member.username : '작성자 정보 없음'}"></td>
+                        <td th:text="${i.formattedSysDate}"></td>
+                        <td th:text="${i.likes}"></td>
+                        <td th:text="${i.views}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 게시글 수정 폼 (기본적으로 숨겨짐) -->
+            <div id="editFormContainer" style="display:none;">
+                <form id="editForm" method="post" action="/boardNormal/update">
+                    <input type="hidden" name="id" id="editPostId">
+                    <label for="editTitle">제목:</label>
+                    <input type="text" name="title" id="editTitle">
+                    <label for="editContent">내용:</label>
+                    <textarea name="content" id="editContent"></textarea>
+                    <button type="submit">수정</button>
+                    <button type="button" onclick="hideEditForm()">취소</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <section>
+            <!-- 글쓰기 버튼 -->
+            <div>
+                <ul class="footer">
+                    <!-- 로그인된 사용자에게만 글쓰기 버튼이 보임 -->
+                    <li th:if="${#authentication.principal != null}">
+                        <a href="/boardNormal/write" class="write-btn">글쓰기</a>
+                    </li>
+                    <li th:if="${#authentication.principal == null}">
+                        <a href="/member/login">로그인 후 글쓰기가 가능합니다.</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 페이징 -->
+            <div class="pagination">
+                <!-- 이전 페이지 링크 -->
+                <a th:if="${page.hasPrevious()}" th:href="@{/boardNormal/home(page=${page.number - 1})}" i data-lucide="chevron-left">이전</a>
+                <!-- 페이지 번호 링크 -->
+                <a th:each="i : ${#numbers.sequence(
                             (page.number - 2 > 0 ? page.number - 2 : 0),
                             (page.number + 2 < page.totalPages - 1 ? page.number + 2 : page.totalPages - 1)
                         )}"
-               th:href="@{/boardNormal/home(page=${i})}"
-               th:classappend="${i == page.number} ? 'current'"
-               th:text="${i + 1}"></a>
-            <!-- 다음 페이지 링크 -->
-            <a th:if="${page.hasNext()}" th:href="@{/boardNormal/home(page=${page.number + 1})}" i data-lucide="chevron-right">다음</a>
-        </div>
-    </section>
-</footer>
+                   th:href="@{/boardNormal/home(page=${i})}"
+                   th:classappend="${i == page.number} ? 'current'"
+                   th:text="${i + 1}"></a>
+                <!-- 다음 페이지 링크 -->
+                <a th:if="${page.hasNext()}" th:href="@{/boardNormal/home(page=${page.number + 1})}" i data-lucide="chevron-right">다음</a>
+            </div>
+        </section>
+    </footer>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // 게시글을 정렬하는 함수
-    function sortArticles(sortBy) {
-        const query = $('#searchQuery').val(); // 검색어 가져오기
-
-        $.ajax({
-            type: 'GET',
-            url: '/boardNormal/search', // 정렬할 때 사용하는 URL
-            data: {
-                query: query,
-                sort: sortBy
-            },
-            success: function (data) {
-                // 검색 결과 부분을 업데이트합니다.
-                $('#articlesContainer').html(data);
-            },
-            error: function (error) {
-                console.error('Error:', error);
+    $(document).ready(function() {
+        // 페이지 로드 시 현재 정렬 옵션에 따라 버튼 상태를 업데이트합니다.
+        const params = new URLSearchParams(window.location.search);
+        const sortParam = params.get('sort') || 'likes';
+        document.querySelectorAll('.sort-container button').forEach(button => {
+            if (button.getAttribute('onclick').includes(sortParam)) {
+                button.classList.add('active');
             }
         });
+    });
+
+    // 정렬 버튼 클릭 시 해당 정렬 옵션으로 페이지를 새로 로드합니다.
+    function sortArticles(sortType) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('sort', sortType); // URL에 정렬 파라미터 추가
+        window.location.href = currentUrl.toString(); // 페이지 새로 고침
+    }
+
+    // 수정 폼을 표시하는 함수
+    function showEditForm(postId, title, content) {
+        document.getElementById('editPostId').value = postId;
+        document.getElementById('editTitle').value = title;
+        document.getElementById('editContent').value = content;
+        document.getElementById('editFormContainer').style.display = 'block';
+    }
+
+    // 수정 폼을 숨기는 함수
+    function hideEditForm() {
+        document.getElementById('editFormContainer').style.display = 'none';
     }
 </script>
+
 </body>
 </html>

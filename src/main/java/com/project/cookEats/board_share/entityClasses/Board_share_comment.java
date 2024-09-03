@@ -33,12 +33,12 @@ public class Board_share_comment {
     @Column(length = 255, nullable = false)
     private String comment;
 
-    @Column(name = "sysDate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDate sysDate;
+    @Column(name = "sysdate", nullable = false, updatable = false,  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDate sysdate;
 
-    @Column(name = "cmtLike")
+    @Column(name = "cmtlike")
     @ColumnDefault("0")
-    private int cmtLike;
+    private int cmtlike;
 
     // 탈퇴시 정보 삭제를 위한 컬럼
     // 코멘트는 많은 사용자가 가질 수 있다. 즉, n:1 양방향 관계 설정

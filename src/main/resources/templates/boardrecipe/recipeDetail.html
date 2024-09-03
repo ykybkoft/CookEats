@@ -222,9 +222,26 @@
         </section>
 
         <div class="recipe-actions">
+            <!-- 추천 버튼 -->
             <a th:href="@{'/boardRecipe/boardLike/' + ${recipe.id}}" class="button" sec:authorize="isAuthenticated()">
                 <i class="fa-regular fa-thumbs-up"></i> 추천
             </a>
+
+            <!-- 수정 버튼 (게시글 작성자와 로그인한 사용자가 동일한 경우에만 표시) -->
+            <div th:if="${member != null and #authentication.principal.id == recipe.member.id}">
+                <a th:href="@{'/boardRecipe/recipeEdit/' + ${recipe.id}}" class="button">
+                    <i class="fa-regular fa-edit"></i> 수정
+                </a>
+            </div>
+
+            <!-- 삭제 버튼 (게시글 작성자와 로그인한 사용자가 동일한 경우에만 표시) -->
+            <div th:if="${member != null and #authentication.principal.id == recipe.member.id}">
+                <a href="#" th:onclick="'deleteRecipe(' + ${recipe.id} + ');'" class="button">
+                    <i class="fa-regular fa-trash-can"></i> 삭제
+                </a>
+            </div>
+
+            <!-- 목록 버튼 -->
             <a href="/boardRecipe/home" class="button">목록</a>
         </div>
     </article>
@@ -266,35 +283,34 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 <script th:inline="javascript">
-        /*<![CDATA[*/
-        var carValue = /*[[${car}]]*/ 0;
-        var proValue = /*[[${pro}]]*/ 0;
-        var fatValue = /*[[${fat}]]*/ 0;
+    /*<![CDATA[*/
+    var carValue = /*[[${car}]]*/ 0;
+    var proValue = /*[[${pro}]]*/ 0;
+    var fatValue = /*[[${fat}]]*/ 0;
 
-        var ctx = document.getElementById('nutritionChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['탄수화물(g)', '단백질(g)', '지방(g)'],
-                datasets: [{
-                    data: [carValue, proValue, fatValue],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                    borderColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' },
-                    title: {
-                        display: true,
-                        text: '영양 성분 구성',
-                        color: '#4CAF4F',
-                        font: {
-                            size: 18,
-                            weight: 'bold'
-                        }
+    var ctx = document.getElementById('nutritionChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['탄수화물(g)', '단백질(g)', '지방(g)'],
+            datasets: [{
+                data: [carValue, proValue, fatValue],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                borderColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: {
+                    display: true,
+                    text: '영양 성분 구성',
+                    color: '#4CAF4F',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
                     }
                 }
             }
@@ -303,37 +319,65 @@
 
         function showEditForm(commentId) {
             document.getElementById('edit-form-' + commentId).style.display = 'block';
+
         }
+    });
+    /*]]>*/
+</script>
+<script>
+    function showEditForm(commentId) {
+        document.getElementById('edit-form-' + commentId).style.display = 'block';
+    }
 
-        function cancelEdit(commentId) {
-            document.getElementById('edit-form-' + commentId).style.display = 'none';
-        }
+    function cancelEdit(commentId) {
+        document.getElementById('edit-form-' + commentId).style.display = 'none';
+    }
 
-        function submitEditForm(commentId) {
-            const content = document.getElementById('edit-content-' + commentId).value;
-            const recipeID = document.getElementById('recipe-id-' + commentId).value;
+    function submitEditForm(commentId) {
+        const content = document.getElementById('edit-content-' + commentId).value;
+        const recipeID = document.getElementById('recipe-id-' + commentId).value;
 
-            fetch(`/boardRecipe/commentModify/${commentId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `content=${encodeURIComponent(content)}&recipeID=${recipeID}`
+        fetch(`/boardRecipe/commentModify/${commentId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `content=${encodeURIComponent(content)}&recipeID=${recipeID}`
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('comment-content-' + commentId).textContent = content;
+                cancelEdit(commentId);
+                alert('댓글이 수정되었습니다.');
+            } else {
+                alert('댓글 수정에 실패했습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('댓글 수정 중 오류가 발생했습니다.');
+        });
+
+        return false;
+    }
+
+    function deleteRecipe(recipeId) {
+        if (confirm('이 게시글을 삭제하시겠습니까?')) {
+            fetch(`/boardRecipe/delete/${recipeId}`, {
+                method: 'POST'
             })
             .then(response => {
                 if (response.ok) {
-                    document.getElementById('comment-content-' + commentId).textContent = content;
-                    cancelEdit(commentId);
-                    alert('댓글이 수정되었습니다.');
+                    alert('게시글이 삭제되었습니다.');
+                    window.location.href = '/boardRecipe/home';
                 } else {
-                    alert('댓글 수정에 실패했습니다.');
+                    alert('게시글 삭제에 실패했습니다.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('댓글 수정 중 오류가 발생했습니다.');
+                alert('게시글 삭제 중 오류가 발생했습니다.');
             });
-
-            return false;
         }
-    </script>
+    }
+</script>
 </body>
 </html>

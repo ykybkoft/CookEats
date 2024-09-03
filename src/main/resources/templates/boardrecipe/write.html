@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>고급스러운 레시피 작성</title>
+
+    <title>레시피 작성</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -84,23 +85,43 @@
         </div>
     </div>
 
-    <button type="button" onclick="addStep()">+ 조리순서 추가</button>
-    <button type="submit">레시피 등록하기</button>
+    <button type="button" onclick="addStep()">+ 추가</button>
+    <button type="button" onclick="deleteStep()">- 제거</button><br>
+    <button type="submit">작성하기</button>
+    <button type="button" class="cancel-button" onclick="cancelPost()">취소</button>
 </form>
 
 <script>
-        let stepCount = 1;
+        let stepIndex = 1;
+
         function addStep() {
-            stepCount++;
-            const newStep = document.createElement('div');
-            newStep.className = 'step';
-            newStep.innerHTML = `
-                <label for="manual${stepCount}">조리순서 ${stepCount}:</label>
-                <input type="text" id="manual${stepCount}" name="manual[]" required>
-                <label for="manualImage${stepCount}">조리순서 ${stepCount}의 사진:</label>
-                <input type="file" id="manualImage${stepCount}" name="manualImage[]" required>
-            `;
-            document.getElementById('stepsContainer').appendChild(newStep);
+            stepIndex++;
+            const container = document.getElementById('stepsContainer');
+            const newStepHtml = `
+                <div class="step" id="step${stepIndex}">
+                    <label for="manual${stepIndex}">조리순서${stepIndex}:</label>
+                    <input type="text" id="manual${stepIndex}" name="manual[]" /><br>
+                    <label for="manualImage${stepIndex}">조리순서${stepIndex}의 사진:</label>
+                    <input type="file" id="manualImage${stepIndex}" name="manualImage[]" /><br>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', newStepHtml);
+        }
+
+        function deleteStep() {
+            if (stepIndex > 1) {
+                const stepToRemove = document.getElementById(`step${stepIndex}`);
+                stepToRemove.remove();
+                stepIndex--;
+            } else {
+                alert("최소 1개의 조리순서는 유지해야 합니다.");
+            }
+        }
+
+        function cancelPost() {
+            const userConfirmed = confirm("정말로 게시글 작성을 취소하시겠습니까?");
+            if (userConfirmed) {
+                window.location.href = "/boardRecipe/home"; // 레시피 게시판 목록 URL로 변경해주세요.
+            }
         }
     </script>
 </body>

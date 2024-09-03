@@ -21,19 +21,36 @@
         <!--게시글 목록 헤드 기능-->
         <div class="article_container">
             <strong class="article_title">공유 게시판</strong>
+
+            <!--검색 기능-->
             <div class="controller">
                 <form class="article_search">
                     <fieldset class="article_search_area">
-                        <legend class="blind">게시판 검색</legend>
-                        <select name="search_option" id="option">
-                            <option value="title">제목</option>
-                            <option value="contents">내용</option>
-                        </select>
-                        <input placeholder="내용을 입력하세요">
-                        <button>검색</button>
+                        <div>
+                            <form class="search" th:action="@{/boardShare/home}" method="get">
+                                <input name="search" type="text" placeholder="검색어를 입력해주세요.">
+                                <button type="submit">검색</button>
+                            </form>
+                        </div>
                     </fieldset>
                 </form>
             </div>
+
+            <!-- 게시글 정렬 버튼 및 검색 정렬 활성화-->
+            <!-- 검색어가 없을시 단순 정렬기준 desc 따라 페이지 로드(검색하려면 정렬되어 있어야 빠름) 추후 binary(index)바탕으로 추가 예정-->
+            <div th:if="${#strings.isEmpty(search)}" class="sort-container">
+                <button th:onclick="location.href='/boardShare/home?sortType=cntlike'">추천순</button>
+                <button th:onclick="location.href='/boardShare/home?sortType=id'">최신순</button>
+                <button th:onclick="location.href='/boardShare/home?sortType=vcount'">조회순</button>
+            </div>
+            <!-- 검색어 text가 존재할 경우 검색어와 선택된 정렬 기준에 맞춰 페이지 로드-->
+            <!-- LLike와 같은 변형을 사용하는 이유는 sql의 like와 같이 혼동 될 수 있기 때문에 사용-->
+            <div th:if="${not #strings.isEmpty(search)}" class="sort-container">
+                <button th:onclick="|location.href='@{/boardShare/home(search=${search}, sortType=cntlike, page=${currentPage})}'|">추천순</button>
+                <button th:onclick="|location.href='@{/boardShare/home(search=${search}, sortType=id, page=${currentPage})}'|">최신순</button>
+                <button th:onclick="|location.href='@{/boardShare/home(search=${search}, sortType=vcount, page=${currentPage})}'|">조회순</button>
+            </div>
+
             <!--게시글 목록 wrap-->
             <div class="board_wrap">
                 <table class="listBoard">
@@ -45,61 +62,67 @@
                     </caption>
                     <colgroup>
                         <col>
+                        <col style="width: 60px">
                         <col style="width: 110px">
                         <col style="width: 100px">
                         <col style="width: 75px">
                         <col style="width: 60px">
+                        <col style="width: 60px">
                     </colgroup>
                     <thead>
                     <tr>
+                        <th>순서</th>
                         <th>제목</th>
                         <th>작성자</th>
                         <th>작성일</th>
+                        <th>추천수</th>
                         <th>조회수</th>
                     </tr>
                     </thead>
                     <tbody class="content" th:each="i : ${home}">
                     <tr>
-                        <td th:text="${i.title}"
+                        <td th:text="${i.id}"></td>
+                        <td><a th:text="${i.title}"
                             th:attr="data-id=${i.id}"
+                            th:href="@{/boardShare/view/{id}(id=${i.id})}"
                             class="title"
-                            onclick="upCountAndMove(this)"></td>
+                            onclick="upCountAndMove(this)"></a></td>
                         <td th:text="${i.member.getNick()}"></td>
-                        <td th:text="${i.sysDate}"></td>
-                        <td th:text="${i.vCount}"></td>
+                        <td th:text="${i.sysdate}"></td>
+                        <td th:text="${i.cntlike}"></td>
+                        <td th:text="${i.vcount}"></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 페이지 버튼 -->
-            <div class="article_pagination">
+            <!-- 페이징 네비게이션 -->
+            <div class="pagination">
+                <!-- 첫 페이지로 돌아가기 -->
+                <a th:if="${startPage < currentPage}"
+                   th:href="@{/boardShare/home(page=${startPage}, search=${search}, sortType=${sortType})}">&lt;&lt;</a>
 
-                <!-- 이전 페이지 버튼 -->
-                <!--disabled는 현재 페이지가 0일 때 버튼 비활성화-->
-                <button class="article_page_bt"
-                        th:disabled="${currentPage == 0}"
-                        th:onclick="|location.href='/boardShare/home?page=${currentPage - 1}'|">&lt;</button>
-                        <!--onclick시 현재 페이지에 1을 뺀 페이지로 이동-->
+                <!-- 이전 페이지로 이동 -->
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/boardShare/home(page=${currentPage - 1}, search=${search}, sortType=${sortType})}"
+                   th:classappend="${currentPage == 1} ? 'disabled' : ''">&lt;</a>
 
-                <!-- 페이지 번호 버튼들 -->
-                <!--thymeleaf numbers 유틸리티 메서드로 버튼 생성-->
-                <!--classappend는 현재 버튼 강조 style 추가하는 코드-->
-                <!--test = 현재 페이지에 1을 더함-->
-                <span th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <button class="article_page_bt"
-                        th:text="${page + 1}"
-                        th:classappend="${page == currentPage} ? 'active'"
-                        th:onclick="|location.href='/boardShare/home?page=${page}'|">
-                    </button>
-                </span>
+                <!-- 페이지 번호 -->
+                <a th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                   th:classappend="${currentPage == i} ? 'current' : ''"
+                   th:href="@{/boardShare/home(page=${i}, search=${search}, sortType=${sortType})}" th:text="${i + 1}">1</a>
 
-                <!-- 다음 페이지 버튼 -->
-                <!-- 마직막 페이지는 현재 페이지에 1을 더했음으로 -1을 해야 맞음-->
-                <button class="article_page_bt"
-                        th:disabled="${currentPage == totalPages - 1}"
-                        th:onclick="|location.href='/boardShare/home?page=${currentPage + 1}'|">&gt;</button>
+                <!-- 다음 페이지로 이동 -->
+                <a th:if="${currentPage < endPage}"
+                   th:href="@{/boardShare/home(page=${currentPage + 1}, search=${search}, sortType=${sortType})}"
+                   th:classappend="${currentPage == totalPages} ? 'disabled' : ''">&gt;</a>
+
+                <!-- 마지막 페이지로 이동 -->
+                <a th:if="${endPage > currentPage}"
+                   th:href="@{/boardShare/home(page=${endPage}, search=${search}, sortType=${sortType})}"
+                   th:classappend="${endPage == totalPages} ? 'disabled' : ''">&gt;&gt;</a>
             </div>
+
         </div>
     </div>
 </div>
@@ -123,14 +146,6 @@
         fetch(`/boardShare/updateCount/${id}`, {
             method: 'POST'
         })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = `/boardShare/view/${id}`;
-            } else {
-                console.error('조회수 업데이트 실패');
-            }
-        })
-        .catch(error => console.error('Error:', error));
     }
 </script>
 </body>

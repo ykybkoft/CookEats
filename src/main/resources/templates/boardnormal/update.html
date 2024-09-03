@@ -4,37 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>게시글 수정 페이지</title>
+    <title>게시글 수정</title>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
+
 </head>
 <body>
 
 <main class="main">
     <section class="contents">
-        <div th:if="${article != null}">
-            <h1>자유게시글 수정</h1>
-            <form action="/boardNormal/update" method="post">
-                <input type="hidden" name="id" th:value="${article.id}">
-                <label for="title">제목:</label><br>
-                <input type="text" id="title" name="title" th:value="${article.title}" required><br><br>
-                <label for="content">내용:</label><br>
-                <textarea id="content" name="content" rows="10" cols="50" required th:text="${article.content}"></textarea><br><br>
-                <button type="submit">수정하기</button>
-            </form>
-
-            <a href="/boardNormal/articles/{id}" th:href="@{/boardNormal//articles/{id}(id=${article.id})}">취소</a>
-        </div>
-        <div th:if="${article == null}">
-            <p>게시글을 찾을 수 없습니다.</p>
-            <a href="/boardNormal/home">목록</a>
-        </div>
+        <h1>게시글 수정</h1>
+        <form id="updateForm" th:action="@{/boardNormal/update}" method="post">
+            <input type="hidden" name="id" th:value="${article.id}" />
+            <div>
+                <label for="title">제목:</label>
+                <input type="text" id="title" name="title" th:value="${article.title}" required />
+            </div>
+            <div>
+                <label for="content">내용:</label>
+                <textarea id="content" name="content" required>${article.content}</textarea>
+            </div>
+            <button type="submit" class="button">수정하기</button>
+            <button type="button" id="cancelButton" class="button">취소</button>
+        </form>
     </section>
 </main>
 
-<footer class="footer">
-    <section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // 폼 제출 시 유효성 검사
+        $('#updateForm').on('submit', function(event) {
+            // 제목과 내용이 비어있지 않은지 확인
+            var title = $('#title').val().trim();
+            var content = $('#content').val().trim();
 
-    </section>
-</footer>
+            if (title === '' || content === '') {
+                alert('제목과 내용은 필수 입력 사항입니다.');
+                event.preventDefault(); // 폼 제출 방지
+            }
+        });
+
+        // 취소 버튼 클릭 시 경고 메시지
+        $('#cancelButton').on('click', function() {
+            if (confirm('수정을 취소하시겠습니까? 변경사항이 저장되지 않습니다.')) {
+                window.location.href = '/boardNormal/articles/' + $('input[name="id"]').val(); // 게시글 상세 페이지로 리다이렉트
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
