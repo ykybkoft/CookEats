@@ -33,7 +33,7 @@ public class BoardNormalController {
         Page<BoardNormal> page;
         switch (sort) {
             case "sysDate":
-                page = bs.findByKeywordOrderBySysDateDesc(keyword, pageable); // 최신순
+                page = bs.findAllByKeywordOrderBySysDateDesc(keyword, pageable); // 최신순
                 break;
             case "views":
                 page = bs.findByKeywordOrderByViewsDesc(keyword, pageable); // 조회순
