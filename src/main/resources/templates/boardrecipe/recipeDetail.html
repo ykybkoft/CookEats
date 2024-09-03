@@ -227,15 +227,11 @@
                 <i class="fa-regular fa-thumbs-up"></i> 추천
             </a>
 
-            <!-- 수정 버튼 (게시글 작성자와 로그인한 사용자가 동일한 경우에만 표시) -->
-            <div th:if="${member != null and #authentication.principal.id == recipe.member.id}">
-                <a th:href="@{'/boardRecipe/recipeEdit/' + ${recipe.id}}" class="button">
+            <!-- 수정 및 삭제 버튼 (게시글 작성자와 로그인한 사용자가 동일한 경우에만 표시) -->
+            <div th:if="${member != null and recipe.member != null and #authentication.principal != null and #authentication.principal.id == recipe.member.id}">
+                <a th:href="@{'/boardRecipe/update/' + ${recipe.id}}" class="button">
                     <i class="fa-regular fa-edit"></i> 수정
                 </a>
-            </div>
-
-            <!-- 삭제 버튼 (게시글 작성자와 로그인한 사용자가 동일한 경우에만 표시) -->
-            <div th:if="${member != null and #authentication.principal.id == recipe.member.id}">
                 <a href="#" th:onclick="'deleteRecipe(' + ${recipe.id} + ');'" class="button">
                     <i class="fa-regular fa-trash-can"></i> 삭제
                 </a>

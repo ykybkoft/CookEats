@@ -1,10 +1,10 @@
 package com.project.cookEats.board_recipe;
 
+import com.project.cookEats.common_module.exception.ResourceNotFoundException;
 import com.project.cookEats.member.Member;
 import com.project.cookEats.member.CustomUser;
 import com.project.cookEats.member.MemberRepository;
 import com.project.cookEats.common_module.file.FileUpLoadService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +14,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,50 +33,24 @@ public class RecipeService {
     private final RecipeDBSubInfoRepository recipeDBSubInfoRepository;
     private final FileUpLoadService fileUpLoadService;
 
-    // 모든 게시글을 반환, Paging
-    //지훈 코드 -> 혜정 수정
-    public Page<RecipeDB> findAll(int page,String search,String sortType) {
-
-
-        int pageSize = 15; // 한 페이지에 표시할 레시피 수
+    public Page<RecipeDB> findAll(int page, String search, String sortType) {
+        int pageSize = 15;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "LLIKE"));
 
-
-        if(sortType!= null){
-            pageable = PageRequest.of(page-1, pageSize, Sort.by(Sort.Direction.DESC, sortType));
-            if(search == null || search.equals("")){
-
-                return recipeDBRepository.findAll(pageable);
-            }else{
-                return recipeDBRepository.findAllSearch(search,pageable);
-            }
-        }else{
-            if(search== null || search.equals("")){
-                return recipeDBRepository.findAll(pageable);
-            }else{
-                return recipeDBRepository.findAllSearch(search,pageable);
-            }
-
+        if (sortType != null) {
+            pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, sortType));
         }
 
-
+        if (search == null || search.isEmpty()) {
+            return recipeDBRepository.findAll(pageable);
+        } else {
+            return recipeDBRepository.findAllSearch(search, pageable);
+        }
     }
 
     public long getTotalItems() {
         return recipeDBRepository.count();
-
     }
-//    public List<RecipeDB> searchRecipes(String keyword, String sortBy) {
-//        return switch (sortBy) {
-//            // 제목에 키워드가 포함된 게시글을 추천수 기준으로 내림차순 정렬
-//            case "likes" -> recipeDBRepository.findByTitleContainingOrderByLikesDesc(keyword);
-//            // 제목에 키워드가 포함된 게시글을 작성일 기준으로 내림차순 정렬
-//            case "date" -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-//            // 제목에 키워드가 포함된 게시글을 조회수 기준으로 내림차순 정렬
-//            case "count" -> recipeDBRepository.findByKeywordOrderByCountDesc(keyword);
-//            default -> recipeDBRepository.findByTitleContainingOrderBySysDateDesc(keyword);
-//        };
-//    }
 
     public RecipeDB getRecipeById(Long id) {
         return recipeDBRepository.findById(id).orElse(null);
@@ -90,19 +69,61 @@ public class RecipeService {
             throw new SecurityException("You are not authorized to delete this recipe");
         }
 
-        // Delete associated files (if any)
         for (String fileUrl : recipe.getManualImages()) {
             fileUpLoadService.deleteFile(fileUrl);
         }
 
-        // Delete the recipe
         recipeDBRepository.delete(recipe);
     }
 
-    //혜정 코드, 좋아요 증가
+    @Transactional
+    public void updateRecipe(RecipeDto recipeDto, MultipartFile[] manualImages) throws IOException {
+        RecipeDB recipe = recipeDBRepository.findById(recipeDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found"));
+
+        recipe.setRCP_NM(recipeDto.getRCP_NM());
+        recipe.setRCP_PARTS_DTLS(recipeDto.getRCP_PARTS_DTLS());
+        recipe.setManuals(recipeDto.getManuals());
+
+        List<String> currentImages = recipe.getManualImages();
+        List<String> newImages = new ArrayList<>();
+
+        if (manualImages != null) {
+            for (MultipartFile file : manualImages) {
+                if (!file.isEmpty()) {
+                    // Save the file and get the URL
+                    String fileName = fileUpLoadService.saveFile(file, "recipe");
+                    newImages.add(fileName);
+                }
+            }
+        }
+
+        // If no new images were uploaded, keep the current images
+        if (newImages.isEmpty()) {
+            // No new images, so no need to delete existing images
+            recipe.setManualImages(currentImages);
+        } else {
+            // Find images that are in currentImages but not in newImages and delete them
+            for (String imageUrl : currentImages) {
+                if (!newImages.contains(imageUrl)) {
+                    // Log the image being deleted
+                    System.out.println("Deleting Image: " + imageUrl);
+                    fileUpLoadService.deleteFile(imageUrl);
+                }
+            }
+
+            // Update the recipe with new image URLs
+            recipe.setManualImages(newImages);
+        }
+
+        // Save the updated recipe
+        recipeDBRepository.save(recipe);
+    }
+
+
     public void upLike(Long id) {
-        RecipeDB recipe = recipeDBRepository.findById(id).get();
-        recipe.setLLIKE(recipe.getLLIKE()+1);
+        RecipeDB recipe = recipeDBRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe not found"));
+        recipe.setLLIKE(recipe.getLLIKE() + 1);
         recipeDBRepository.save(recipe);
     }
 
@@ -112,14 +133,13 @@ public class RecipeService {
         CustomUser user = (CustomUser) auth.getPrincipal();
         recipe.setMember(memberRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found")));
         recipeDBRepository.save(recipe);
-
         return 1;
     }
 
     //혜정 코드, 조회수 증가
     public void viewCount(Long id) {
-        RecipeDB recipe = recipeDBRepository.findById(id).get();
-        recipe.setCCOUNT(recipe.getCCOUNT()+1);
+        RecipeDB recipe = recipeDBRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe not found"));
+        recipe.setCCOUNT(recipe.getCCOUNT() + 1);
         recipeDBRepository.save(recipe);
     }
 
@@ -131,14 +151,13 @@ public class RecipeService {
 
     //혜정 코드, 댓글 목록 조회
     public List<RecipeComment> commentList(Long id) {
-
-        return recipeCommentRepository.findAllByRecipeDB(recipeDBRepository.findById(id).get());
+        return recipeCommentRepository.findAllByRecipeDB(recipeDBRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe not found")));
     }
 
     //혜정 코드, 댓글 좋아요 증가
     public RecipeComment upCommentLike(Long id) {
-        RecipeComment comment = recipeCommentRepository.findById(id).get();
-        comment.setLLIKE(comment.getLLIKE()+1);
+        RecipeComment comment = recipeCommentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
+        comment.setLLIKE(comment.getLLIKE() + 1);
         recipeCommentRepository.save(comment);
         return comment;
     }
@@ -151,7 +170,7 @@ public class RecipeService {
 
     //혜정 코드, 댓글 내용 업데이트
     public void updateComment(Long id, String content) {
-        RecipeComment comment = recipeCommentRepository.findById(id).get();
+        RecipeComment comment = recipeCommentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
         comment.setComment_contents(content);
         recipeCommentRepository.save(comment);  // 변경된 내용 저장
     }
@@ -168,5 +187,4 @@ public class RecipeService {
 
         return model;
     }
-
 }
