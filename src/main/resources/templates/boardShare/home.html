@@ -98,22 +98,29 @@
 
             <!-- 페이징 네비게이션 -->
             <div class="pagination">
+                <!-- 첫 페이지로 돌아가기 -->
+                <a th:if="${startPage < currentPage}"
+                   th:href="@{/boardShare/home(page=${startPage}, search=${search}, sortType=${sortType})}">&lt;&lt;</a>
 
-                <a th:if="${startPage > 10}"
-                   th:href="@{/boardShare/home(page=${startPage - 1}, search=${search}, sortType=${sortType})}">&lt;&lt;</a>
+                <!-- 이전 페이지로 이동 -->
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/boardShare/home(page=${currentPage - 1}, search=${search}, sortType=${sortType})}"
+                   th:classappend="${currentPage == 1} ? 'disabled' : ''">&lt;</a>
 
-                <a th:if="${currentPage > 1}"
-                   th:href="@{/boardShare/home(page=${currentPage - 1}, search=${search}, sortType=${sortType})}">&lt;</a>
-            
+                <!-- 페이지 번호 -->
                 <a th:each="i : ${#numbers.sequence(startPage, endPage)}"
                    th:classappend="${currentPage == i} ? 'current' : ''"
                    th:href="@{/boardShare/home(page=${i}, search=${search}, sortType=${sortType})}" th:text="${i + 1}">1</a>
 
-                <a th:if="${currentPage < totalPages}"
-                   th:href="@{/boardShare/home(page=${currentPage + 1}, search=${search}, sortType=${sortType})}">&gt;</a>
+                <!-- 다음 페이지로 이동 -->
+                <a th:if="${currentPage < endPage}"
+                   th:href="@{/boardShare/home(page=${currentPage + 1}, search=${search}, sortType=${sortType})}"
+                   th:classappend="${currentPage == totalPages} ? 'disabled' : ''">&gt;</a>
 
-                <a th:if="${endPage < totalPages}"
-                   th:href="@{/boardShare/home(page=${endPage + 1}, search=${search}, sortType=${sortType})}">&gt;&gt;</a>
+                <!-- 마지막 페이지로 이동 -->
+                <a th:if="${endPage > currentPage}"
+                   th:href="@{/boardShare/home(page=${endPage}, search=${search}, sortType=${sortType})}"
+                   th:classappend="${endPage == totalPages} ? 'disabled' : ''">&gt;&gt;</a>
             </div>
 
         </div>
