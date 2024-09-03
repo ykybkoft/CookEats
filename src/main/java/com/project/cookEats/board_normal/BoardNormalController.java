@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,23 @@ public class BoardNormalController {
 
     // 게시판 홈 화면
     @GetMapping("/home")
-    public String home(Model model, @PageableDefault(size = 10) Pageable pageable) {
-        // 페이지별 게시글 목록을 불러옴
-        Page<BoardNormal> page = bs.findAll(pageable);
+    public String home(Model model, @PageableDefault(size = 10) Pageable pageable,
+                       @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                       @RequestParam(value = "sort", required = false, defaultValue = "likes") String sort) {
+        // 검색 및 정렬 처리
+        Page<BoardNormal> page;
+        switch (sort) {
+            case "sysDate":
+                page = bs.findAllByKeywordOrderBySysDateDesc(keyword, pageable); // 최신순
+                break;
+            case "views":
+                page = bs.findByKeywordOrderByViewsDesc(keyword, pageable); // 조회순
+                break;
+            case "likes":
+            default:
+                page = bs.findByKeywordOrderByLikesDesc(keyword, pageable); // 추천순 (기본값)
+                break;
+        }
 
         // 날짜 포맷 설정 (yyyy-MM-dd)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -43,37 +58,15 @@ public class BoardNormalController {
 
         // 모델에 페이지 정보 추가
         model.addAttribute("page", page);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("sort", sort);
         return "boardNormal/home"; // home.html 템플릿 반환
     }
 
-    // 검색 및 정렬
-    @GetMapping("/search")
-    public String search(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-                         @RequestParam(value = "sort", required = false, defaultValue = "likes") String sort,
-                         @PageableDefault(size = 10) Pageable pageable, Model model) {
-        Page<BoardNormal> page;
-        // 정렬 기준에 따른 게시글 검색
-        switch (sort) {
-            case "sysDate":
-                page = bs.findByKeywordOrderBySysDateDesc(keyword, pageable); // 최신순
-                break;
-            case "views":
-                page = bs.findByKeywordOrderByViewsDesc(keyword, pageable); // 조회순
-                break;
-            case "likes":
-            default:
-                page = bs.findByKeywordOrderByLikesDesc(keyword, pageable); // 추천순 (기본값)
-                break;
-        }
-        model.addAttribute("page", page);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("sort", sort);
-        return "boardNormal/searchResults"; // 검색 결과를 보여줄 HTML 템플릿
-    }
 
     // 게시글 상세 페이지
     @GetMapping("/articles/{id}")
-    public String getArticleDetail(@PathVariable("id") Long id, Model model) {
+    public String getArticleDetail(@PathVariable("id") Long id, Model model, Authentication auth) {
         BoardNormal article = bs.getArticleById(id);
         if (article != null) {
             // 조회수 증가
@@ -86,14 +79,22 @@ public class BoardNormalController {
             List<BoardNormalComment> comments = commentService.getCommentsByArticleId(id);
             model.addAttribute("comments", comments);
 
+            // 현재 사용자 이름 추가
+            String currentUsername = us.getCurrentUsername();
+            model.addAttribute("currentUsername", currentUsername);
+
             model.addAttribute("article", article);
             model.addAttribute("formattedDate", formattedDate);
+
+            //혜정 코드
+            if(auth != null){model.addAttribute("member", ms.findMember(auth));}
             return "boardNormal/articleDetail"; // articleDetail.html
         } else {
             model.addAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
             return "error"; // error.html
         }
     }
+
 
     // 글쓰기 폼
     @GetMapping("/write")
@@ -124,9 +125,10 @@ public class BoardNormalController {
         return "redirect:/boardNormal/home";
     }
 
+
     // 게시글 수정 폼
-    @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/articles/{id}/edit")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
         BoardNormal article = bs.getArticleById(id);
         if (article != null) {
             model.addAttribute("article", article);
@@ -138,28 +140,33 @@ public class BoardNormalController {
     }
 
     // 게시글 수정 처리
-    @PostMapping("/update")
-    public String updateArticle(@RequestParam Long id, @RequestParam String title, @RequestParam String content) {
+    @PostMapping("/articles/{id}/edit")
+    public String updateArticle(@PathVariable("id") Long id,
+                                @RequestParam String title,
+                                @RequestParam String content) {
         BoardNormal article = bs.getArticleById(id);
         if (article != null) {
             article.setTitle(title);
             article.setContent(content);
             bs.save(article);
-            return "redirect:/boardNormal/articles/" + id;
+            return "redirect:/boardNormal/articles/" + id; // 수정 후 게시글 상세 페이지로 리다이렉트
         } else {
-            return "error"; // error.html
+            return "error";
         }
     }
 
+
+
+
     // 게시글 삭제
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteArticle(@PathVariable("id") Long id) {
         bs.deleteById(id);
         return "redirect:/boardNormal/home";
     }
 
     // 좋아요 증가 처리
-    @PostMapping("/articles/{id}/like")
+    @GetMapping("/articles/{id}/like")
     public String likeArticle(@PathVariable("id") Long id) {
         try {
             boolean result = bs.incrementLikes(id); // 좋아요 수 증가
@@ -225,16 +232,18 @@ public class BoardNormalController {
     @PostMapping("/comments/{id}/edit")
     public String updateComment(@PathVariable("id") Long id, @RequestParam String contents) {
         BoardNormalComment comment = commentService.getCommentById(id);
+        Member currentMember = us.getCurrentMember();
 
-        if (comment != null) {
+        // 현재 사용자와 댓글 작성자가 일치하는지 확인
+        if (comment != null && comment.getMember().getId().equals(currentMember.getId())) {
             comment.setContents(contents);
             commentService.updateComment(comment);
 
             Long boardId = comment.getBoardNormal().getId(); // 댓글이 속한 게시글 ID를 가져옴
             return "redirect:/boardNormal/articles/" + boardId; // 수정된 댓글이 포함된 게시글 상세 페이지로 리다이렉트
         } else {
-            return "error"; // 댓글을 찾을 수 없을 때 에러 페이지 반환
+            return "error"; // 댓글을 수정할 권한이 없을 때 에러 페이지 반환
         }
     }
-
 }
+

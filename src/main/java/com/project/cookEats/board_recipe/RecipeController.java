@@ -41,6 +41,11 @@ public class RecipeController {
 
         int pageSize = 15;
         Pageable pageable = PageRequest.of(page - 1, pageSize);
+
+        if(sortType==null ||sortType.equals("")){
+            sortType="LLIKE";
+        }
+
         Page<RecipeDB> resultPage = recipeService.findAll(page, search , sortType);
 
         int totalPages = resultPage.getTotalPages();
@@ -62,6 +67,7 @@ public class RecipeController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("search", search);
+        model.addAttribute("sortType", sortType);
 
         return "boardRecipe/home";
     }

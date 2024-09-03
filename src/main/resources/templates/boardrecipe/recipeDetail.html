@@ -201,7 +201,7 @@
             <div class="recipe-image">
                 <img th:src="@{${recipe.ATT_FILE_NO_MK}}" alt="Recipe Image" />
             </div>
-            <div class="nutrition-chart">
+            <div class="nutrition-chart" th:if="${car} != null" >
                 <canvas id="nutritionChart"></canvas>
             </div>
         </div>
@@ -245,7 +245,7 @@
     <section class="comments">
         <h2>댓글</h2>
         <form th:if="${member != null}" class="comment-form" method="post" action="/boardRecipe/commentWrite">
-            <textarea name="comment_contents" placeholder="댓글을 작성해주세요" rows="4"></textarea>
+            <textarea name="comment_contents" placeholder="댓글을 작성해주세요" rows="4" required></textarea>
             <input type="hidden" name="recipeDB" th:value="${recipe.id}">
             <input type="hidden" name="member" th:value="${member.id}">
             <button type="submit" class="button">등록</button>
@@ -267,7 +267,7 @@
                     <a th:if="${member != null and #authentication.principal.id == comment.member.id}" th:href="@{'/boardRecipe/commentDelete/' + ${comment.id}(recipeID=${comment.recipeDB.id})}">삭제</a>
                 </div>
                 <div th:id="'edit-form-' + ${comment.id}" style="display: none;">
-                    <textarea th:id="'edit-content-' + ${comment.id}" rows="4" th:text="${comment.comment_contents}"></textarea>
+                    <textarea th:id="'edit-content-' + ${comment.id}" rows="4" th:text="${comment.comment_contents}" required></textarea>
                     <input type="hidden" th:id="'recipe-id-' + ${comment.id}" th:value="${comment.recipeDB.id}" />
                     <button class="button" th:onclick="'submitEditForm(' + ${comment.id} + ');'">수정하기</button>
                     <button class="button" th:onclick="'cancelEdit(' + ${comment.id} + ');'">취소</button>
@@ -310,6 +310,12 @@
                     }
                 }
             }
+        });
+        /*]]>*/
+
+        function showEditForm(commentId) {
+            document.getElementById('edit-form-' + commentId).style.display = 'block';
+
         }
     });
     /*]]>*/

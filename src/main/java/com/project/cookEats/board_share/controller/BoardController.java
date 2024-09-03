@@ -1,5 +1,6 @@
 package com.project.cookEats.board_share.controller;
 
+import com.amazonaws.services.neptunedata.model.IllegalArgumentException;
 import com.project.cookEats.board_share.entityClasses.Board_share_comment;
 import com.project.cookEats.board_share.repositories.Board_shareRepository;
 import com.project.cookEats.board_share.entityClasses.Board_share;
@@ -9,6 +10,7 @@ import com.project.cookEats.board_share.service.CommentService;
 import com.project.cookEats.member.Member;
 import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,21 +32,29 @@ public class BoardController {
     private final CommentRepository cr;
     private final CommentService cs;
 
-
-    // 게시글 페이지네이션
-    // 1-1. @RequestParam를 사용하면 쿼리파라미터방식으로 데이터를 받아오기에 html의 url주소를 변경할 필요가 없음
-    // 1-2. 위와 같이 처리하지 않고 /home{abc} 처럼 url경로일부로 데이터를 받아올 경우 클래스들 return 경로 및 html의 경로 모두 수정해야 됨.....
-    // @PageableDefault = (최신글순 정렬) / 페이지 수 나눔
+    // 게시글 목록 기능
+    // page = 페이징 값, search = 검색 값, sortType = 정렬 값
     @GetMapping("/home")
     String page(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                @RequestParam(required = false) String search,
+                @RequestParam(required = false) String sortType,
                 Model model){
 
-        // 페이지 번호를 pageable의 첫 페이지로 설정
-        Pageable pageRequest = PageRequest.of(page, pageable.getPageSize(), pageable.getSort());
+        // 서비스에서 목록, 검색, 정렬 기능 구현 후 가공된 데이터를 한번에 묶어 페이징 처리함.
+        Page<Board_share> resultPage = bs.pageFunction(page, search, sortType);
+        bs.pagination(resultPage, model);
 
-        // 서비스 메서드를 호출하여 페이지네이션 처리
-        bs.pageNavigation(pageRequest, model);
+        // 아무 정렬 버튼을 누르지 않아 전송되는 데이터가 없을 시 기본 페이징 버튼을 클릭해도 값을 넣어주기 위함.
+        if (sortType == null || sortType.equals("")) {
+            sortType = "id";
+
+            System.out.println("controller sortType : " + sortType);
+        }
+
+        // 검색값, 정렬값를 model에 추가
+        model.addAttribute("search", search);
+        model.addAttribute("sortType", sortType);
+
 
         return "boardShare/home.html";
     }
@@ -60,7 +70,17 @@ public class BoardController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    // 좋아요 기능
+    // 게시글 좋아요 기능
+    @PostMapping("/contentsLike/{id}")
+    @ResponseBody
+    public ResponseEntity<String> contentsLike(@PathVariable Long id) {
+
+        bs.contentsLike(id);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    // 댓글 좋아요 기능
     @PostMapping("/upLike/{id}")
     @ResponseBody
     public ResponseEntity<String> upLike(@PathVariable Long id) {

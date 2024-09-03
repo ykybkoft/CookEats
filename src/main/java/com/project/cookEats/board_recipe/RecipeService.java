@@ -127,6 +127,8 @@ public class RecipeService {
         recipeDBRepository.save(recipe);
     }
 
+
+    //레시피 저장
     public int write(RecipeDB recipe, Authentication auth) {
         CustomUser user = (CustomUser) auth.getPrincipal();
         recipe.setMember(memberRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found")));
@@ -134,21 +136,25 @@ public class RecipeService {
         return 1;
     }
 
+    //혜정 코드, 조회수 증가
     public void viewCount(Long id) {
         RecipeDB recipe = recipeDBRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe not found"));
         recipe.setCCOUNT(recipe.getCCOUNT() + 1);
         recipeDBRepository.save(recipe);
     }
 
+    //혜정 코드, 댓글 저장
     public int saveComment(RecipeComment comment) {
         recipeCommentRepository.save(comment);
         return 1;
     }
 
+    //혜정 코드, 댓글 목록 조회
     public List<RecipeComment> commentList(Long id) {
         return recipeCommentRepository.findAllByRecipeDB(recipeDBRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe not found")));
     }
 
+    //혜정 코드, 댓글 좋아요 증가
     public RecipeComment upCommentLike(Long id) {
         RecipeComment comment = recipeCommentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
         comment.setLLIKE(comment.getLLIKE() + 1);
@@ -156,24 +162,29 @@ public class RecipeService {
         return comment;
     }
 
+    //혜정 코드, 댓글 삭제
     public int commentDelete(Long id) {
         recipeCommentRepository.deleteById(id);
         return 1;
     }
 
+    //혜정 코드, 댓글 내용 업데이트
     public void updateComment(Long id, String content) {
         RecipeComment comment = recipeCommentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
         comment.setComment_contents(content);
-        recipeCommentRepository.save(comment);
+        recipeCommentRepository.save(comment);  // 변경된 내용 저장
     }
 
+    //혜정 코드
     public Model getNutrition(Model model, Long id) {
         Optional<RecipeDBSubInfo> recipeInfo = recipeDBSubInfoRepository.findById(id);
-        if (recipeInfo.isPresent()) {
-            model.addAttribute("car", recipeInfo.get().getINFO_CAR());
-            model.addAttribute("fat", recipeInfo.get().getINFO_FAT());
-            model.addAttribute("pro", recipeInfo.get().getINFO_PRO());
+        if(recipeInfo.isEmpty()){
+            return model;
         }
+        model.addAttribute("car", recipeInfo.get().getINFO_CAR());
+        model.addAttribute("fat", recipeInfo.get().getINFO_FAT());
+        model.addAttribute("pro", recipeInfo.get().getINFO_PRO());
+
         return model;
     }
 }
