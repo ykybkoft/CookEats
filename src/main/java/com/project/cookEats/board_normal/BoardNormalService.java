@@ -18,8 +18,8 @@ public class BoardNormalService {
     private final BoardNormalRepository br;
 
     // 최신순 내림차순 정렬
-    public Page<BoardNormal> findByKeywordOrderBySysDateDesc(String keyword, Pageable pageable) {
-        return br.findByTitleContainingOrderBySysDateDesc(keyword, pageable);
+    public Page<BoardNormal> findAllByKeywordOrderBySysDateDesc(String keyword, Pageable pageable) {
+        return br.findAllByTitleContainingOrderBySysDateDesc(keyword, pageable);
     }
 
     // 조회수 기준으로 내림차순 정렬

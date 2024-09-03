@@ -16,7 +16,7 @@ public interface BoardNormalRepository extends JpaRepository<BoardNormal, Long> 
     List<BoardNormal> findAllByMember(Member member);
 
     // 최신순 내림차순 정렬
-    Page<BoardNormal> findByTitleContainingOrderBySysDateDesc(String keyword, Pageable pageable);
+    Page<BoardNormal> findAllByTitleContainingOrderBySysDateDesc(String keyword, Pageable pageable);
 
     // 조회수 기준으로 내림차순 정렬
     Page<BoardNormal> findByTitleContainingOrderByViewsDesc(String keyword, Pageable pageable);

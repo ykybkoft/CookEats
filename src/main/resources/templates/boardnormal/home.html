@@ -174,7 +174,6 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>게시판</title>
-
     <div th:replace="~{/header.html :: navbar}"></div>
     <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 
@@ -211,7 +210,7 @@
                     <div class="article-card">
                         <h3 th:text="${article.title}"></h3>
                         <p th:text="${article.content}"></p>
-                        <p><strong>날짜:</strong> <span th:text="${article.formattedSysDate}"></span></p>
+                        <p><strong>최신수:</strong> <span th:text="${article.formattedSysDate}"></span></p>
                         <p><strong>추천수:</strong> <span th:text="${article.likes}"></span></p>
                         <p><strong>조회수:</strong> <span th:text="${article.views}"></span></p>
                         <a th:href="@{/boardNormal/articles/{id}(id=${article.id})}">더보기</a>
