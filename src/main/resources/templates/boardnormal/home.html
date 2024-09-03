@@ -1,6 +1,17 @@
 <!doctype html>
 <html lang="en">
-<style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>게시판</title>
+
+    <div th:replace="~{/header.html :: navbar}"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <style>
     body {
         font-family: 'Arial', sans-serif;
        line-height: 1.6;
@@ -164,19 +175,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-
-
-
 </style>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>게시판</title>
-
-    <div th:replace="~{/header.html :: navbar}"></div>
-    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 
 </head>
 <body>
@@ -194,7 +193,7 @@
     </form>
 </div>
 
-<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+
 
 <!-- 정렬 옵션 -->
 <!--<div class="dropdown">

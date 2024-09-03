@@ -201,7 +201,7 @@
             <div class="recipe-image">
                 <img th:src="@{${recipe.ATT_FILE_NO_MK}}" alt="Recipe Image" />
             </div>
-            <div class="nutrition-chart">
+            <div class="nutrition-chart" th:if="${car} != null" >
                 <canvas id="nutritionChart"></canvas>
             </div>
         </div>
@@ -300,8 +300,7 @@
             }
         });
         /*]]>*/
-    </script>
-<script>
+
         function showEditForm(commentId) {
             document.getElementById('edit-form-' + commentId).style.display = 'block';
         }
