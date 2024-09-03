@@ -217,8 +217,20 @@
                 <tr th:each="share : ${share}">
                     <td th:text="${share.title}"></td>
                     <td th:text="${share.content}"></td>
-                    <td class="edit-delete">✏️</td>
-                    <td class="edit-delete">🗑️</td>
+                    <td class="edit-delete">
+                        <button th:onclick="|location.href='/boardShare/edit/${share.id}'|">✏️</button>
+                    </td>
+                    <td class="edit-delete">
+                        <form
+                                id="delete-contents"
+                                th:action="@{/boardShare/delete/{id}(id=${share.id})}"
+                                method="post"
+                                onsubmit="return confirmDelete(event)"
+                                style="padding-left: 5px"
+                        >
+                            <button type="submit">🗑️</button>
+                        </form>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -238,8 +250,12 @@
                 </tr>
                 <tr th:each="recipe : ${recipe}">
                     <td th:text="${recipe.RCP_NM}"></td>
-                    <td class="edit-delete">✏️</td>
-                    <td class="edit-delete">🗑️</td>
+                    <td class="edit-delete">
+                        <a th:href="@{'/boardRecipe/update/' + ${recipe.id}}" class="button">✏️</a>
+                    </td>
+                    <td class="edit-delete">
+                        <a href="#" th:onclick="'deleteRecipe(' + ${recipe.id} + ');'" class="button">🗑️</a>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -259,6 +275,37 @@
     if(param.get('result')=='false'){
         alert('비밀번호가 틀렸습니다.');
     }
+
+    function deleteRecipe(recipeId) {
+        if (confirm('이 게시글을 삭제하시겠습니까?')) {
+            fetch(`/boardRecipe/delete/${recipeId}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('게시글이 삭제되었습니다.');
+                    window.location.href = '/member/myPage';
+                } else {
+                    alert('게시글 삭제에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('게시글 삭제 중 오류가 발생했습니다.');
+            });
+        }
+    }
+
+    // 게시글 삭제 안내 메세지
+         function confirmDelete(event) {
+             const message = '게시글을 삭제하시겠습니까?';
+             if(!confirm(message)){
+                 event.preventDefault();
+                 return false;
+             }
+             // 확인 버튼 클릭시
+             return true;
+         }
 
 </script>
 

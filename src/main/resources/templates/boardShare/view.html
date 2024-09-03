@@ -1,10 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <title>글쓰기</title>
 
@@ -12,281 +14,431 @@
     <div th:replace="~{header.html :: navbar}"></div>
 
     <!--Link css-->
-
-</head>
-<body>
-<!--board contents view code-->
-<div class="contents_layout" style="background-color: rgb(193, 253, 221)">
-    <div class="detail_title">
-        <hr>
+  </head>
+  <body>
+    <!--board contents view code-->
+    <div class="contents_layout" style="background-color: rgb(193, 253, 221)">
+      <div class="detail_title">
+        <hr />
         <h3 th:text="${contents.title}">글 제목</h3>
-        <hr>
-    </div>
-    <div class="writer_info" style="display: flex; justify-content: space-between">
+        <hr />
+      </div>
+      <div
+        class="writer_info"
+        style="display: flex; justify-content: space-between"
+      >
         <div style="padding-right: 30px; background-color: rgb(116, 217, 251)">
-            <strong>닉네임 :</strong>
-            <p style="display: inline" th:text="${contents.member.getNick()}"></p>
+          <strong>닉네임 :</strong>
+          <p style="display: inline" th:text="${contents.member.getNick()}"></p>
         </div>
-        <div style="display: flex; background-color: rgb(116, 217, 251); justify-content: left">
-            <div style="padding-right: 30px">
-                <strong>조회수 :</strong>
-                <p style="display: inline" th:text="${contents.vcount}"></p>
-            </div>
-            <div style="padding-right: 30px">
-                <strong>날짜 :</strong>
-                <p style="display: inline" th:text="${contents.sysdate}"></p>
-            </div>
+        <div
+          style="
+            display: flex;
+            background-color: rgb(116, 217, 251);
+            justify-content: left;
+          "
+        >
+          <div style="padding-right: 30px">
+            <strong>조회수 :</strong>
+            <p style="display: inline" th:text="${contents.vcount}"></p>
+          </div>
+          <div style="padding-right: 30px">
+            <strong>날짜 :</strong>
+            <p style="display: inline" th:text="${contents.sysdate}"></p>
+          </div>
         </div>
         <!-- 로그인된 사용자인 경우에만 수정 및 삭제 버튼 표시 -->
-        <div th:if="${auth != null and auth.id == contents.member.id}" style="padding-right: 15px; float: right; display: flex">
-            <button th:onclick="|location.href='/boardShare/edit/${contents.id}'|">수정</button>
+        <div
+          th:if="${auth != null and auth.id == contents.member.id}"
+          style="padding-right: 15px; float: right; display: flex"
+        >
+          <button
+            th:onclick="|location.href='/boardShare/edit/${contents.id}'|"
+          >
+            수정
+          </button>
 
-            <form id="delete-contents" th:action="@{/boardShare/delete/{id}(id=${contents.id})}" method="post" onsubmit="return confirmDelete(event)" style="padding-left: 5px">
-                <button type="submit">삭제</button>
-            </form>
+          <form
+            id="delete-contents"
+            th:action="@{/boardShare/delete/{id}(id=${contents.id})}"
+            method="post"
+            onsubmit="return confirmDelete(event)"
+            style="padding-left: 5px"
+          >
+            <button type="submit">삭제</button>
+          </form>
         </div>
-    </div>
-    <hr>
-    <div>
-
-    </div>
-    <div class="detail_text" style="justify-content: center; background-color: rgb(116, 251, 157)">
+      </div>
+      <hr />
+      <div></div>
+      <div
+        class="detail_text"
+        style="justify-content: center; background-color: rgb(116, 251, 157)"
+      >
         <p th:text="${contents.content}">글 내용</p>
-
-    </div>
-    <div class="contents_like" style="background-color: rgb(116, 217, 251); display: flex; justify-content: center; align-items: center;" sec:authorize="isAuthenticated()">
-        <button type="button" onclick="contentsLike(event)" th:attr="data-id=${contents.id}">
-            <span class="blind">좋아요</span>
-            <span th:text="${contents.cntlike}">좋아요 수</span>
+        <div id="map" style="width: 100%; height: 350px"></div>
+      </div>
+      <div
+        class="contents_like"
+        style="
+          background-color: rgb(116, 217, 251);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+        sec:authorize="isAuthenticated()"
+      >
+        <button
+          type="button"
+          onclick="contentsLike(event)"
+          th:attr="data-id=${contents.id}"
+        >
+          <span class="blind">좋아요</span>
+          <span th:text="${contents.cntlike}">좋아요 수</span>
         </button>
+      </div>
     </div>
-</div>
 
-<!--comment write code-->
-<!--로그인 유저가 작성한 것이 맞는지 비교할 필요 없기에 sec를 사용-->
-<div id="write-form" sec:authorize="isAuthenticated()">
-    <form class="input_area" th:action="@{/boardShare/comment/{id}(id=${contents.id})}" method="post" onsubmit="return writeComment(event)">
+    <!--comment write code-->
+    <!--로그인 유저가 작성한 것이 맞는지 비교할 필요 없기에 sec를 사용-->
+    <div id="write-form" sec:authorize="isAuthenticated()">
+      <form
+        class="input_area"
+        th:action="@{/boardShare/comment/{id}(id=${contents.id})}"
+        method="post"
+        onsubmit="return writeComment(event)"
+      >
         <div class="input_comment">
-            <textarea id="write-textarea" name="comment" placeholder="댓글을 입력하세요" style="margin: 10px 0px;" rows="3" cols="50"></textarea>
+          <textarea
+            id="write-textarea"
+            name="comment"
+            placeholder="댓글을 입력하세요"
+            style="margin: 10px 0px"
+            rows="3"
+            cols="50"
+          ></textarea>
         </div>
         <div class="input_bottom_area" style="margin-bottom: 50px">
-            <button class="input_comment_btn" type="submit">등록</button>
+          <button class="input_comment_btn" type="submit">등록</button>
         </div>
-    </form>
-</div>
+      </form>
+    </div>
 
-<!--comment view code-->
-<div class="comment_view_container">
-    <div th:each="comment : ${comments}">
+    <!--comment view code-->
+    <div class="comment_view_container">
+      <div th:each="comment : ${comments}">
         <div class="member_info">
-            <div class="comment_profile" style="display: flex; align-items: center;">
-                <button type="button" class="profile_button">
-                    <img class="comment_image" width="28" height="28"
-                         src="https://ssl.pstatic.net/cmstatic/nng/img/img_anonymous_square_gray_opacity2x.png">
-                </button>
-                <div class="comment_nick">
-                    <strong>
-                        <span th:text="${comment.member.getNick()}">닉네임</span>
-                    </strong>
-                </div>
+          <div
+            class="comment_profile"
+            style="display: flex; align-items: center"
+          >
+            <button type="button" class="profile_button">
+              <img
+                class="comment_image"
+                width="28"
+                height="28"
+                src="https://ssl.pstatic.net/cmstatic/nng/img/img_anonymous_square_gray_opacity2x.png"
+              />
+            </button>
+            <div class="comment_nick">
+              <strong>
+                <span th:text="${comment.member.getNick()}">닉네임</span>
+              </strong>
             </div>
+          </div>
         </div>
         <div id="comment-view" style="padding: 10px">
-            <!--토글 기능을 위한 id 추가-->
-            <div th:attr="id=${'view-comment-' + comment.id}"
-                 class="comment-view"
-                 th:text="${comment.comment}">댓글 내용</div>
+          <!--토글 기능을 위한 id 추가-->
+          <div
+            th:attr="id=${'view-comment-' + comment.id}"
+            class="comment-view"
+            th:text="${comment.comment}"
+          >
+            댓글 내용
+          </div>
         </div>
 
         <!-- 수정 폼 영역 버튼 클릭시 view -->
-        <div th:attr="id=${'edit-form-' + comment.id}"
-             class="edit-form"
-             style="display: none"
-             th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})">
-            <form th:action="@{/boardShare/editComment/{id}(id=${comment.id})}" method="post" onsubmit="return saveEdit(event)">
-                <textarea id="edit-textarea" th:utext="${comment.comment}" name="comment" rows="3" cols="50">댓글 수정 영역</textarea>
-                <button id="save-button" type="submit">저장</button>
-            </form>
+        <div
+          th:attr="id=${'edit-form-' + comment.id}"
+          class="edit-form"
+          style="display: none"
+          th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})"
+        >
+          <form
+            th:action="@{/boardShare/editComment/{id}(id=${comment.id})}"
+            method="post"
+            onsubmit="return saveEdit(event)"
+          >
+            <textarea
+              id="edit-textarea"
+              th:utext="${comment.comment}"
+              name="comment"
+              rows="3"
+              cols="50"
+            >
+댓글 수정 영역</textarea
+            >
+            <button id="save-button" type="submit">저장</button>
+          </form>
         </div>
 
         <!--댓글 정보 및 수정 삭제 버튼-->
-        <div class="comment_info" style="display: flex; justify-content: space-between">
-            <div class="comment_time" style="display: flex;">
-                <span th:text="${comment.sysdate}" style="padding-right: 10px">댓글 작성 시간</span>
-                <!-- 로그인된 사용자이고, 댓글 작성자와 일치할 경우 수정/삭제 버튼 표시 -->
-                <div id="comment_edit_delete"
-                     th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})"
-                     style="display: flex; gap: 5px">
-                    <button class="edit-button" th:attr="data-comment-id=${comment.id}">수정</button>
-                    <button class="delete-button" type="button" th:attr="data-id=${comment.id}">삭제</button>
-                </div>
+        <div
+          class="comment_info"
+          style="display: flex; justify-content: space-between"
+        >
+          <div class="comment_time" style="display: flex">
+            <span th:text="${comment.sysdate}" style="padding-right: 10px"
+              >댓글 작성 시간</span
+            >
+            <!-- 로그인된 사용자이고, 댓글 작성자와 일치할 경우 수정/삭제 버튼 표시 -->
+            <div
+              id="comment_edit_delete"
+              th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})"
+              style="display: flex; gap: 5px"
+            >
+              <button
+                class="edit-button"
+                th:attr="data-comment-id=${comment.id}"
+              >
+                수정
+              </button>
+              <button
+                class="delete-button"
+                type="button"
+                th:attr="data-id=${comment.id}"
+              >
+                삭제
+              </button>
             </div>
-            <div class="comment_like" style="float: right" sec:authorize="isAuthenticated()">
-                <button type="button" onclick="upLike(event)" th:attr="data-id=${comment.id}">
-                    <span class="blind">좋아요</span>
-                    <span th:text="${comment.cmtlike}">좋아요 수</span>
-                </button>
-            </div>
+          </div>
+          <div
+            class="comment_like"
+            style="float: right"
+            sec:authorize="isAuthenticated()"
+          >
+            <button
+              type="button"
+              onclick="upLike(event)"
+              th:attr="data-id=${comment.id}"
+            >
+              <span class="blind">좋아요</span>
+              <span th:text="${comment.cmtlike}">좋아요 수</span>
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- JavaScript -->
-<script>
-    // 최초 로드 시 페이지 새로 고침(조회수 업데이트)
-    document.addEventListener('DOMContentLoaded', (event) => {
+    <!-- JavaScript -->
+    <script>
+          // 최초 로드 시 페이지 새로 고침(조회수 업데이트)
+          document.addEventListener('DOMContentLoaded', (event) => {
 
-        if (!sessionStorage.getItem('pageRefreshed')) {
+              if (!sessionStorage.getItem('pageRefreshed')) {
 
-            sessionStorage.setItem('pageRefreshed', 'true');
-            location.reload();  // 페이지 리로드
-        } else {
-            // If page has been refreshed before, clear the flag
-            sessionStorage.removeItem('pageRefreshed');
-        }
-    });
+                  sessionStorage.setItem('pageRefreshed', 'true');
+                  location.reload();  // 페이지 리로드
+              } else {
+                  // If page has been refreshed before, clear the flag
+                  sessionStorage.removeItem('pageRefreshed');
+              }
+          });
 
-    // 게시글 삭제 안내 메세지
-    function confirmDelete(event) {
-        const message = '게시글을 삭제하시겠습니까?';
-        if(!confirm(message)){
-            event.preventDefault();
-            return false;
-        }
-        // 확인 버튼 클릭시
-        return true;
-    }
+          // 게시글 삭제 안내 메세지
+          function confirmDelete(event) {
+              const message = '게시글을 삭제하시겠습니까?';
+              if(!confirm(message)){
+                  event.preventDefault();
+                  return false;
+              }
+              // 확인 버튼 클릭시
+              return true;
+          }
 
-    // 댓글 공백 추가 방지 및 예외 메세지
-    function writeComment(event) {
-        const writeTextarea = document.getElementById('write-textarea');
+          // 댓글 공백 추가 방지 및 예외 메세지
+          function writeComment(event) {
+              const writeTextarea = document.getElementById('write-textarea');
 
-        if(writeTextarea.value.trim() === '') {
-            alert('댓글를 입력하세요.');
-            event.preventDefault(); // 폼 제출 방지
-            return false;
-        } else {
-            alert('댓글이 작성되었습니다.');
-            return true;
-        }
-    }
+              if(writeTextarea.value.trim() === '') {
+                  alert('댓글를 입력하세요.');
+                  event.preventDefault(); // 폼 제출 방지
+                  return false;
+              } else {
+                  alert('댓글이 작성되었습니다.');
+                  return true;
+              }
+          }
 
-    // 댓글 수정 토글 이벤트 추가(이거 구현하느라 꽤 고생했다....ㅋ 뿌!듯)
-    document.querySelectorAll('.edit-button').forEach(button => {
-        button.addEventListener('click', function(event) {
-            // 1. 코멘트 아이디를 수정 버튼에서 th:attr과 html5의 data- 문법으로 받아온다.
-            const commentId = event.target.getAttribute('data-comment-id');
-            // 2. th:attr로 id에 코멘트 아이디를 넣는다. 그리고 받아온다!
-            const editForm = document.querySelector(`#edit-form-${commentId}`);
-            const view = document.querySelector(`#view-comment-${commentId}`);
+          // 댓글 수정 토글 이벤트 추가(이거 구현하느라 꽤 고생했다....ㅋ 뿌!듯)
+          document.querySelectorAll('.edit-button').forEach(button => {
+              button.addEventListener('click', function(event) {
+                  // 1. 코멘트 아이디를 수정 버튼에서 th:attr과 html5의 data- 문법으로 받아온다.
+                  const commentId = event.target.getAttribute('data-comment-id');
+                  // 2. th:attr로 id에 코멘트 아이디를 넣는다. 그리고 받아온다!
+                  const editForm = document.querySelector(`#edit-form-${commentId}`);
+                  const view = document.querySelector(`#view-comment-${commentId}`);
 
-             if (editForm && view) {
-                // 수정 폼과 댓글 내용의 display 상태를 토글
-                if (editForm.style.display === 'none') {
-                    // editForm을 보여주고, view를 숨김
-                    editForm.style.display = 'block';
-                    view.style.display = 'none';
-                } else {
-                    // editForm을 숨기고, view를 보여줌
-                    editForm.style.display = 'none';
-                    view.style.display = 'block';
-                }
-            } else {
-                // 데이터 흐름파악
-                console.error(`ID가 edit-form-${commentId}인 editForm을 찾을 수 없습니다.`);
-            }
-        });
-    });
+                   if (editForm && view) {
+                      // 수정 폼과 댓글 내용의 display 상태를 토글
+                      if (editForm.style.display === 'none') {
+                          // editForm을 보여주고, view를 숨김
+                          editForm.style.display = 'block';
+                          view.style.display = 'none';
+                      } else {
+                          // editForm을 숨기고, view를 보여줌
+                          editForm.style.display = 'none';
+                          view.style.display = 'block';
+                      }
+                  } else {
+                      // 데이터 흐름파악
+                      console.error(`ID가 edit-form-${commentId}인 editForm을 찾을 수 없습니다.`);
+                  }
+              });
+          });
 
-    // 댓글 삭제 클릭 이벤트 추가
-    document.addEventListener('click', function(event) {
+          // 댓글 삭제 클릭 이벤트 추가
+          document.addEventListener('click', function(event) {
 
-        // 댓글 삭제 버튼 클릭 시
-        if (event.target.classList.contains('delete-button')) {
-            const commentId = event.target.getAttribute('data-id');
-            const message = '정말로 삭제하시겠습니까?';
+              // 댓글 삭제 버튼 클릭 시
+              if (event.target.classList.contains('delete-button')) {
+                  const commentId = event.target.getAttribute('data-id');
+                  const message = '정말로 삭제하시겠습니까?';
 
-            if (confirm(message)) {
-                deleteComment(commentId);
-            }
-        }
-    });
-    // 댓글 삭제 요청 기능
-    function deleteComment(commentId) {
+                  if (confirm(message)) {
+                      deleteComment(commentId);
+                  }
+              }
+          });
+          // 댓글 삭제 요청 기능
+          function deleteComment(commentId) {
 
-        fetch(`/boardShare/deleteComment/?id=${commentId}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('댓글이 삭제되었습니다.');
-                location.reload(); // 삭제 후 페이지 새로고침
-            } else {
-                alert('댓글 삭제에 실패했습니다.');
-            }
-        })
-        .catch(error => {
-            console.error('삭제 요청 중 오류 발생:', error);
-            alert('댓글 삭제 중 오류가 발생했습니다.');
-        });
-    }
+              fetch(`/boardShare/deleteComment/?id=${commentId}`, {
+                  method: 'DELETE'
+              })
+              .then(response => {
+                  if (response.ok) {
+                      alert('댓글이 삭제되었습니다.');
+                      location.reload(); // 삭제 후 페이지 새로고침
+                  } else {
+                      alert('댓글 삭제에 실패했습니다.');
+                  }
+              })
+              .catch(error => {
+                  console.error('삭제 요청 중 오류 발생:', error);
+                  alert('댓글 삭제 중 오류가 발생했습니다.');
+              });
+          }
 
-    // 댓글 수정 시 공백 확인하는 함수
-    function saveEdit(event) {
-        const editTextarea = document.getElementById('edit-textarea');
+          // 댓글 수정 시 공백 확인하는 함수
+          function saveEdit(event) {
+              const editTextarea = document.getElementById('edit-textarea');
 
-        // textarea의 값이 공백인지 확인
-        if (editTextarea.value.trim() === '') {
-            alert('수정 내용을 입력해 주세요.');
-            event.preventDefault(); // 폼 제출 방지
-            return false;
-        } else {
-            alert('댓글 수정 완료');
-            return true;
-        }
-    }
+              // textarea의 값이 공백인지 확인
+              if (editTextarea.value.trim() === '') {
+                  alert('수정 내용을 입력해 주세요.');
+                  event.preventDefault(); // 폼 제출 방지
+                  return false;
+              } else {
+                  alert('댓글 수정 완료');
+                  return true;
+              }
+          }
 
-    // 게시글 좋아요 기능
-    function contentsLike(event) {
-        const button = event.target.closest('button');
-        const contentsId = button.getAttribute('data-id');
+          // 게시글 좋아요 기능
+          function contentsLike(event) {
+              const button = event.target.closest('button');
+              const contentsId = button.getAttribute('data-id');
 
-        // 서버로 요청 보내기
-        fetch(`/boardShare/contentsLike/${contentsId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include' // 인증된 세션을 보내기 위해
-        })
-        .then(response => response.text())  // 서버응답을 텍스트로 받음 = JSON 형식으로 서버에서 요청이 안 들어옴
-        .then(data => {
-            // 요청이 성공적으로 처리된 후 페이지 새로 고침
-            console.log('Reloading the page');
-            location.reload();
-        })
-    }
+              // 서버로 요청 보내기
+              fetch(`/boardShare/contentsLike/${contentsId}`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  credentials: 'include' // 인증된 세션을 보내기 위해
+              })
+              .then(response => response.text())  // 서버응답을 텍스트로 받음 = JSON 형식으로 서버에서 요청이 안 들어옴
+              .then(data => {
+                  // 요청이 성공적으로 처리된 후 페이지 새로 고침
+                  console.log('Reloading the page');
+                  location.reload();
+              })
+          }
 
-    // 댓글 좋아요 기능
-    function upLike(event) {
-        const button = event.target.closest('button');
-        const commentId = button.getAttribute('data-id');
+          // 댓글 좋아요 기능
+          function upLike(event) {
+              const button = event.target.closest('button');
+              const commentId = button.getAttribute('data-id');
 
-        // 서버로 요청 보내기
-        fetch(`/boardShare/upLike/${commentId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include' // 인증된 세션을 보내기 위해
-        })
-        .then(response => response.text())  // 서버응답을 텍스트로 받음 = JSON 형식으로 서버에서 요청이 안 들어옴
-        .then(data => {
-            // 요청이 성공적으로 처리된 후 페이지 새로 고침
-            console.log('Reloading the page');
-            location.reload();
-    });
-}
-</script>
-</body>
+              // 서버로 요청 보내기
+              fetch(`/boardShare/upLike/${commentId}`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  credentials: 'include' // 인증된 세션을 보내기 위해
+              })
+              .then(response => response.text())  // 서버응답을 텍스트로 받음 = JSON 형식으로 서버에서 요청이 안 들어옴
+              .then(data => {
+                  // 요청이 성공적으로 처리된 후 페이지 새로 고침
+                  console.log('Reloading the page');
+                  location.reload();
+          });
+      }
+
+                 //혜정 코드
+              /*<![CDATA[*/
+      var lng = [[${contents.longitude}]];
+      var lat = [[${contents.latitude}]];
+      var place = [[${contents.place}]]; // 장소 이름
+
+      var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+      mapOption = {
+          center: new kakao.maps.LatLng(lat, lng),
+          level: 3 // 지도의 확대 레벨
+      };
+
+      // 지도를 생성합니다
+      var map = new kakao.maps.Map(mapContainer, mapOption);
+
+      // 마커가 표시될 위치입니다
+      var markerPosition  = new kakao.maps.LatLng(lat, lng);
+
+      // 마커를 생성합니다
+      var marker = new kakao.maps.Marker({
+          position: markerPosition
+      });
+
+      // 마커를 지도에 표시합니다.
+      marker.setMap(map);
+
+      // 커스텀 오버레이에 표시할 HTML 내용
+      var content = `<div style="
+                      padding: 5px;
+                      background-color: white;
+                      border: 1px solid black;
+                      border-radius: 5px;
+                      font-size: 12px;
+                      white-space: nowrap;
+                      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+                      ">
+                        ${place}
+                     </div>`;
+
+      // 커스텀 오버레이를 생성합니다
+      var customOverlay = new kakao.maps.CustomOverlay({
+          position: markerPosition,
+          content: content,
+          yAnchor: 2.5, // Y축 위치를 조정하여 마커 위에 오버레이가 표시되도록 설정
+          xAnchor: 0.5, // 중앙에 오버레이 정렬
+          clickable: true // 클릭이 가능하도록 설정
+      });
+
+      // 커스텀 오버레이를 지도에 표시합니다
+      customOverlay.setMap(map);
+      /*]]>*/
+    </script>
+  </body>
 </html>
