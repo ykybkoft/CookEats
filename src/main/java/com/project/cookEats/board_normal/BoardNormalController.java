@@ -156,8 +156,6 @@ public class BoardNormalController {
     }
 
 
-
-
     // 게시글 삭제
     @GetMapping("/delete/{id}")
     public String deleteArticle(@PathVariable("id") Long id) {
@@ -245,5 +243,18 @@ public class BoardNormalController {
             return "error"; // 댓글을 수정할 권한이 없을 때 에러 페이지 반환
         }
     }
+
+    // 댓글 좋아요 처리
+    @PostMapping("/comments/{id}/like")
+    public String likeComment(@PathVariable("id") Long id) {
+        try {
+            commentService.incrementCommentLikes(id);
+            return "redirect:/boardNormal/articles/" + id; // 좋아요 후 게시글 상세 페이지로 리다이렉트
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error"; // 에러 발생 시 에러 페이지로 리다이렉트
+        }
+    }
+
 }
 
