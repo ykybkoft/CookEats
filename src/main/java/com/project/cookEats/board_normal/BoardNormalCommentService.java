@@ -49,4 +49,12 @@ public class BoardNormalCommentService {
         return commentRepository.findById(id).orElse(null);
     }
 
+
+    // 댓글 좋아요
+    public void incrementCommentLikes(Long commentId) {
+        BoardNormalComment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+        comment.setComment_like(comment.getComment_like() + 1);
+        commentRepository.save(comment);
+    }
 }

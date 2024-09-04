@@ -365,7 +365,22 @@
         }
     }
 
-
+    // 댓글 좋아요 함수
+    function likeComment(commentId) {
+        $.ajax({
+            type: "POST",
+            url: `/boardNormal/comments/${commentId}/like`,
+            success: function() {
+                let likeCountElement = $(`#comment-like-count-${commentId}`);
+                let currentCount = parseInt(likeCountElement.text());
+                likeCountElement.text(currentCount + 1);
+                window.location.reload(); // 페이지 새로고침
+            },
+            error: function(xhr, status, error) {
+                console.error("댓글 좋아요 증가 실패:", error);
+            }
+        });
+    }
 
 
 
