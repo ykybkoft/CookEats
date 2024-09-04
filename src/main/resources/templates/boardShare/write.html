@@ -280,7 +280,7 @@
                 <div id="menu_wrap" class="bg_white">
                     <div class="option">
                         <div>
-                            키워드 : <input type="text" placeholder="장소 검색" value="서울 시청" id="keyword" size="15">
+                            키워드 : <input type="text" placeholder="장소 검색" value="서울 시청" id="keyword" size="15" onkeydown="handleKeywordEnter(event)">
                             <button type="button" onclick="searchPlaces(); return false;">검색하기</button>
                         </div>
                     </div>
@@ -505,6 +505,13 @@
           el.removeChild(el.lastChild);
         }
       }
+
+      function handleKeywordEnter(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // 기본 폼 제출 방지
+            searchPlaces(); // 검색 함수 호출
+        }
+    }
     </script>
 </body>
 </html>
