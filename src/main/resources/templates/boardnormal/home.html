@@ -174,8 +174,9 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>게시판</title>
+
     <div th:replace="~{/header.html :: navbar}"></div>
-<!--    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">-->
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 
 </head>
 <body>
@@ -210,7 +211,7 @@
                     <div class="article-card">
                         <h3 th:text="${article.title}"></h3>
                         <p th:text="${article.content}"></p>
-                        <p><strong>최신수:</strong> <span th:text="${article.formattedSysDate}"></span></p>
+                        <p><strong>날짜:</strong> <span th:text="${article.formattedSysDate}"></span></p>
                         <p><strong>추천수:</strong> <span th:text="${article.likes}"></span></p>
                         <p><strong>조회수:</strong> <span th:text="${article.views}"></span></p>
                         <a th:href="@{/boardNormal/articles/{id}(id=${article.id})}">더보기</a>
@@ -278,23 +279,18 @@
             <!-- 페이징 -->
             <div class="pagination">
                 <!-- 이전 페이지 링크 -->
-                <a th:if="${page.hasPrevious()}"
-                   th:href="@{/boardNormal/home(page=${page.number - 1}, sort=${param.sort})}"
-                   i data-lucide="chevron-left">이전</a>
+                <a th:if="${page.hasPrevious()}" th:href="@{/boardNormal/home(page=${page.number - 1})}" i data-lucide="chevron-left">이전</a>
                 <!-- 페이지 번호 링크 -->
                 <a th:each="i : ${#numbers.sequence(
-                (page.number - 2 > 0 ? page.number - 2 : 0),
-                (page.number + 2 < page.totalPages - 1 ? page.number + 2 : page.totalPages - 1)
-            )}"
-                   th:href="@{/boardNormal/home(page=${i}, sort=${param.sort})}"
+                            (page.number - 2 > 0 ? page.number - 2 : 0),
+                            (page.number + 2 < page.totalPages - 1 ? page.number + 2 : page.totalPages - 1)
+                        )}"
+                   th:href="@{/boardNormal/home(page=${i})}"
                    th:classappend="${i == page.number} ? 'current'"
                    th:text="${i + 1}"></a>
                 <!-- 다음 페이지 링크 -->
-                <a th:if="${page.hasNext()}"
-                   th:href="@{/boardNormal/home(page=${page.number + 1}, sort=${param.sort})}"
-                   i data-lucide="chevron-right">다음</a>
+                <a th:if="${page.hasNext()}" th:href="@{/boardNormal/home(page=${page.number + 1})}" i data-lucide="chevron-right">다음</a>
             </div>
-
         </section>
     </footer>
 </div>

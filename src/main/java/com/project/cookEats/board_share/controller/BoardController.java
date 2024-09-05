@@ -128,8 +128,8 @@ public class BoardController {
     String write(Authentication auth, Model model){
         //게시글 로그인 된 유저의 아이디 가져옴 -my page- 활용
         Member result = bs.findMember(auth);
-        model.addAttribute("nick",result.getNick());
 
+        model.addAttribute("nick",result.getNick());
         return "boardShare/write.html";
     }
 
@@ -161,11 +161,11 @@ public class BoardController {
     }
 
     // 게시글 삭제
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable Long id){
 
         bs.deleteContents(id);
-        return "redirect:/boardShare/home";
+        return "boardShare/home.html";
     }
 
 }

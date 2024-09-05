@@ -6,51 +6,146 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>글쓰기</title>
+    <title>장터게시판</title>
 
     <!--navbar inculude-->
     <div th:replace="~{header.html :: navbar}"></div>
 
     <!--Link css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/home.css}">
 
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .contents-layout {
+            max-width: 800px;
+            margin: 0px auto;
+            padding: 0px auto;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+            display: flex; /* Flexbox 사용 */
+            justify-content: center; /* 가로 중앙 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+        }
+        :root {
+            --primary-color: #4CAF4F;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --border-radius: 12px;
+        }
+        .edit-layout h1{
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .detail-title, .detail-text {
+            display: flex; /* 전체적으로 조금 더 슬림해짐 */
+            width: 33em; /* view의 pre 폼과 규격 맞춤 */
+        }
+        .detail-title textarea, .detail-text textarea{
+            justify-content: center; /* 가로 중앙 정렬 */
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            resize: none;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .writer-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .writer-info div {
+            margin: 0 15px 10px;
+            padding-left: 10px;
+        }
+        .button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 2px;
+        }
+        .button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 79, 0.4);
+        }
+    </style>
 </head>
 <body>
-<!--board contents view code-->
-<form action="/boardShare/edit" method="post" class="contents_layout" onsubmit="return editContents(event);" style="background-color: rgb(193, 253, 221)">
-    <div class="detail_title">
-        <hr>
-        <h3 th:utext="${data.title}">글 제목</h3>
-        <input name="id" th:value="${data.id}" type="hidden">
-        <hr>
-    </div>
-    <div class="writer_info" style="display: flex; justify-content: space-between">
-        <div style="padding-right: 30px; background-color: rgb(116, 217, 251)">
-            <strong>닉네임 :</strong>
-            <span th:text="${data.member.getNick()}"></span>
-            <input name="member" th:value="${data.member.getId()}" type="hidden">
-            <p style="display: inline" ></p>
-        </div>
-        <div style="display: flex; background-color: rgb(116, 217, 251); justify-content: left">
-            <div style="padding-right: 30px">
-                <strong>조회수 :</strong>
-                <p style="display: inline" th:text="${data.vcount}"></p>
+<main class="edit-layout">
+    <div class="edit-form">
+        <h1 >&nbsp;&nbsp;게시글 수정</h1>
+        <!--board contents view code-->
+        <form action="/boardShare/edit" method="post" class="contents-layout" onsubmit="return editContents(event);">
+            <div class="contents-box">
+                <div class="detail-title">
+                    <textarea th:utext="${data.title}" name="title">글 제목</textarea>
+                    <input name="id" th:value="${data.id}" type="hidden">
+                </div>
+                <div class="writer-info">
+                    <div><i class="fas fa-user"></i> <span th:text="${data.member.getNick()}"></span></div>
+                    <div><i class="far fa-calendar-alt"></i><span th:text="${data.sysdate}"></span></div>
+                    <div><i class="fas fa-eye"></i><span th:text="${data.vcount}"></span></div>
+                    <div><i class="fas fa-heart"></i><span th:text="${data.cntlike}"></span></div>
+                </div>
+                <div class="detail-text">
+                    <textarea id="edit-content"  name="content" th:utext="${data.content}"></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="button">저장</button>
+                </div>
             </div>
-            <div style="padding-right: 30px">
-                <strong>날짜 :</strong>
-                <p style="display: inline" th:text="${data.sysdate}"></p>
-            </div>
-        </div>
+        </form>
     </div>
-    <hr>
-    <div class="detail_text" style="justify-content: center; background-color: rgb(116, 251, 157)">
-        <textarea id="edit-content"  name="content" th:utext="${data.content}"></textarea>
-        <div style="padding-right: 30px; float: right">
-            <button type="submit">수정완료</button>
-        </div>
-    </div>
-</form>
+</main>
 
 <script>
+    // textarea 높이 자동 조절 함수
+    function autoHeight(textarea) {
+        textarea.style.height = 'auto'; // 높이를 'auto'로 리셋
+        textarea.style.height = textarea.scrollHeight + 'px'; // scrollHeight에 맞춰 높이 설정
+    }
+
+    // 페이지 로드되면 모든 textarea에 대해 높이 조절 함수 호출
+    document.addEventListener('DOMContentLoaded', () => {
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            autoHeight(textarea); // 초기 높이 조정
+            textarea.addEventListener('input', () => autoHeight(textarea)); // 입력 시 높이 조정
+        });
+    });
+
     function editContents(event){
         const content = document.getElementById('edit-content');
 

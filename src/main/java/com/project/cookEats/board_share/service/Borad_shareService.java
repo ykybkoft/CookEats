@@ -218,7 +218,8 @@ public class Borad_shareService {
         // 개발자 도구로 POST 될 게시물 아이디를 변경해서 다른 글을 수정하는 것을 막기 위한 목적의 로직
         // 현재 로그인 된 사용자 아이디와 현재 게시물에 저장된 아이디가 맞다면
         if (member.getId().equals(board.getMember().getId())) {
-            data.setTitle(board.getTitle());
+            data.setMember(board.getMember());
+            data.setTitle(data.getTitle());
             data.setContent(data.getContent());
             data.setBoard_comment(board.getBoard_comment());
             br.save(data);
