@@ -265,14 +265,17 @@
                         </div>
                         <!--댓글 정보 및 수정 삭제 버튼-->
                         <!-- 로그인된 사용자이고, 댓글 작성자와 일치할 경우 수정/삭제 버튼 표시 -->
-                        <div id="comment_edit_delete" class="comment-actions" style="padding-bottom: 50px;"
-                             th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})">
-                            <button type="button" onclick="upLike(event)" th:attr="data-id=${comment.id}">
+                        <div id="comment_edit_delete" class="comment-actions" style="padding-bottom: 50px;">
+                            <button type="button" onclick="upLike(event)" th:attr="data-id=${comment.id}" sec:authorize="isAuthenticated()">
                             <i class="fa-regular fa-thumbs-up" style="cursor: pointer;"></i>
                             <strong th:text="${comment.cmtlike}">좋아요 수</strong>
                             </button>
-                            <button class="edit-button" th:attr="data-comment-id=${comment.id}" style="font-weight: bold; cursor: pointer;">수정</button>
-                            <button class="delete-button" type="button" th:attr="data-id=${comment.id}" style="font-weight: bold; cursor: pointer;">삭제</button>
+                            <button class="edit-button" th:attr="data-comment-id=${comment.id}"
+                                    th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})"
+                                    style="font-weight: bold; cursor: pointer;">수정</button>
+                            <button class="delete-button" type="button" th:attr="data-id=${comment.id}"
+                                    th:if="${auth != null} and (${auth.getId()} == ${comment.member.getId()})"
+                                    style="font-weight: bold; cursor: pointer;">삭제</button>
                         </div>
                     </div>
                 </div>
