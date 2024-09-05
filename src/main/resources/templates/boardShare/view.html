@@ -217,9 +217,9 @@
         </div>
         <!-- 로그인된 사용자인 경우에만 버튼 표시 -->
         <div class="contents-actions">
-            <button class="button" type="button" onclick="contentsLike(event)" th:attr="data-id=${contents.id}">
+            <button class="button" type="button" onclick="contentsLike(event)" th:attr="data-id=${contents.id}" sec:authorize="isAuthenticated()">
                 <span class="blind">좋아요</span>
-                <span th:text="${contents.cntlike}" sec:authorize="isAuthenticated()">좋아요 수</span>
+                <span th:text="${contents.cntlike}">좋아요 수</span>
             </button>
             <button class="button" th:onclick="|location.href='/boardShare/edit/${contents.id}'|" th:if="${auth != null and auth.id == contents.member.id}">수정</button>
             <a href="#" class="button" onclick="confirmDelete(event)" th:attr="data-id=${contents.id}" th:if="${auth != null and auth.id == contents.member.id}">삭제</a>
